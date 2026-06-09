@@ -273,13 +273,14 @@ function buildScreens(course) {
 const CSS = `
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--sage:#2d7a5e;--sage-mid:#4aab7e;--sage-light:#7ec89a;--bg:#0c1510;--card:rgba(255,255,255,0.05);--card-hover:rgba(255,255,255,0.08);--text:#eef4f0;--muted:rgba(238,244,240,0.5);--border:rgba(180,220,190,0.1);--border-hi:rgba(126,200,154,0.3);--r:14px}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6;overflow-x:hidden}
+html,body{height:100%;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;height:100vh;overflow:hidden;line-height:1.6}
 .bg-mesh{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 15% 10%,rgba(60,120,80,.45) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 25%,rgba(80,190,140,.2) 0%,transparent 55%),radial-gradient(ellipse 70% 55% at 50% 90%,rgba(120,180,100,.18) 0%,transparent 60%),#0c1510;animation:mesh 14s ease-in-out infinite alternate}
 @keyframes mesh{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(12deg) brightness(1.08)}}
 
 /* SHELL */
-.course-top{position:sticky;top:0;z-index:100;background:rgba(12,21,16,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:56px;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
-.top-logo{height:32px;width:auto}
+.course-top{flex-shrink:0;position:relative;z-index:100;background:rgba(12,21,16,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:56px;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
+.top-logo{height:28px;width:auto;filter:brightness(0) invert(1) opacity(.85)}
 .top-right{display:flex;align-items:center;gap:12px}
 .top-biz{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn-map-top{font-size:.73rem;font-weight:600;color:var(--sage-light);background:rgba(45,122,94,.12);border:1px solid var(--border-hi);border-radius:100px;padding:5px 14px;cursor:pointer;transition:all .18s;font-family:inherit}
@@ -287,20 +288,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .progress-rail{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.06)}
 .progress-fill{height:2px;background:linear-gradient(90deg,var(--sage),var(--sage-light));transition:width .4s ease}
 
-.course-main{position:relative;z-index:2;max-width:680px;margin:0 auto;padding:40px 20px 120px}
+.course-main{position:relative;z-index:2;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.card-wrap{max-width:740px;margin:0 auto;padding:28px 20px 24px}
 
 /* SCREENS */
 .screen{display:none}
-.screen.active{display:block;animation:sIn .35s cubic-bezier(.22,1,.36,1)}
-@keyframes sIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{display:block}
+.screen.anim-right{animation:sInR .3s cubic-bezier(.22,1,.36,1)}
+.screen.anim-left{animation:sInL .3s cubic-bezier(.22,1,.36,1)}
+@keyframes sInR{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:translateX(0)}}
+@keyframes sInL{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:translateX(0)}}
 
-/* BOTTOM NAV */
-.course-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(12,21,16,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:12px 20px;display:flex;justify-content:space-between;align-items:center}
-.btn-back{background:none;border:none;color:var(--muted);font-size:.88rem;font-weight:600;cursor:pointer;padding:10px 4px;font-family:inherit;transition:color .18s}
-.btn-back:hover{color:var(--text)}
-.nav-ctr{font-size:.72rem;color:rgba(238,244,240,.25);font-weight:500}
-.btn-next{background:linear-gradient(135deg,var(--sage),var(--sage-mid));color:#fff;font-size:.92rem;font-weight:700;padding:11px 28px;border:none;border-radius:100px;cursor:pointer;transition:all .18s;font-family:inherit;box-shadow:0 0 20px rgba(45,122,94,.35)}
-.btn-next:hover{transform:translateY(-1px);box-shadow:0 0 32px rgba(45,122,94,.55)}
+/* BOTTOM NAV — Quizlet style */
+.course-nav{flex-shrink:0;position:relative;z-index:100;background:rgba(12,21,16,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:14px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.btn-arrow{width:50px;height:50px;border-radius:50%;background:rgba(45,122,94,.12);border:1.5px solid var(--border-hi);color:var(--text);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;font-family:inherit;flex-shrink:0}
+.btn-arrow:hover{background:rgba(45,122,94,.28);border-color:rgba(126,200,154,.5)}
+.btn-arrow:disabled{opacity:.18;pointer-events:none}
+.nav-ctr{font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-.3px;text-align:center;min-width:72px}
+.nav-ctr .nav-total{font-weight:400;color:var(--muted)}
+.btn-begin{background:linear-gradient(135deg,var(--sage),var(--sage-mid));color:#fff;font-size:.9rem;font-weight:700;padding:13px 28px;border:none;border-radius:100px;cursor:pointer;transition:all .18s;font-family:inherit;box-shadow:0 0 20px rgba(45,122,94,.35);white-space:nowrap}
+.btn-begin:hover{transform:translateY(-1px);box-shadow:0 0 32px rgba(45,122,94,.55)}
 
 /* TYPOGRAPHY */
 .screen-tag{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-light);margin-bottom:10px}
@@ -447,13 +454,15 @@ export default async function handler(req) {
   </div>
 
   <div class="course-main">
-    ${screensHtml}
+    <div class="card-wrap">
+      ${screensHtml}
+    </div>
   </div>
 
   <div class="course-nav">
-    <button class="btn-back" id="btn-back" onclick="back()">← Back</button>
+    <button class="btn-arrow" id="btn-back" onclick="back()" aria-label="Previous">&#8592;</button>
     <span class="nav-ctr" id="nav-ctr"></span>
-    <button class="btn-next" id="btn-next" onclick="next()">Begin Course</button>
+    <button class="btn-arrow" id="btn-next" onclick="next()" aria-label="Next">&#8594;</button>
   </div>
 
   <script>
@@ -463,34 +472,43 @@ export default async function handler(req) {
     const CL = ${checklistLen};
     const KEY = 'course_' + SLUG + '_screen';
     let cur = Math.min(parseInt(localStorage.getItem(KEY) || '0'), TOTAL - 1);
+    let dir = 1;
 
     function goTo(n) {
       if (n < 0 || n >= TOTAL) return;
-      document.getElementById('s' + cur).classList.remove('active');
+      dir = n > cur ? 1 : -1;
+      const prev = document.getElementById('s' + cur);
+      prev.classList.remove('active', 'anim-right', 'anim-left');
       cur = n;
-      document.getElementById('s' + cur).classList.add('active');
+      const next = document.getElementById('s' + cur);
+      next.classList.add('active', dir > 0 ? 'anim-right' : 'anim-left');
+      next.addEventListener('animationend', () => next.classList.remove('anim-right', 'anim-left'), { once: true });
       localStorage.setItem(KEY, cur);
       render();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.querySelector('.course-main').scrollTo({ top: 0, behavior: 'instant' });
     }
     function next() { goTo(cur + 1); }
     function back() { goTo(cur - 1); }
 
     function jumpToModule(m) { if (MS[m] !== undefined) goTo(MS[m]); }
 
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') next();
+      else if (e.key === 'ArrowLeft') back();
+    });
+
     function render() {
       document.getElementById('pf').style.width = (cur / (TOTAL - 1) * 100) + '%';
-      document.getElementById('nav-ctr').textContent = (cur + 1) + ' / ' + TOTAL;
-      document.getElementById('btn-back').style.visibility = cur > 0 ? 'visible' : 'hidden';
-      const nb = document.getElementById('btn-next');
-      if (cur === TOTAL - 1) { nb.style.display = 'none'; }
-      else { nb.style.display = ''; nb.textContent = cur === 0 ? 'Begin Course' : 'Next →'; }
+      const ctr = document.getElementById('nav-ctr');
+      ctr.innerHTML = (cur + 1) + '<span class="nav-total"> / ' + TOTAL + '</span>';
+      document.getElementById('btn-back').disabled = cur === 0;
+      document.getElementById('btn-next').disabled = cur === TOTAL - 1;
       // mark completed modules on map
       Object.entries(MS).forEach(([m, start]) => {
         const card = document.getElementById('mcard-' + m);
         if (!card) return;
-        const next = Object.values(MS).find(s => s > start) || TOTAL;
-        card.classList.toggle('done', cur >= next);
+        const nxt = Object.values(MS).find(s => s > start) || TOTAL;
+        card.classList.toggle('done', cur >= nxt);
       });
     }
 
