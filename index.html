@@ -79,6 +79,21 @@
     }
     .nav-cta:hover { background: rgba(255,255,255,0.14); }
 
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .fade-up { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+    .fade-up-2 { animation: fadeUp 0.7s 0.12s cubic-bezier(0.22,1,0.36,1) both; }
+    .fade-up-3 { animation: fadeUp 0.7s 0.24s cubic-bezier(0.22,1,0.36,1) both; }
+    .fade-up-4 { animation: fadeUp 0.7s 0.36s cubic-bezier(0.22,1,0.36,1) both; }
+    .fade-in   { animation: fadeIn 0.6s 0.1s both; }
+
     .hero {
       position: relative;
       z-index: 2;
@@ -209,6 +224,17 @@
     .cta-btn-light:hover { background: #fff; transform: translateY(-2px); }
 
     footer { position: relative; z-index: 2; text-align: center; padding: 32px 24px; font-size: 0.8rem; color: rgba(238,244,240,0.22); }
+
+    /* SCROLL-IN OBSERVER ANIMATIONS */
+    @keyframes scrollIn {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal { opacity: 0; }
+    .reveal.visible { animation: scrollIn 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+    .reveal.visible:nth-child(2) { animation-delay: 0.08s; }
+    .reveal.visible:nth-child(3) { animation-delay: 0.16s; }
+    .reveal.visible:nth-child(4) { animation-delay: 0.24s; }
   </style>
 </head>
 <body>
@@ -216,15 +242,47 @@
 
   <nav>
     <div class="logo">Sage <span>Systems</span></div>
-    <a href="intake.html" class="nav-cta">Get Started →</a>
+    <a href="intake.html" class="nav-cta">Free Starter Scan →</a>
   </nav>
 
   <section class="hero">
-    <div class="badge">✦ Custom AI Courses for Real Businesses</div>
-    <h1>A custom AI starter course<br/>for <em>your actual business.</em></h1>
-    <p class="subhead">Stop guessing how to use AI. I'll study your website, tools, and workflows — then build you a simple, click-through course with prompts you can actually copy and use.</p>
-    <a href="intake.html" class="cta-btn">Build My Course</a>
-    <p class="cta-note">Takes about 10 minutes. No payment needed to start.</p>
+    <div class="badge fade-up">✦ Free AI Scan + Custom Course for $49</div>
+    <h1 class="fade-up-2">Stop guessing.<br/><em>Get a custom AI plan</em><br/>for your business.</h1>
+    <p class="subhead fade-up-3">Answer 7 questions. Get your #1 AI opportunity on screen instantly — free. Ready to go deeper? Upgrade to a full custom course for $49.</p>
+    <a href="intake.html" class="cta-btn fade-up-4">Generate My Free Starter Scan →</a>
+    <p class="cta-note fade-in">Takes 3 minutes. 100% free. No card needed.</p>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="section" style="padding-top:60px;padding-bottom:60px;">
+    <div class="section-label">How It Works</div>
+    <h2>Three steps. Starts free.</h2>
+    <div class="ladder" style="margin-top:28px;">
+      <div class="ladder-item glass">
+        <span class="step">STEP 1</span>
+        <div>
+          <h3>Answer 7 questions about your business</h3>
+          <p>Takes 3 minutes. Tell me your industry, workflows, tools, and what's eating your time.</p>
+        </div>
+      </div>
+      <div class="ladder-item glass">
+        <span class="step">STEP 2 — FREE</span>
+        <div>
+          <h3>Get your AI Bottleneck Scan on screen</h3>
+          <p>Instantly see your #1 AI opportunity and 3 copy-paste prompts you can use today. Emailed to you too.</p>
+        </div>
+      </div>
+      <div class="ladder-item glass" style="border-color:rgba(126,200,154,0.28);">
+        <span class="step" style="background:linear-gradient(135deg,#2d7a5e,#5fd3a0);">STEP 3 — $49</span>
+        <div>
+          <h3>Upgrade to your full Custom AI Course</h3>
+          <p>I build a private, click-through course around your actual business — your brand, tools, workflows. Ready in 48 hours.</p>
+          <a href="https://buy.stripe.com/4gM7sNfo18wF3eVdPd8k801" class="vault-buy-btn" style="margin-top:4px;">Get My Course for $49 →</a>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.78rem;color:rgba(238,244,240,0.28);text-align:center;margin-top:20px;">Start with the free scan. Upgrade when you're ready — no pressure.</p>
   </section>
 
   <hr class="divider" />
@@ -315,37 +373,24 @@
 
   <hr class="divider" />
 
-  <section class="section">
-    <div class="section-label">The Offer</div>
-    <h2>Two options. Both stupid simple.</h2>
-    <div class="ladder">
-      <div class="ladder-item glass">
-        <span class="step">FREE</span>
-        <div>
-          <h3>AI Bottleneck Snapshot</h3>
-          <p>Fill out the intake. Get your #1 AI opportunity on screen instantly — and a full breakdown in your inbox. No payment, no catch.</p>
-        </div>
-      </div>
-      <div class="ladder-item glass" style="border-color: rgba(126,200,154,0.28); box-shadow: 0 0 30px rgba(45,122,94,0.14);">
-        <span class="step" style="background: linear-gradient(135deg, #2d7a5e, #5fd3a0);">$49 ONE-TIME</span>
-        <div>
-          <h3>Your Custom AI Course</h3>
-          <p>A private, click-through course built from your actual business. Your brand voice, your tools, your top 3 workflows. Copy-paste prompts, workflow map, privacy rules, and a first-step checklist. Done in 48 hours.</p>
-          <a href="https://buy.stripe.com/4gM7sNfo18wF3eVdPd8k801" class="vault-buy-btn">Get My Course for $49 →</a>
-        </div>
-      </div>
-    </div>
-    <p style="font-size:0.78rem;color:rgba(238,244,240,0.28);text-align:center;margin-top:20px;">Start with the free snapshot. Upgrade when you're ready.</p>
-  </section>
-
   <section class="final-cta">
     <div class="final-cta-inner">
-      <h2>Tell me about your business.<br/>I'll build your course.</h2>
-      <p>Free snapshot in minutes. Full custom course for $49. No subscriptions.</p>
-      <a href="intake.html" class="cta-btn-light">Get My Free Snapshot →</a>
+      <h2>Your free AI scan takes<br/>3 minutes to generate.</h2>
+      <p>Find your #1 bottleneck instantly — free. Full custom course for $49 when you're ready.</p>
+      <a href="intake.html" class="cta-btn-light">Generate My Free Starter Scan →</a>
     </div>
   </section>
 
   <footer>© 2026 Sage Systems by Kelty Sage · Built for real businesses.</footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.what-card, .who-list li, .diff-list li, .ladder-item').forEach(el => {
+      el.classList.add('reveal');
+      observer.observe(el);
+    });
+  </script>
 </body>
 </html>
