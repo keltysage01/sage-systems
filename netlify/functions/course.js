@@ -128,7 +128,8 @@ function buildScreens(course) {
     <div class="screen-tag">Module 1 · Lesson 1</div>
     <h2 class="screen-title">Picture this</h2>
     <div class="hook-card">Every time you open a new AI chat, AI has no idea who you are, what your business does, or what your rules are. You start from scratch every single time.<br/><br/>The Business Brain fixes that. One paste at the start of every session — and AI already knows ${biz}, your clients, your voice, and your limits.</div>
-    <div class="tool-pills"><span class="tool-pill">Claude</span><span class="tool-pill">ChatGPT</span><span class="tool-pill">Any AI chat</span></div>` });
+    <div class="tool-pills"><span class="tool-pill">Claude</span><span class="tool-pill">ChatGPT</span><span class="tool-pill">Any AI chat</span></div>
+    <div class="concept-note"><span class="d-pill">Delegation</span><strong>Should AI do this?</strong> The first skill in AI fluency is knowing which tasks to hand off. The Business Brain earns AI more delegation — by giving it the context to make good calls on your behalf.</div>` });
 
   screens.push({ id:"m1-prompt", module:1, html:`
     <div class="screen-tag">Module 1 · Lesson 2</div>
@@ -159,7 +160,8 @@ function buildScreens(course) {
     <div class="screen-tag">Module 2 · Lesson 1</div>
     <h2 class="screen-title">The idea</h2>
     <div class="hook-card">Generic prompts give generic results. These were written for ${biz} — your workflows, your tools, your clients.<br/><br/>Start with one. Copy it. Fill in the brackets. Paste it. See what comes back. Then improve from there. Do this before making it fancy.</div>
-    <div class="tool-pills"><span class="tool-pill">Claude</span><span class="tool-pill">ChatGPT</span></div>` });
+    <div class="tool-pills"><span class="tool-pill">Claude</span><span class="tool-pill">ChatGPT</span></div>
+    <div class="concept-note"><span class="d-pill">Description</span><strong>Am I communicating clearly?</strong> The quality of AI's output is directly tied to the quality of your prompt. These are pre-built with the three ingredients of clear description: what you want, how you want it done, and what a good result looks like.</div>` });
 
   (prompts).forEach((p, i) => {
     screens.push({ id:`m2-p${i}`, module:2, html:`
@@ -190,7 +192,8 @@ function buildScreens(course) {
   screens.push({ id:"m3-hook", module:3, html:`
     <div class="screen-tag">Module 3 · Lesson 1</div>
     <h2 class="screen-title">The idea</h2>
-    <div class="hook-card">Not everything in your business should be automated. Some things AI does well — drafting, summarizing, generating options. Some things need your judgment, your relationships, your expertise.<br/><br/>This map shows you what's what for ${biz}.</div>` });
+    <div class="hook-card">Not everything in your business should be automated. Some things AI does well — drafting, summarizing, generating options. Some things need your judgment, your relationships, your expertise.<br/><br/>This map shows you what's what for ${biz}.</div>
+    <div class="concept-note"><span class="d-pill">Discernment</span><strong>Is this output trustworthy?</strong> AI can hallucinate — state wrong information with full confidence. The workflow map shows where human review belongs. Always check AI outputs before they reach a client.</div>` });
 
   screens.push({ id:"m3-map", module:3, html:`
     <div class="screen-tag">Module 3 · Your Map</div>
@@ -232,7 +235,8 @@ function buildScreens(course) {
   screens.push({ id:"m4-hook", module:4, html:`
     <div class="screen-tag">Module 4 · Lesson 1</div>
     <h2 class="screen-title">The idea</h2>
-    <div class="hook-card">AI is powerful, but it's a third-party system. Anything you paste into a public AI tool could be used to improve that tool's models.<br/><br/>Before you automate anything, know what information should never leave your hands.</div>` });
+    <div class="hook-card">AI is powerful, but it's a third-party system. Anything you paste into a public AI tool could be used to improve that tool's models.<br/><br/>Before you automate anything, know what information should never leave your hands.</div>
+    <div class="concept-note"><span class="d-pill">Diligence</span><strong>Am I responsible for this?</strong> You're accountable for what AI produces on your behalf — even if AI wrote the first draft. That means verifying outputs, disclosing AI use when appropriate, and keeping client data private.</div>` });
 
   screens.push({ id:"m4-rules", module:4, html:`
     <div class="screen-tag">Module 4 · Your Rules</div>
@@ -291,6 +295,7 @@ function buildScreens(course) {
         <div class="grad-item"><span class="gi-check">✓</span>Privacy rules for ${biz}</div>
         <div class="grad-item"><span class="gi-check">✓</span>First-steps checklist to start this week</div>
       </div>
+      <div class="concept-note" style="text-align:left;margin-bottom:20px">You've now built the four pillars of AI fluency at ${biz}: <strong>Delegation</strong> (what to hand off), <strong>Description</strong> (how to communicate clearly), <strong>Discernment</strong> (what to trust), and <strong>Diligence</strong> (what you're accountable for).</div>
       <button class="btn-map" onclick="goTo(2)">Back to course map</button>
     </div>` });
 
@@ -442,6 +447,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .check-box.checked{background:var(--neon);border-color:var(--neon);box-shadow:0 0 10px rgba(0,240,87,.4)}
 .check-box.checked::after{content:"✓";color:var(--olive);font-size:.65rem;font-weight:900}
 
+/* CONCEPT NOTE */
+.concept-note{margin-top:16px;background:rgba(28,65,44,.07);border-left:3px solid var(--olive-mid);border-radius:0 10px 10px 0;padding:12px 16px;font-size:.82rem;line-height:1.55;color:var(--olive)}.concept-note strong{font-weight:800;color:var(--olive)}.concept-note .d-pill{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--olive);color:#fff;border-radius:100px;padding:2px 8px;margin-right:6px}
 /* WIN */
 .win-screen{padding:28px 0}
 .win-icon{width:64px;height:64px;background:rgba(0,240,87,.12);border:1.5px solid rgba(0,240,87,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:18px;box-shadow:0 0 24px rgba(0,240,87,.15)}
