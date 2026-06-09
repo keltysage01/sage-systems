@@ -453,7 +453,7 @@
 
       <!-- STEP 1: Welcome + Business confirm -->
       <div class="step active" data-step="1">
-        <div class="step-eyebrow">Payment confirmed ✓</div>
+        <div class="step-eyebrow">Payment confirmed</div>
         <h1>Let's build your course.</h1>
         <p class="step-desc">A few more details and I'll have everything I need. This takes about 5 minutes.</p>
 
@@ -494,7 +494,7 @@
           <label>Upload your logo</label>
           <div class="logo-drop" id="logo-drop">
             <input type="file" name="logo" accept="image/*" id="logo-input" />
-            <div class="drop-icon">🖼️</div>
+            <div class="drop-icon" style="font-size:1.4rem;font-weight:700;color:rgba(238,244,240,0.3);margin-bottom:10px;">+ Logo</div>
             <div class="drop-title">Drop your logo here or click to upload</div>
             <div class="drop-sub">PNG, JPG, SVG — up to 5MB</div>
             <img id="logo-preview" alt="Logo preview" />
@@ -588,7 +588,6 @@
           <label class="card-option">
             <input type="radio" name="learning_style" value="short_steps" />
             <div class="card-body">
-              <div class="card-icon">⚡</div>
               <div class="card-title">Short steps</div>
               <div class="card-desc">Quick wins. One action per lesson. Get results fast.</div>
             </div>
@@ -596,7 +595,6 @@
           <label class="card-option">
             <input type="radio" name="learning_style" value="deep_modules" />
             <div class="card-body">
-              <div class="card-icon">📖</div>
               <div class="card-title">Deep modules</div>
               <div class="card-desc">Context, reasoning, and examples before I act.</div>
             </div>
@@ -604,7 +602,6 @@
           <label class="card-option">
             <input type="radio" name="learning_style" value="copy_paste" />
             <div class="card-body">
-              <div class="card-icon">📋</div>
               <div class="card-title">Copy-paste first</div>
               <div class="card-desc">Just give me the prompts. I'll figure out the rest.</div>
             </div>
@@ -612,7 +609,6 @@
           <label class="card-option">
             <input type="radio" name="learning_style" value="visual_workflow" />
             <div class="card-body">
-              <div class="card-icon">🗺️</div>
               <div class="card-title">Visual workflow</div>
               <div class="card-desc">Show me the map first, then walk me through it.</div>
             </div>
@@ -626,7 +622,7 @@
 
         <div class="step-footer">
           <button type="button" class="btn-back" onclick="prevStep(4)">← Back</button>
-          <button type="submit" class="btn-submit">Submit & Build My Course ✦</button>
+          <button type="submit" class="btn-submit">Submit & Build My Course</button>
         </div>
       </div>
 
@@ -641,30 +637,30 @@
 
     <!-- CONFIRM -->
     <div id="confirm-state">
-      <div class="confirm-icon">🌿</div>
+      <div class="confirm-icon" style="font-size:1.1rem;font-weight:700;letter-spacing:0.06em;color:#7ec89a;background:rgba(45,122,94,0.12);border:1.5px solid rgba(126,200,154,0.25);width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">SS</div>
       <h2>You're all set.</h2>
-      <p>Your course is in the queue. I'll review your intake and have everything ready within 48 hours — sent directly to your inbox.</p>
+      <p>Your details are in. Kelty will review your intake, build your course, and send it directly to your inbox.</p>
 
       <div class="timeline">
         <div class="timeline-item">
           <div class="tl-dot">1</div>
           <div class="tl-content">
-            <strong>Review complete</strong>
-            <span>I review your intake and study your website</span>
+            <strong>Details received</strong>
+            <span>Your intake is in — no further action needed</span>
           </div>
         </div>
         <div class="timeline-item">
           <div class="tl-dot">2</div>
           <div class="tl-content">
             <strong>Course built</strong>
-            <span>Custom prompts, workflow map, and course modules created</span>
+            <span>Custom prompts, workflow map, and course modules created for your business</span>
           </div>
         </div>
         <div class="timeline-item">
           <div class="tl-dot">3</div>
           <div class="tl-content">
             <strong>Delivered to inbox</strong>
-            <span>Private course link sent to your email within 48 hours</span>
+            <span>Your private course link arrives via email</span>
           </div>
         </div>
       </div>
