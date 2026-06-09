@@ -8,8 +8,6 @@ function esc(s) {
 
 function buildScreens(course) {
   const { name, business_name, welcome, brain, prompts = [], map = {}, rules = [], checklist = [], logo } = course;
-  const logoSrc = logo ? logo : "/assets/logo.png";
-  const logoStyle = logo ? 'mix-blend-mode:multiply;object-fit:contain' : 'mix-blend-mode:multiply;object-fit:contain';
   const biz = esc(business_name);
   const owner = esc(name);
   const slug = (business_name || "course").toLowerCase().replace(/[^a-z0-9]+/g, "_");
@@ -38,7 +36,7 @@ function buildScreens(course) {
   // ── WELCOME ─────────────────────────────────────────────────────
   screens.push({ id: "welcome", module: 0, html: `
     <div class="welcome-shell">
-      <img class="welcome-logo" src="${logoSrc}" alt="${biz}" onerror="this.style.display='none'" style="${logoStyle}"/>
+      ${logo ? `<img class="welcome-logo" src="${logo}" alt="${biz}" onerror="this.style.display='none'" style="mix-blend-mode:multiply;object-fit:contain"/>` : `<div class="welcome-biz-name">${biz}</div>`}
       <div class="welcome-tag">Custom AI Course</div>
       <h1 class="welcome-title">AI for ${biz}</h1>
       <p class="welcome-for">Built for <strong>${owner}</strong> — specific to the real workflows of <strong>${biz}</strong>.</p>
@@ -285,7 +283,7 @@ function buildScreens(course) {
   // ── GRADUATION ───────────────────────────────────────────────────
   screens.push({ id:"grad", module:0, html:`
     <div class="grad-shell">
-      <img src="${logoSrc}" alt="${biz}" class="grad-logo" onerror="this.style.display='none'" style="${logoStyle}"/>
+      ${logo ? `<img src="${logo}" alt="${biz}" class="grad-logo" onerror="this.style.display='none'" style="mix-blend-mode:multiply;object-fit:contain"/>` : `<div class="grad-biz-name">${biz}</div>`}
       <div class="grad-headline">Course complete.</div>
       <p class="grad-sub">You now have a complete AI starter system for ${biz}.</p>
       <div class="grad-list">
@@ -318,10 +316,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 /* SHELL */
 .course-top{flex-shrink:0;position:relative;z-index:100;background:var(--glass);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid var(--glass-border);height:60px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 0 var(--glass-shine),inset 0 1px 0 var(--glass-shine)}
-.top-logo{height:36px;width:auto;mix-blend-mode:multiply;object-fit:contain}
-.top-logo-wm{font-size:1.05rem;font-weight:800;letter-spacing:-0.5px;color:var(--olive);line-height:1}.top-logo-wm span{color:var(--sage)}
+.top-logo{height:36px;width:auto;mix-blend-mode:multiply;object-fit:contain;max-width:160px}
+.top-biz-pill{font-size:.85rem;font-weight:800;letter-spacing:-.3px;color:var(--olive);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .top-right{display:flex;align-items:center;gap:10px}
-.top-biz{font-size:.7rem;font-weight:700;color:var(--sage);letter-spacing:.05em;text-transform:uppercase;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn-map-top{font-size:.72rem;font-weight:600;color:var(--olive);background:var(--glass);border:1px solid var(--glass-border);border-radius:100px;padding:5px 14px;cursor:pointer;transition:all .2s;font-family:inherit}
 .btn-map-top:hover{background:rgba(255,255,255,.5)}
 .progress-rail{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(122,156,120,.2)}
@@ -466,6 +463,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .gi-check{color:var(--neon);font-weight:700;font-size:.9rem;flex-shrink:0;filter:drop-shadow(0 0 4px var(--neon))}
 .btn-map{background:rgba(255,255,255,.5);border:1px solid var(--glass-border);color:var(--olive);font-size:.88rem;font-weight:700;padding:10px 24px;border-radius:100px;cursor:pointer;transition:all .2s;font-family:inherit;backdrop-filter:blur(10px)}
 .btn-map:hover{background:rgba(255,255,255,.7)}
+
+/* BIZ NAME FALLBACKS (when no logo uploaded) */
+.welcome-biz-name{font-size:clamp(1.6rem,6vw,2.2rem);font-weight:900;letter-spacing:-1px;color:var(--olive);margin-bottom:16px;line-height:1.1}
+.grad-biz-name{font-size:clamp(1.4rem,5vw,1.9rem);font-weight:900;letter-spacing:-0.8px;color:var(--olive);margin-bottom:20px;line-height:1.1}
+
+/* MOBILE */
+@media(max-width:520px){
+  .card-wrap{padding:16px 12px 16px}
+  .course-nav{padding:10px 16px 12px;gap:8px}
+  .btn-arrow{width:42px;height:42px;font-size:1rem}
+  .nav-ctr{min-width:48px;font-size:.85rem}
+  .screen-title{font-size:1.45rem}
+  .welcome-title{font-size:1.8rem}
+  .mmap-grid{grid-template-columns:1fr}
+  .wmap-grid{grid-template-columns:1fr;gap:10px}
+  .prompt-box{font-size:.8rem;padding:14px}
+  .copy-btn{width:100%;text-align:center}
+  .rules-list{padding:16px 18px}
+  .check-item{padding:12px 14px}
+  .hook-card{padding:18px 16px;font-size:.9rem}
+  .lesson-list{gap:8px}
+  .module-intro-shell{padding:20px 0}
+  .top-biz-pill{max-width:130px;font-size:.78rem}
+  .btn-map-top{padding:5px 10px;font-size:.68rem}
+  .grad-list{width:100%}
+  .grad-item{padding:10px 14px;font-size:.85rem}
+  .concept-note{font-size:.78rem;padding:10px 12px}
+}
 `;
 
 export default async function handler(req) {
@@ -500,9 +525,8 @@ export default async function handler(req) {
 <body>
   <div class="bg-mesh"></div>
   <div class="course-top">
-    ${course.logo ? `<img class="top-logo" src="${course.logo}" alt="${esc(course.business_name)}" onerror="this.style.display='none'"/>` : `<div class="top-logo-wm">Sage <span>Systems</span></div>`}
+    ${course.logo ? `<img class="top-logo" src="${course.logo}" alt="${esc(course.business_name)}" onerror="this.style.display='none'"/>` : `<div class="top-biz-pill">${esc(course.business_name)}</div>`}
     <div class="top-right">
-      <span class="top-biz">${esc(course.business_name)}</span>
       <button class="btn-map-top" onclick="goTo(2)">Dashboard</button>
     </div>
     <div class="progress-rail"><div class="progress-fill" id="pf"></div></div>
