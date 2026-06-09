@@ -164,11 +164,17 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     #loading-state p { color: rgba(238,244,240,0.45); font-size: 0.9rem; }
 
-    #result-state { display: none; padding: 40px 36px; }
+    #result-state { display: none; padding: 32px 36px 40px; }
     .result-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(95,211,160,0.1); border: 1px solid rgba(95,211,160,0.28); color: #7ec89a; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 14px; border-radius: 100px; margin-bottom: 20px; }
-    #result-state h2 { font-size: 1.2rem; font-weight: 800; color: #fff; margin-bottom: 12px; }
-    .snapshot-box { background: rgba(45,122,94,0.1); backdrop-filter: blur(16px); border: 1px solid rgba(126,200,154,0.2); border-radius: 16px; padding: 22px 24px; font-size: 0.9rem; color: rgba(238,244,240,0.8); line-height: 1.7; margin-bottom: 20px; white-space: pre-wrap; }
-    .email-note { font-size: 0.8rem; color: rgba(238,244,240,0.3); text-align: center; }
+    #result-state h2 { font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .snapshot-box { background: rgba(45,122,94,0.12); backdrop-filter: blur(16px); border: 1px solid rgba(126,200,154,0.22); border-radius: 16px; padding: 20px 22px; font-size: 0.9rem; color: rgba(238,244,240,0.85); line-height: 1.7; margin-bottom: 24px; }
+    .prompts-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(126,200,154,0.7); margin-bottom: 12px; }
+    .prompt-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(180,220,190,0.1); border-radius: 14px; padding: 16px 18px; margin-bottom: 10px; }
+    .prompt-card-label { font-size: 0.7rem; font-weight: 700; color: #7ec89a; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .prompt-card-text { font-size: 0.8rem; color: rgba(238,244,240,0.65); line-height: 1.6; font-family: ui-monospace, monospace; white-space: pre-wrap; }
+    .copy-btn { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; font-size: 0.74rem; font-weight: 700; color: rgba(126,200,154,0.8); background: none; border: 1px solid rgba(126,200,154,0.25); border-radius: 100px; padding: 4px 12px; cursor: pointer; transition: all 0.15s; }
+    .copy-btn:hover { background: rgba(126,200,154,0.1); }
+    .email-note { font-size: 0.78rem; color: rgba(238,244,240,0.3); text-align: center; margin-top: 4px; }
     .email-note span { color: rgba(126,200,154,0.65); }
 
     .step { display: none; }
@@ -436,6 +442,10 @@
         <div class="result-badge">✦ Your AI Bottleneck Snapshot</div>
         <h2 id="result-heading">Here's your #1 AI opportunity:</h2>
         <div class="snapshot-box" id="snapshot-content"></div>
+        <div id="prompts-section" style="display:none;margin-bottom:24px;">
+          <div class="prompts-label">3 prompts you can copy right now</div>
+          <div id="prompts-container"></div>
+        </div>
         <p class="email-note">Full breakdown sent to <span id="result-email"></span></p>
         <div style="margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.07);text-align:center;">
           <p style="font-size:0.82rem;color:rgba(238,244,240,0.45);margin-bottom:14px;">Want the full custom course — prompts, workflow map, and everything built for your business?</p>
@@ -543,6 +553,23 @@
         document.getElementById('result-state').style.display = 'block';
         document.getElementById('snapshot-content').textContent = json.teaser || 'Your snapshot is being prepared — check your email in a moment.';
         document.getElementById('result-email').textContent = data.email;
+
+        if (json.actionPrompts && json.actionPrompts.length) {
+          document.getElementById('prompts-section').style.display = 'block';
+          const container = document.getElementById('prompts-container');
+          container.innerHTML = '';
+          json.actionPrompts.forEach((p, i) => {
+            const card = document.createElement('div');
+            card.className = 'prompt-card';
+            card.innerHTML = `
+              <div class="prompt-card-label">${p.label}</div>
+              <div class="prompt-card-text">${p.prompt}</div>
+              <button class="copy-btn" onclick="copyPrompt(this, ${i})">Copy prompt</button>
+            `;
+            container.appendChild(card);
+          });
+          window._prompts = json.actionPrompts;
+        }
       } catch (err) {
         document.getElementById('loading-state').style.display = 'none';
         document.getElementById('result-state').style.display = 'block';
@@ -550,6 +577,12 @@
         document.getElementById('result-email').textContent = data.email;
       }
     });
+    function copyPrompt(btn, i) {
+      navigator.clipboard.writeText(window._prompts[i].prompt).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy prompt', 2000);
+      });
+    }
   </script>
 </body>
 </html>

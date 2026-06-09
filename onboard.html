@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build My Course — Sage Systems</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f7f7f5;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: #fff;
+      border-bottom: 1px solid #ebebeb;
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo { font-weight: 800; font-size: 1rem; color: #1a1a1a; letter-spacing: -0.3px; }
+    .logo span { color: #2d7a5e; }
+    .nav-step {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #999;
+      letter-spacing: 0.04em;
+    }
+
+    /* PROGRESS */
+    .progress-track {
+      height: 3px;
+      background: #ebebeb;
+      position: sticky;
+      top: 57px;
+      z-index: 9;
+    }
+    .progress-fill {
+      height: 3px;
+      background: #2d7a5e;
+      transition: width 0.4s ease;
+    }
+
+    /* PAGE */
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* STEP */
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .step-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #2d7a5e;
+      margin-bottom: 10px;
+    }
+    .step h1 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      color: #111;
+    }
+    .step-desc {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    /* CARDS GRID */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 500px) { .cards-grid { grid-template-columns: 1fr; } }
+
+    .card-option { cursor: pointer; }
+    .card-option input { display: none; }
+    .card-body {
+      padding: 18px 20px;
+      background: #fff;
+      border: 1.5px solid #ebebeb;
+      border-radius: 14px;
+      transition: all 0.18s;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .card-option:hover .card-body { border-color: #b8dac8; background: #fafefa; }
+    .card-option input:checked + .card-body {
+      border-color: #2d7a5e;
+      background: #f0faf4;
+      box-shadow: 0 0 0 3px rgba(45,122,94,0.08);
+    }
+    .card-icon { font-size: 1.4rem; margin-bottom: 4px; }
+    .card-title { font-size: 0.88rem; font-weight: 700; color: #111; }
+    .card-desc { font-size: 0.78rem; color: #888; line-height: 1.4; }
+
+    /* FIELDS */
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 8px;
+      letter-spacing: 0.01em;
+    }
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="url"],
+    .field textarea {
+      width: 100%;
+      background: #fff;
+      border: 1.5px solid #ebebeb;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 0.92rem;
+      color: #111;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+    .field input:focus,
+    .field textarea:focus {
+      border-color: #2d7a5e;
+      box-shadow: 0 0 0 3px rgba(45,122,94,0.1);
+    }
+    .field input::placeholder,
+    .field textarea::placeholder { color: #bbb; }
+    .field textarea { min-height: 100px; resize: vertical; }
+
+    /* LOGO UPLOAD */
+    .logo-drop {
+      border: 2px dashed #ddd;
+      border-radius: 14px;
+      padding: 32px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #fff;
+      position: relative;
+    }
+    .logo-drop:hover, .logo-drop.drag-over { border-color: #2d7a5e; background: #f0faf4; }
+    .logo-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .logo-drop .drop-icon { font-size: 2rem; margin-bottom: 10px; }
+    .logo-drop .drop-title { font-size: 0.9rem; font-weight: 700; color: #333; margin-bottom: 4px; }
+    .logo-drop .drop-sub { font-size: 0.78rem; color: #999; }
+    #logo-preview {
+      display: none;
+      margin-top: 16px;
+      max-height: 80px;
+      max-width: 200px;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    /* COLOR SWATCHES */
+    .color-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+    .color-swatch { cursor: pointer; }
+    .color-swatch input { display: none; }
+    .swatch-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .color-swatch input:checked + .swatch-dot {
+      border-color: #111;
+      transform: scale(1.1);
+    }
+    .color-swatch input:checked + .swatch-dot::after {
+      content: "✓";
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+
+    /* TONE CHIPS */
+    .chip-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .chip-opt { cursor: pointer; }
+    .chip-opt input { display: none; }
+    .chip-opt span {
+      display: inline-block;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #555;
+      background: #fff;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 100px;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .chip-opt input:checked + span { background: #f0faf4; border-color: #2d7a5e; color: #2d7a5e; }
+    .chip-opt:hover span { border-color: #aaa; color: #333; }
+
+    /* DIVIDER */
+    .section-divider {
+      height: 1px;
+      background: #ebebeb;
+      margin: 32px 0;
+    }
+
+    /* FOOTER NAV */
+    .step-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid #ebebeb;
+    }
+    .btn-back {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #aaa;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 12px 0;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: #555; }
+    .btn-next {
+      background: #111;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 13px 32px;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: -0.2px;
+    }
+    .btn-next:hover { background: #2d7a5e; transform: translateY(-1px); }
+    .btn-submit {
+      background: #2d7a5e;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(45,122,94,0.25);
+    }
+    .btn-submit:hover { background: #245f4a; transform: translateY(-1px); }
+
+    /* LOADING */
+    #loading-state {
+      display: none;
+      text-align: center;
+      padding: 80px 24px;
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 2.5px solid #eee;
+      border-top-color: #2d7a5e;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading-state h2 { font-size: 1.2rem; font-weight: 800; color: #111; margin-bottom: 8px; }
+    #loading-state p { font-size: 0.9rem; color: #888; }
+
+    /* CONFIRM */
+    #confirm-state {
+      display: none;
+      text-align: center;
+      padding: 60px 24px;
+    }
+    .confirm-icon {
+      width: 72px;
+      height: 72px;
+      background: #f0faf4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 24px;
+    }
+    #confirm-state h2 { font-size: 1.6rem; font-weight: 800; color: #111; letter-spacing: -0.5px; margin-bottom: 12px; }
+    #confirm-state p { font-size: 0.95rem; color: #666; line-height: 1.6; max-width: 440px; margin: 0 auto 32px; }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      max-width: 400px;
+      margin: 32px auto 0;
+      text-align: left;
+    }
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding-bottom: 24px;
+      position: relative;
+    }
+    .timeline-item:not(:last-child)::before {
+      content: "";
+      position: absolute;
+      left: 15px;
+      top: 32px;
+      bottom: 0;
+      width: 1px;
+      background: #ebebeb;
+    }
+    .tl-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #f0faf4;
+      border: 1.5px solid #b8dac8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      color: #2d7a5e;
+      font-weight: 700;
+    }
+    .tl-content strong { display: block; font-size: 0.88rem; font-weight: 700; color: #111; margin-bottom: 2px; }
+    .tl-content span { font-size: 0.8rem; color: #888; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Sage <span>Systems</span></div>
+    <div class="nav-step" id="nav-step-label">Step 1 of 4</div>
+  </nav>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill" style="width:25%"></div>
+  </div>
+
+  <div class="page">
+    <form id="onboard-form" novalidate>
+
+      <!-- STEP 1: Welcome + Business confirm -->
+      <div class="step active" data-step="1">
+        <div class="step-eyebrow">Payment confirmed ✓</div>
+        <h1>Let's build your course.</h1>
+        <p class="step-desc">A few more details and I'll have everything I need. This takes about 5 minutes.</p>
+
+        <div class="field">
+          <label>Your name *</label>
+          <input type="text" name="name" placeholder="First name" />
+        </div>
+        <div class="field">
+          <label>Email address *</label>
+          <input type="email" name="email" placeholder="you@yourbusiness.com" />
+        </div>
+        <div class="field">
+          <label>Business name *</label>
+          <input type="text" name="business_name" placeholder="What's your business called?" />
+        </div>
+        <div class="field">
+          <label>Website <span style="font-weight:400;color:#bbb">(optional)</span></label>
+          <input type="url" name="website" placeholder="https://" />
+        </div>
+        <div class="field">
+          <label>What do you sell or offer? *</label>
+          <textarea name="offer" placeholder="e.g. 1:1 coaching for health practitioners who want to grow their practice online..."></textarea>
+        </div>
+
+        <div class="step-footer">
+          <span></span>
+          <button type="button" class="btn-next" onclick="nextStep(1)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Brand -->
+      <div class="step" data-step="2">
+        <div class="step-eyebrow">Brand Identity</div>
+        <h1>What does your brand look and feel like?</h1>
+        <p class="step-desc">This shapes the visual style and tone of your course.</p>
+
+        <div class="field">
+          <label>Upload your logo</label>
+          <div class="logo-drop" id="logo-drop">
+            <input type="file" name="logo" accept="image/*" id="logo-input" />
+            <div class="drop-icon">🖼️</div>
+            <div class="drop-title">Drop your logo here or click to upload</div>
+            <div class="drop-sub">PNG, JPG, SVG — up to 5MB</div>
+            <img id="logo-preview" alt="Logo preview" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Pick your primary brand color</label>
+          <div class="color-row">
+            <label class="color-swatch"><input type="radio" name="brand_color" value="#2d7a5e" /><div class="swatch-dot" style="background:#2d7a5e"></div></label>
+            <label class="color-swatch"><input type="radio" name="brand_color" value="#1a56db" /><div class="swatch-dot" style="background:#1a56db"></div></label>
+            <label class="color-swatch"><input type="radio" name="brand_color" value="#7c3aed" /><div class="swatch-dot" style="background:#7c3aed"></div></label>
+            <label class="color-swatch"><input type="radio" name="brand_color" value="#dc2626" /><div class="swatch-dot" style="background:#dc2626"></div></label>
+            <label class="color-swatch"><input type="radio" name="brand_color" value="#d97706" /><div class="swatch-dot" style="background:#d97706"></div></label>
+            <label class="color-swatch"><input type="radio" name="brand_color" value="#db2777" /><div class="swatch-dot" style="background:#db2777"></div></label>
+            <label class="color-swatch"><input type="radio" name="brand_color" value="#111111" /><div class="swatch-dot" style="background:#111111"></div></label>
+            <label class="color-swatch"><input type="radio" name="brand_color" value="#custom" /><div class="swatch-dot" style="background: conic-gradient(red,yellow,lime,cyan,blue,magenta,red)"></div></label>
+          </div>
+          <input type="text" name="brand_color_custom" placeholder="Or enter a hex code: #FF6B6B" style="margin-top:12px;background:#fff;border:1.5px solid #ebebeb;border-radius:12px;padding:10px 14px;font-size:0.85rem;width:100%;outline:none;font-family:inherit;" />
+        </div>
+
+        <div class="field">
+          <label>Brand tone</label>
+          <div class="chip-wrap">
+            <label class="chip-opt"><input type="checkbox" name="tone" value="Warm"><span>Warm</span></label>
+            <label class="chip-opt"><input type="checkbox" name="tone" value="Bold"><span>Bold</span></label>
+            <label class="chip-opt"><input type="checkbox" name="tone" value="Professional"><span>Professional</span></label>
+            <label class="chip-opt"><input type="checkbox" name="tone" value="Playful"><span>Playful</span></label>
+            <label class="chip-opt"><input type="checkbox" name="tone" value="Minimalist"><span>Minimalist</span></label>
+            <label class="chip-opt"><input type="checkbox" name="tone" value="Luxury"><span>Luxury</span></label>
+            <label class="chip-opt"><input type="checkbox" name="tone" value="Earthy"><span>Earthy</span></label>
+            <label class="chip-opt"><input type="checkbox" name="tone" value="High energy"><span>High energy</span></label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Tagline or one-sentence brand description</label>
+          <input type="text" name="tagline" placeholder="e.g. Systems that make you look like you have a team." />
+        </div>
+
+        <div class="step-footer">
+          <button type="button" class="btn-back" onclick="prevStep(2)">← Back</button>
+          <button type="button" class="btn-next" onclick="nextStep(2)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Audience + Workflows -->
+      <div class="step" data-step="3">
+        <div class="step-eyebrow">Your People & Work</div>
+        <h1>Who do you serve and what do you want to fix first?</h1>
+        <p class="step-desc">This tells me exactly where to focus your prompts and course modules.</p>
+
+        <div class="field">
+          <label>Describe your ideal client *</label>
+          <textarea name="ideal_client" placeholder="e.g. Female health coaches, 30-45, running 1:1 practices online, struggling with content creation and client follow-up..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>What's the #1 task you want AI to handle first?</label>
+          <textarea name="priority_task" placeholder="e.g. Writing weekly emails to my list — I spend 3 hours on this every week and it's always last minute..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Any tools you definitely want prompts built for?</label>
+          <input type="text" name="tools_needed" placeholder="e.g. Gmail, Canva, Notion, HubSpot, Mailchimp..." />
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="field">
+          <label>Anything AI should NEVER touch in your business?</label>
+          <textarea name="off_limits" placeholder="e.g. Never use AI to respond to a client complaint. Never put client health data into any AI tool..."></textarea>
+        </div>
+
+        <div class="step-footer">
+          <button type="button" class="btn-back" onclick="prevStep(3)">← Back</button>
+          <button type="button" class="btn-next" onclick="nextStep(3)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Course style -->
+      <div class="step" data-step="4">
+        <div class="step-eyebrow">Final Step</div>
+        <h1>How do you learn best?</h1>
+        <p class="step-desc">I'll shape the course format around how you actually work.</p>
+
+        <div class="cards-grid">
+          <label class="card-option">
+            <input type="radio" name="learning_style" value="short_steps" />
+            <div class="card-body">
+              <div class="card-icon">⚡</div>
+              <div class="card-title">Short steps</div>
+              <div class="card-desc">Quick wins. One action per lesson. Get results fast.</div>
+            </div>
+          </label>
+          <label class="card-option">
+            <input type="radio" name="learning_style" value="deep_modules" />
+            <div class="card-body">
+              <div class="card-icon">📖</div>
+              <div class="card-title">Deep modules</div>
+              <div class="card-desc">Context, reasoning, and examples before I act.</div>
+            </div>
+          </label>
+          <label class="card-option">
+            <input type="radio" name="learning_style" value="copy_paste" />
+            <div class="card-body">
+              <div class="card-icon">📋</div>
+              <div class="card-title">Copy-paste first</div>
+              <div class="card-desc">Just give me the prompts. I'll figure out the rest.</div>
+            </div>
+          </label>
+          <label class="card-option">
+            <input type="radio" name="learning_style" value="visual_workflow" />
+            <div class="card-body">
+              <div class="card-icon">🗺️</div>
+              <div class="card-title">Visual workflow</div>
+              <div class="card-desc">Show me the map first, then walk me through it.</div>
+            </div>
+          </label>
+        </div>
+
+        <div class="field">
+          <label>Anything else I should know before building your course?</label>
+          <textarea name="extra_notes" placeholder="Other tools, past AI attempts, specific frustrations, goals for the next 90 days..."></textarea>
+        </div>
+
+        <div class="step-footer">
+          <button type="button" class="btn-back" onclick="prevStep(4)">← Back</button>
+          <button type="submit" class="btn-submit">Submit & Build My Course ✦</button>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- LOADING -->
+    <div id="loading-state">
+      <div class="spinner"></div>
+      <h2>Sending your details...</h2>
+      <p>Just a moment while we lock everything in.</p>
+    </div>
+
+    <!-- CONFIRM -->
+    <div id="confirm-state">
+      <div class="confirm-icon">🌿</div>
+      <h2>You're all set.</h2>
+      <p>Your course is in the queue. I'll review your intake and have everything ready within 48 hours — sent directly to your inbox.</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="tl-dot">1</div>
+          <div class="tl-content">
+            <strong>Review complete</strong>
+            <span>I review your intake and study your website</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-dot">2</div>
+          <div class="tl-content">
+            <strong>Course built</strong>
+            <span>Custom prompts, workflow map, and course modules created</span>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-dot">3</div>
+          <div class="tl-content">
+            <strong>Delivered to inbox</strong>
+            <span>Private course link sent to your email within 48 hours</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const totalSteps = 4;
+    let currentStep = 1;
+
+    function updateProgress(step) {
+      document.getElementById('progress-fill').style.width = (step / totalSteps * 100) + '%';
+      document.getElementById('nav-step-label').textContent = `Step ${step} of ${totalSteps}`;
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.querySelector(`.step[data-step="${n}"]`).classList.add('active');
+      updateProgress(n);
+      currentStep = n;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextStep(current) {
+      if (current < totalSteps) showStep(current + 1);
+    }
+    function prevStep(current) {
+      if (current > 1) showStep(current - 1);
+    }
+
+    // Logo preview
+    document.getElementById('logo-input').addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const preview = document.getElementById('logo-preview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        document.querySelector('.drop-title').textContent = file.name;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    const drop = document.getElementById('logo-drop');
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag-over'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
+    drop.addEventListener('drop', e => {
+      e.preventDefault();
+      drop.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        document.getElementById('logo-input').files = e.dataTransfer.files;
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const preview = document.getElementById('logo-preview');
+          preview.src = ev.target.result;
+          preview.style.display = 'block';
+          document.querySelector('.drop-title').textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Submit
+    document.getElementById('onboard-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const q = name => form.querySelector(`[name="${name}"]`);
+
+      const data = {
+        name: q('name').value.trim(),
+        email: q('email').value.trim(),
+        business_name: q('business_name').value.trim(),
+        website: q('website').value.trim(),
+        offer: q('offer').value.trim(),
+        brand_color: q('brand_color_custom').value.trim() || (form.querySelector('[name="brand_color"]:checked')?.value || ''),
+        tone: [...form.querySelectorAll('[name="tone"]:checked')].map(c => c.value),
+        tagline: q('tagline').value.trim(),
+        ideal_client: q('ideal_client').value.trim(),
+        priority_task: q('priority_task').value.trim(),
+        tools_needed: q('tools_needed').value.trim(),
+        off_limits: q('off_limits').value.trim(),
+        learning_style: form.querySelector('[name="learning_style"]:checked')?.value || '',
+        extra_notes: q('extra_notes').value.trim(),
+      };
+
+      form.style.display = 'none';
+      document.getElementById('loading-state').style.display = 'block';
+
+      try {
+        await fetch('/api/onboard', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+      } catch (err) { /* non-fatal */ }
+
+      document.getElementById('loading-state').style.display = 'none';
+      document.getElementById('confirm-state').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

@@ -19,9 +19,7 @@ async function callClaude(prompt, maxTokens) {
 }
 
 export default async function handler(req) {
-  if (req.method !== "POST") {
-    return new Response("Method not allowed", { status: 405 });
-  }
+  if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
 
   const body = await req.json();
   const {
@@ -39,32 +37,60 @@ Tools they use: ${[...tools, other_tools].filter(Boolean).join(", ") || "not spe
 Biggest time sinks: ${time_sinks}
 Things they dread: ${dreaded_tasks || "not specified"}
 Top workflows to improve: ${workflows.join(", ") || "not specified"}
-Sensitive data / privacy rules: ${[...sensitive_data, privacy_notes].filter(Boolean).join(", ") || "none specified"}
+Sensitive data: ${[...sensitive_data, privacy_notes].filter(Boolean).join(", ") || "none"}
 AI comfort level: ${comfort}
   `.trim();
 
-  const teaserPrompt = `You are an AI business consultant. Based on this business profile, identify their single biggest AI opportunity in 3-4 sentences. Be specific to their business. Start directly with the insight — no preamble.
+  const teaserPrompt = `You are an AI business consultant. Based on this business profile, write a sharp, specific 2-3 sentence insight about their single biggest AI opportunity. Be direct and specific to their business. No preamble. Start with the insight.
 
 ${context}`;
 
-  const emailPrompt = `You are an AI business consultant writing a personalized email to ${name} at ${business_name}.
+  const promptsPrompt = `You are an AI business consultant. Based on this business profile, create exactly 3 copy-paste prompts they can use TODAY in Claude or ChatGPT.
 
-Based on their intake form, write a warm, specific, actionable email that:
-1. Names their #1 AI bottleneck (2-3 sentences)
-2. Gives them one concrete prompt they can copy and use TODAY for their top workflow
-3. Explains what their custom $49 AI course would include (3-4 bullet points specific to their business)
-4. Ends with a soft CTA to get their full course
+Each prompt should:
+- Target one of their top workflows
+- Be specific to their business type
+- Include [bracket fields] they fill in
+- Be immediately useful
 
-Keep it under 300 words. Conversational, not corporate. Sign off as "Kelty at Sage Systems".
+Return ONLY a JSON array of 3 objects with this exact format:
+[
+  {"label": "Short workflow name (3-5 words)", "prompt": "The full copy-paste prompt with [bracket fields]"},
+  {"label": "...", "prompt": "..."},
+  {"label": "...", "prompt": "..."}
+]
 
 Business profile:
 ${context}`;
 
+  const emailPrompt = `You are an AI business consultant writing a personalized email to ${name} at ${business_name}.
+
+Write a warm, specific email that:
+1. Names their #1 AI bottleneck (2 sentences)
+2. Gives one concrete action to take this week
+3. Explains what their $49 custom course includes (3 bullet points specific to their business)
+4. Ends with a soft CTA
+
+Under 250 words. Sign off as "Kelty at Sage Systems".
+
+${context}`;
+
   try {
-    const [teaser, emailBody] = await Promise.all([
-      callClaude(teaserPrompt, 300),
-      callClaude(emailPrompt, 1000),
+    const [teaser, promptsRaw, emailBody] = await Promise.all([
+      callClaude(teaserPrompt, 200),
+      callClaude(promptsPrompt, 800),
+      callClaude(emailPrompt, 800),
     ]);
+
+    let actionPrompts = [];
+    try {
+      actionPrompts = JSON.parse(promptsRaw);
+    } catch (e) {
+      const match = promptsRaw.match(/\[[\s\S]*\]/);
+      if (match) {
+        try { actionPrompts = JSON.parse(match[0]); } catch (e2) {}
+      }
+    }
 
     let emailSent = false;
     try {
@@ -79,7 +105,7 @@ ${context}`;
           to: email,
           subject: `Your AI Bottleneck Snapshot — ${business_name}`,
           html: `<div style="font-family:-apple-system,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;color:#1a1a1a;">
-            <p style="font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#2d7a5e;margin-bottom:24px;">Sage Systems</p>
+            <p style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#2d7a5e;margin-bottom:24px;">Sage Systems</p>
             ${emailBody.replace(/\n\n/g, '</p><p style="margin:0 0 16px;">').replace(/\n/g, '<br/>').replace(/^/, '<p style="margin:0 0 16px;">')}
             <hr style="border:none;border-top:1px solid #eee;margin:32px 0;" />
             <p style="font-size:12px;color:#999;">Sage Systems · <a href="${process.env.SITE_URL}" style="color:#2d7a5e;">sage-systems-ai.netlify.app</a></p>
@@ -87,11 +113,9 @@ ${context}`;
         }),
       });
       emailSent = emailRes.ok;
-    } catch (e) {
-      // email failure is non-fatal
-    }
+    } catch (e) {}
 
-    return new Response(JSON.stringify({ teaser, emailSent }), {
+    return new Response(JSON.stringify({ teaser, actionPrompts, emailSent }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
