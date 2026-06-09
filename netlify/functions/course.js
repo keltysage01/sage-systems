@@ -444,6 +444,81 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .check-box.checked{background:var(--neon);border-color:var(--neon);box-shadow:0 0 10px rgba(0,240,87,.4)}
 .check-box.checked::after{content:"✓";color:var(--olive);font-size:.65rem;font-weight:900}
 
+/* MODE BAR */
+.mode-bar{flex-shrink:0;position:relative;z-index:50;background:rgba(255,255,255,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);padding:8px 16px;display:none;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;align-items:center}
+.mode-bar::-webkit-scrollbar{display:none}
+.mode-btn{flex-shrink:0;padding:7px 16px;border-radius:100px;font-size:.78rem;font-weight:700;border:1px solid transparent;background:transparent;color:var(--sage);cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.mode-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.mode-btn.active{background:var(--olive);color:#fff;border-color:var(--olive);box-shadow:0 2px 8px rgba(28,65,44,.2)}
+/* INTERACTIVE PANELS */
+.imode-panel{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;z-index:2}
+.imode-inner{max-width:740px;margin:0 auto;padding:20px 16px 80px}
+.no-study{text-align:center;color:var(--sage);padding:40px 0;font-size:.9rem}
+/* FLASHCARDS */
+.flash-header{text-align:center;margin-bottom:18px}
+.flash-counter{font-size:.72rem;font-weight:700;color:var(--sage);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.flash-bar{height:3px;background:rgba(122,156,120,.2);border-radius:2px;max-width:200px;margin:0 auto;overflow:hidden}
+.flash-bar-fill{height:100%;background:var(--neon);border-radius:2px;transition:width .4s}
+.flash-scene{perspective:1200px;margin:0 auto 14px;max-width:480px;height:210px;cursor:pointer}
+.flash-3d{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.flash-3d.flipped{transform:rotateY(180deg)}
+.flash-face{position:absolute;inset:0;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);box-shadow:0 8px 32px rgba(28,65,44,.1),inset 0 1px 0 rgba(255,255,255,.8);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flash-face-lbl{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
+.flash-face-text{font-size:1.1rem;font-weight:700;color:var(--olive);line-height:1.4}
+.flash-back-face{transform:rotateY(180deg)}
+.flash-back-face .flash-face-text{font-size:.92rem;font-weight:500;color:var(--olive-mid);line-height:1.6}
+.flash-hint{font-size:.7rem;color:var(--sage);text-align:center;margin-bottom:14px}
+.flash-btns{display:flex;gap:10px;max-width:480px;margin:0 auto}
+.flash-btns.hidden{visibility:hidden;pointer-events:none}
+.btn-still{flex:1;padding:12px;border-radius:14px;border:1px solid rgba(122,156,120,.3);background:rgba(255,255,255,.4);color:var(--sage);font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-know{flex:1;padding:12px;border-radius:14px;border:1px solid rgba(0,240,87,.4);background:rgba(0,240,87,.1);color:var(--olive-mid);font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-still:hover{background:rgba(255,255,255,.65)}
+.btn-know:hover{background:rgba(0,240,87,.2)}
+.flash-done{text-align:center;padding:32px 0}
+.flash-done-icon{font-size:2.8rem;margin-bottom:12px}
+.flash-done-title{font-size:1.3rem;font-weight:800;color:var(--olive);margin-bottom:8px}
+.flash-done-sub{font-size:.88rem;color:var(--sage);margin-bottom:20px;line-height:1.5}
+/* QUIZ */
+.quiz-qnum{font-size:.63rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
+.quiz-qtext{font-size:1rem;font-weight:700;color:var(--olive);line-height:1.55;margin-bottom:18px}
+.quiz-choices{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
+.quiz-choice{padding:13px 17px;border-radius:14px;border:1px solid var(--glass-border);background:rgba(255,255,255,.45);backdrop-filter:blur(10px);color:var(--olive);font-size:.88rem;font-weight:600;text-align:left;cursor:pointer;transition:all .2s;font-family:inherit;width:100%}
+.quiz-choice:hover:not(:disabled){background:rgba(255,255,255,.65);border-color:rgba(122,156,120,.5)}
+.quiz-choice.correct{background:rgba(0,240,87,.15);border-color:rgba(0,240,87,.5);color:var(--olive-mid)}
+.quiz-choice.wrong{background:rgba(220,50,50,.1);border-color:rgba(220,50,50,.4);color:#7a2020}
+.quiz-choice:disabled{cursor:default}
+.quiz-feed{padding:13px 16px;border-radius:14px;font-size:.83rem;line-height:1.5;display:none}
+.quiz-feed.show{display:block}
+.quiz-feed.correct{background:rgba(0,240,87,.1);border:1px solid rgba(0,240,87,.3);color:var(--olive-mid)}
+.quiz-feed.wrong{background:rgba(220,50,50,.07);border:1px solid rgba(220,50,50,.25);color:#7a2020}
+.btn-qnext{width:100%;padding:13px;border-radius:14px;background:var(--olive);color:#fff;font-size:.9rem;font-weight:700;border:none;cursor:pointer;font-family:inherit;transition:all .2s;display:none;margin-top:12px}
+.btn-qnext.show{display:block}
+.quiz-score{text-align:center;padding:32px 0}
+.quiz-score-num{font-size:3rem;font-weight:900;color:var(--olive);letter-spacing:-2px;margin-bottom:6px}
+.quiz-score-pct{font-size:.88rem;color:var(--sage);margin-bottom:16px}
+.quiz-score-msg{font-size:1rem;font-weight:700;color:var(--olive-mid);margin-bottom:24px}
+/* MATCH */
+.match-intro{text-align:center;margin-bottom:16px}
+.match-intro p{font-size:.8rem;color:var(--sage);line-height:1.4}
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.match-col-lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;text-align:center}
+.match-col-cards{display:flex;flex-direction:column;gap:8px}
+.match-card{padding:11px 12px;border-radius:12px;border:1px solid var(--glass-border);background:rgba(255,255,255,.45);backdrop-filter:blur(10px);color:var(--olive);font-size:.8rem;font-weight:600;line-height:1.4;cursor:pointer;transition:all .25s;text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center}
+.match-card:hover:not(.matched):not(.selected){background:rgba(255,255,255,.65)}
+.match-card.selected{background:rgba(28,65,44,.12);border-color:var(--olive);box-shadow:0 0 0 2px var(--olive)}
+.match-card.matched{background:rgba(0,240,87,.12);border-color:rgba(0,240,87,.5);color:var(--olive-mid);cursor:default;opacity:.8}
+.match-card.wrong{animation:mshake .4s}
+@keyframes mshake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.match-done{text-align:center;padding:32px 0}
+.match-done-icon{font-size:2.8rem;margin-bottom:12px}
+.match-done-title{font-size:1.3rem;font-weight:800;color:var(--olive);margin-bottom:8px}
+.match-done-sub{font-size:.88rem;color:var(--sage);margin-bottom:20px}
+/* BACK TO LEARN NAV */
+.btn-mode-back{padding:9px 20px;border-radius:100px;background:rgba(255,255,255,.5);border:1px solid var(--glass-border);color:var(--olive);font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;backdrop-filter:blur(10px)}
+.btn-mode-back:hover{background:rgba(255,255,255,.7)}
+/* RESTART BTN */
+.btn-restart{padding:10px 24px;border-radius:100px;background:rgba(255,255,255,.5);border:1px solid var(--glass-border);color:var(--olive);font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;display:inline-block}
+.btn-restart:hover{background:rgba(255,255,255,.7)}
 /* CONCEPT NOTE */
 .concept-note{margin-top:16px;background:rgba(28,65,44,.07);border-left:3px solid var(--olive-mid);border-radius:0 10px 10px 0;padding:12px 16px;font-size:.82rem;line-height:1.55;color:var(--olive)}.concept-note strong{font-weight:800;color:var(--olive)}.concept-note .d-pill{display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--olive);color:#fff;border-radius:100px;padding:2px 8px;margin-right:6px}
 /* WIN */
@@ -532,10 +607,32 @@ export default async function handler(req) {
     <div class="progress-rail"><div class="progress-fill" id="pf"></div></div>
   </div>
 
+  <div class="mode-bar" id="mode-bar">
+    <button class="mode-btn active" data-mode="learn" onclick="setMode('learn')">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      Learn
+    </button>
+    <button class="mode-btn" data-mode="flash" onclick="setMode('flash')">
+      <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M12 9v6M9 12h6"/></svg>
+      Flashcards
+    </button>
+    <button class="mode-btn" data-mode="quiz" onclick="setMode('quiz')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      Quiz
+    </button>
+    <button class="mode-btn" data-mode="match" onclick="setMode('match')">
+      <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+      Match
+    </button>
+  </div>
+
   <div class="course-main">
-    <div class="card-wrap">
+    <div class="card-wrap" id="learn-panel">
       ${screensHtml}
     </div>
+    <div id="flash-panel" class="imode-panel" style="display:none"></div>
+    <div id="quiz-panel" class="imode-panel" style="display:none"></div>
+    <div id="match-panel" class="imode-panel" style="display:none"></div>
   </div>
 
   <div class="course-nav">
@@ -543,9 +640,12 @@ export default async function handler(req) {
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       <span>Dashboard</span>
     </button>
-    <button class="btn-arrow" id="btn-back" onclick="back()" aria-label="Previous">&#8592;</button>
-    <span class="nav-ctr" id="nav-ctr"></span>
-    <button class="btn-arrow" id="btn-next" onclick="next()" aria-label="Next">&#8594;</button>
+    <span id="learn-nav" style="display:flex;align-items:center;gap:12px">
+      <button class="btn-arrow" id="btn-back" onclick="back()" aria-label="Previous">&#8592;</button>
+      <span class="nav-ctr" id="nav-ctr"></span>
+      <button class="btn-arrow" id="btn-next" onclick="next()" aria-label="Next">&#8594;</button>
+    </span>
+    <button class="btn-mode-back" id="btn-mode-back" onclick="setMode('learn')" style="display:none">← Lesson</button>
     <button class="nav-tab-btn" id="tab-profile" onclick="goTo(${total-1})" title="Completion">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       <span>Profile</span>
@@ -553,10 +653,13 @@ export default async function handler(req) {
   </div>
 
   <script>
+    // ── DATA ──────────────────────────────────────────────
     const TOTAL = ${total};
     const SLUG = ${JSON.stringify(slug)};
     const MS = ${JSON.stringify(moduleStarts)};
     const CL = ${checklistLen};
+    const STUDY = ${JSON.stringify(course.study || {flashcards:[],quiz:[],match:[]})};
+    const SMODS = ${JSON.stringify(screens.map(s => s.module))};
     const KEY = 'course_' + SLUG + '_screen';
     let cur = Math.min(parseInt(localStorage.getItem(KEY) || '0'), TOTAL - 1);
     let dir = 1;
@@ -585,6 +688,9 @@ export default async function handler(req) {
     });
 
     function render() {
+      const inMod = SMODS[cur] > 0;
+      document.getElementById('mode-bar').style.display = inMod ? 'flex' : 'none';
+      if (!inMod && curMode !== 'learn') setMode('learn');
       document.getElementById('pf').style.width = (cur / (TOTAL - 1) * 100) + '%';
       const ctr = document.getElementById('nav-ctr');
       ctr.innerHTML = (cur + 1) + '<span class="nav-total"> / ' + TOTAL + '</span>';
@@ -643,6 +749,166 @@ export default async function handler(req) {
 
     render();
     restoreChecks();
+
+    // ── HELPERS ────────────────────────────────────────────
+    function eh(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // ── MODE SWITCHING ─────────────────────────────────────
+    let curMode = 'learn';
+    function setMode(m) {
+      curMode = m;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+      document.getElementById('learn-panel').style.display = m === 'learn' ? '' : 'none';
+      ['flash','quiz','match'].forEach(p => document.getElementById(p+'-panel').style.display = m === p ? '' : 'none');
+      document.getElementById('learn-nav').style.display = m === 'learn' ? 'flex' : 'none';
+      document.getElementById('btn-mode-back').style.display = m !== 'learn' ? 'block' : 'none';
+      document.querySelector('.course-main').scrollTo({top:0,behavior:'instant'});
+      if (m === 'flash') initFlash();
+      if (m === 'quiz')  initQuiz();
+      if (m === 'match') initMatch();
+    }
+
+    // ── FLASHCARDS ─────────────────────────────────────────
+    let fIdx=0, fFlipped=false, fKnown=new Set(), fQueue=[];
+    function initFlash() {
+      fQueue = STUDY.flashcards.map((_,i)=>i).sort(()=>Math.random()-.5);
+      fIdx=0; fFlipped=false; fKnown.clear();
+      renderFlash();
+    }
+    function renderFlash() {
+      const p = document.getElementById('flash-panel');
+      const cards = STUDY.flashcards;
+      if (!cards.length) { p.innerHTML='<div class="imode-inner"><p class="no-study">No flashcards yet — generate a new course to get them.</p></div>'; return; }
+      if (fIdx >= fQueue.length) {
+        const k = fKnown.size, t = cards.length;
+        p.innerHTML = '<div class="imode-inner"><div class="flash-done">'
+          + '<div class="flash-done-icon">'+(k===t?'🎉':'💪')+'</div>'
+          + '<div class="flash-done-title">'+(k===t?'All '+t+' cards known!':k+' of '+t+' known')+'</div>'
+          + '<div class="flash-done-sub">'+(k<t?'A few more to go. Shuffle and keep going.':'Ready to quiz yourself?')+'</div>'
+          + '<button class="btn-restart" onclick="initFlash()">Shuffle &amp; restart</button>'
+          + (k===t?'<br/><br/><button class="mode-btn active" style="margin:0 auto" onclick="setMode(\'quiz\')">Try the quiz →</button>':'')
+          + '</div></div>';
+        return;
+      }
+      const card = cards[fQueue[fIdx]];
+      const pct = Math.round(fIdx/fQueue.length*100);
+      p.innerHTML = '<div class="imode-inner">'
+        + '<div class="flash-header"><div class="flash-counter">'+(fIdx+1)+' / '+fQueue.length+'</div>'
+        + '<div class="flash-bar"><div class="flash-bar-fill" style="width:'+pct+'%"></div></div></div>'
+        + '<div class="flash-scene" onclick="flipFlash()">'
+        + '<div class="flash-3d" id="fc3d" style="'+(fFlipped?'transform:rotateY(180deg)':'')+'"">'
+        + '<div class="flash-face"><div class="flash-face-lbl">Term</div><div class="flash-face-text">'+eh(card.term)+'</div></div>'
+        + '<div class="flash-face flash-back-face"><div class="flash-face-lbl">Definition</div><div class="flash-face-text">'+eh(card.def)+'</div></div>'
+        + '</div></div>'
+        + '<div class="flash-hint">'+(fFlipped?'Tap card to flip back':'Tap card to reveal definition')+'</div>'
+        + '<div class="flash-btns'+(fFlipped?'':' hidden')+'" id="fbtns">'
+        + '<button class="btn-still" onclick="markFlash(false)">Still learning</button>'
+        + '<button class="btn-know" onclick="markFlash(true)">Got it ✓</button>'
+        + '</div></div>';
+    }
+    function flipFlash() {
+      fFlipped = !fFlipped;
+      const c = document.getElementById('fc3d');
+      if (c) c.style.transform = fFlipped ? 'rotateY(180deg)' : '';
+      const h = document.querySelector('.flash-hint'); if (h) h.textContent = fFlipped ? 'Tap card to flip back' : 'Tap card to reveal definition';
+      const b = document.getElementById('fbtns'); if (b) b.classList.toggle('hidden', !fFlipped);
+    }
+    function markFlash(known) { if(known) fKnown.add(fQueue[fIdx]); fIdx++; fFlipped=false; renderFlash(); }
+
+    // ── QUIZ ───────────────────────────────────────────────
+    let qIdx=0, qAnswered=false, qScore=0, qOrd=[];
+    function initQuiz() {
+      qOrd = STUDY.quiz.map((_,i)=>i).sort(()=>Math.random()-.5);
+      qIdx=0; qAnswered=false; qScore=0;
+      renderQuiz();
+    }
+    function renderQuiz() {
+      const p = document.getElementById('quiz-panel');
+      const qs = STUDY.quiz;
+      if (!qs.length) { p.innerHTML='<div class="imode-inner"><p class="no-study">No quiz questions yet — generate a new course to get them.</p></div>'; return; }
+      if (qIdx >= qOrd.length) {
+        const pct = Math.round(qScore/qOrd.length*100);
+        const msg = pct>=80?'🎉 You nailed it!':pct>=60?'👍 Solid progress — keep reviewing.':'📖 Review the flashcards and try again.';
+        p.innerHTML = '<div class="imode-inner"><div class="quiz-score">'
+          + '<div class="quiz-score-num">'+qScore+'/'+qOrd.length+'</div>'
+          + '<div class="quiz-score-pct">'+pct+'% correct</div>'
+          + '<div class="quiz-score-msg">'+msg+'</div>'
+          + '<button class="btn-restart" onclick="initQuiz()">Retake quiz</button>'
+          + (pct>=80?'<br/><br/><button class="mode-btn active" style="margin:0 auto" onclick="setMode(\'match\')">Try matching →</button>':'')
+          + '</div></div>';
+        return;
+      }
+      const q = qs[qOrd[qIdx]];
+      p.innerHTML = '<div class="imode-inner">'
+        + '<div class="quiz-qnum">Question '+(qIdx+1)+' of '+qOrd.length+'</div>'
+        + '<div class="quiz-qtext">'+eh(q.q)+'</div>'
+        + '<div class="quiz-choices">'+q.choices.map((c,i)=>'<button class="quiz-choice" onclick="answerQ('+i+')">'+eh(c)+'</button>').join('')+'</div>'
+        + '<div class="quiz-feed" id="qfeed"></div>'
+        + '<button class="btn-qnext" id="qnext" onclick="nextQ()">Next question →</button>'
+        + '</div>';
+    }
+    function answerQ(i) {
+      if (qAnswered) return; qAnswered=true;
+      const q = STUDY.quiz[qOrd[qIdx]]; const ok = i===q.correct;
+      if (ok) qScore++;
+      document.querySelectorAll('.quiz-choice').forEach((b,j)=>{
+        b.disabled=true;
+        if(j===q.correct) b.classList.add('correct');
+        if(j===i && !ok) b.classList.add('wrong');
+      });
+      const f=document.getElementById('qfeed');
+      if(f){f.className='quiz-feed show '+(ok?'correct':'wrong');f.innerHTML=(ok?'✓ Correct. ':'✗ Not quite. ')+eh(q.explain);}
+      const n=document.getElementById('qnext'); if(n) n.classList.add('show');
+    }
+    function nextQ() { qIdx++; qAnswered=false; renderQuiz(); }
+
+    // ── MATCH ──────────────────────────────────────────────
+    let mSel=null, mDone=new Set(), mTerms=[], mDefs=[];
+    function initMatch() {
+      const pairs=STUDY.match;
+      if(!pairs||!pairs.length){document.getElementById('match-panel').innerHTML='<div class="imode-inner"><p class="no-study">No matching pairs yet — generate a new course to get them.</p></div>';return;}
+      mSel=null; mDone.clear();
+      mTerms=pairs.map((p,i)=>({txt:p.term,idx:i})).sort(()=>Math.random()-.5);
+      mDefs=pairs.map((p,i)=>({txt:p.def,idx:i})).sort(()=>Math.random()-.5);
+      renderMatch();
+    }
+    function renderMatch() {
+      const p=document.getElementById('match-panel');
+      if(mDone.size===STUDY.match.length){
+        p.innerHTML='<div class="imode-inner"><div class="match-done"><div class="match-done-icon">🎯</div><div class="match-done-title">All matched!</div><div class="match-done-sub">Perfect score on the matching game.</div><button class="btn-restart" onclick="initMatch()">Play again</button></div></div>';
+        return;
+      }
+      const tCols = mTerms.map((t,i)=>'<div class="match-card'+(mDone.has(t.idx)?' matched':(mSel&&mSel.side==='t'&&mSel.i===i?' selected':''))+'" onclick="selM(\'t\','+i+')" id="mt'+i+'">'+eh(t.txt)+'</div>').join('');
+      const dCols = mDefs.map((d,i)=>'<div class="match-card'+(mDone.has(d.idx)?' matched':'')+'" onclick="selM(\'d\','+i+')" id="md'+i+'">'+eh(d.txt)+'</div>').join('');
+      p.innerHTML='<div class="imode-inner">'
+        +'<div class="match-intro"><p>Tap a term on the left, then its matching definition on the right.</p><p>'+(mDone.size)+' / '+STUDY.match.length+' matched</p></div>'
+        +'<div class="match-cols"><div><div class="match-col-lbl">Terms</div><div class="match-col-cards">'+tCols+'</div></div>'
+        +'<div><div class="match-col-lbl">Definitions</div><div class="match-col-cards">'+dCols+'</div></div></div></div>';
+    }
+    function selM(side, i) {
+      const item = side==='t' ? mTerms[i] : mDefs[i];
+      if (mDone.has(item.idx)) return;
+      if (!mSel) {
+        if (side!=='t') return;
+        mSel={side,i};
+        document.getElementById('mt'+i)?.classList.add('selected');
+        return;
+      }
+      if (mSel.side==='t' && side==='d') {
+        const tIdx=mTerms[mSel.i].idx, dIdx=mDefs[i].idx;
+        if (tIdx===dIdx) {
+          mDone.add(tIdx); mSel=null; renderMatch();
+        } else {
+          const te=document.getElementById('mt'+mSel.i), de=document.getElementById('md'+i);
+          [te,de].forEach(el=>{if(el){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong','selected'),500);}});
+          mSel=null;
+        }
+      } else if (mSel.side==='t' && side==='t') {
+        document.getElementById('mt'+mSel.i)?.classList.remove('selected');
+        mSel={side,i};
+        document.getElementById('mt'+i)?.classList.add('selected');
+      }
+    }
   </script>
 </body>
 </html>`;

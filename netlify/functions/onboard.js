@@ -58,7 +58,7 @@ Learning style preference: ${learning_style || "not specified"}
 Extra notes: ${extra_notes || "none"}
   `.trim();
 
-  const [welcomeRaw, brainRaw, promptsRaw, mapRaw, rulesRaw, checklistRaw] = await Promise.all([
+  const [welcomeRaw, brainRaw, promptsRaw, mapRaw, rulesRaw, checklistRaw, studyRaw] = await Promise.all([
     callClaude(`Write a warm, specific 2-paragraph intro for ${name} at ${business_name}. First paragraph: their single biggest AI opportunity, stated directly. Second paragraph: what their custom course will cover, specific to them. No headers, no preamble. Signed "— Kelty, Sage Systems".\n\n${ctx}`, 320),
 
     callClaude(`Create a reusable "Business Brain" system prompt for ${name} at ${business_name} to paste at the start of every Claude or ChatGPT session. Include: who the business is, what they offer, who they serve, brand voice/tone, and any hard limits. Make it practical and ready to copy. Start with: "You are an AI assistant for..."\n\n${ctx}`, 420),
@@ -70,6 +70,8 @@ Extra notes: ${extra_notes || "none"}
     callClaude(`Write 5 privacy rules for ${name} at ${business_name} — specific things that should NEVER go into any AI tool, specific to their business type and clients.\n\nReturn ONLY valid JSON array of strings:\n["Rule 1","Rule 2"]\n\n${ctx}`, 300),
 
     callClaude(`Write a first-steps checklist for ${name} at ${business_name} — 8 concrete actions to take this week to start using AI. Each should be specific and actionable for their situation.\n\nReturn ONLY valid JSON array of strings (no "Step N:" prefix):\n["Action 1","Action 2"]\n\n${ctx}`, 450),
+
+    callClaude(`Create interactive study materials for ${name} at ${business_name} to reinforce their AI course.\n\n1. FLASHCARDS (10): Mix of AI vocabulary with plain-English definitions AND business-specific terms from their workflows. Make them memorable and practical.\n2. QUIZ (6 questions): Scenario-based multiple-choice questions testing real understanding of using AI at ${business_name}. Each has 4 choices, one correct answer (0-indexed), and a brief explanation.\n3. MATCH (6 pairs): Short terms (3-5 words) paired with brief definitions (6-12 words). For a tap-to-match game.\n\nReturn ONLY valid JSON:\n{"flashcards":[{"term":"Business Brain","def":"A reusable prompt that gives AI full context about your business — paste it at the start of every session."}],"quiz":[{"q":"You need to write a client proposal at ${business_name}. What do you do first?","choices":["Start typing in ChatGPT","Paste your Business Brain first","Use a generic template","Ask a colleague"],"correct":1,"explain":"Always paste your Business Brain first so AI has full context about your business, tone, and clients before generating anything."}],"match":[{"term":"Context window","def":"Amount of text AI holds in one session"}]}\n\n${ctx}`, 1400),
   ]);
 
   const welcome = welcomeRaw;
@@ -78,12 +80,13 @@ Extra notes: ${extra_notes || "none"}
   const map = parseJSON(mapRaw, { ai: [], human: [], improve: [] });
   const rules = parseJSON(rulesRaw, []);
   const checklist = parseJSON(checklistRaw, []);
+  const study = parseJSON(studyRaw, { flashcards: [], quiz: [], match: [] });
 
   const courseId = genId();
   const courseData = {
     id: courseId, name, email, business_name, brand_color,
     welcome, brain, prompts, map, rules, checklist,
-    logo: logo || null,
+    logo: logo || null, study,
   };
 
   const siteUrl = process.env.SITE_URL || "https://sage-systems-ai.netlify.app";
