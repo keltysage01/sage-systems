@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sage Systems — Custom AI Courses for Real Businesses</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0c1510;
+      color: #eef4f0;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(60,120,80,0.45) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 25%, rgba(80,190,140,0.2) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 55% at 50% 85%, rgba(120,180,100,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 8% 75%, rgba(180,210,140,0.1) 0%, transparent 50%),
+        radial-gradient(ellipse 35% 30% at 90% 80%, rgba(60,160,120,0.12) 0%, transparent 45%),
+        #0c1510;
+      animation: meshShift 14s ease-in-out infinite alternate;
+    }
+    @keyframes meshShift {
+      0%   { filter: hue-rotate(0deg) brightness(1); }
+      100% { filter: hue-rotate(12deg) brightness(1.08); }
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(180,220,190,0.1);
+      border-radius: 20px;
+    }
+    .glass-light {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(180,220,190,0.12);
+      border-radius: 16px;
+    }
+
+    nav {
+      position: relative;
+      z-index: 10;
+      padding: 22px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px; color: #fff; }
+    .logo span {
+      background: linear-gradient(135deg, #7ec89a, #b8e0a0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-cta {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(180,220,190,0.2);
+      color: #d4edd9;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover { background: rgba(255,255,255,0.14); }
+
+    .hero {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 80px 28px 100px;
+      text-align: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(126,200,154,0.12);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(126,200,154,0.3);
+      color: #a3d4b0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 3.6rem);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #7ec89a 0%, #b8e8a8 50%, #5fd3a0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subhead { font-size: 1.15rem; color: rgba(238,244,240,0.6); max-width: 520px; margin: 0 auto 48px; }
+
+    .cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #2d7a5e, #4aab7e);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 16px 40px;
+      border-radius: 100px;
+      text-decoration: none;
+      box-shadow: 0 0 40px rgba(45,122,94,0.5), 0 0 80px rgba(45,122,94,0.2);
+      transition: all 0.3s;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(45,122,94,0.65), 0 0 100px rgba(45,122,94,0.25); }
+    .cta-note { font-size: 0.82rem; color: rgba(238,244,240,0.35); margin-top: 14px; }
+
+    .section { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; padding: 80px 28px; }
+    .section-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7ec89a; margin-bottom: 14px; }
+    h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 20px; color: #fff; }
+    .body-text { font-size: 1rem; color: rgba(238,244,240,0.6); margin-bottom: 14px; }
+
+    .quote-block {
+      background: rgba(126,200,154,0.07);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(126,200,154,0.18);
+      border-left: 3px solid #7ec89a;
+      border-radius: 0 16px 16px 0;
+      padding: 24px 28px;
+      margin: 32px 0;
+    }
+    .quote-block p { font-size: 1rem; color: rgba(238,244,240,0.75); margin-bottom: 8px; line-height: 1.6; }
+    .quote-block p:last-child { margin-bottom: 0; }
+
+    .what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 36px; }
+    @media (max-width: 540px) { .what-grid { grid-template-columns: 1fr; } }
+    .what-card { padding: 22px; transition: transform 0.2s, border-color 0.2s; }
+    .what-card:hover { transform: translateY(-3px); border-color: rgba(126,200,154,0.3); }
+    .what-card .icon { font-size: 1.5rem; margin-bottom: 12px; }
+    .what-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .what-card p { font-size: 0.85rem; color: rgba(238,244,240,0.5); line-height: 1.5; }
+
+    .who-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 28px; }
+    @media (max-width: 540px) { .who-list { grid-template-columns: 1fr; } }
+    .who-list li { padding: 13px 16px; font-size: 0.9rem; color: rgba(238,244,240,0.8); display: flex; align-items: center; gap: 10px; }
+    .who-list li::before { content: "✓"; color: #7ec89a; font-weight: 700; flex-shrink: 0; }
+
+    .diff-list { list-style: none; margin-top: 28px; }
+    .diff-list li { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.95rem; color: rgba(238,244,240,0.65); display: flex; gap: 14px; align-items: flex-start; }
+    .diff-list li:last-child { border-bottom: none; }
+    .diff-list li .tag { font-size: 0.72rem; font-weight: 700; background: rgba(126,200,154,0.12); border: 1px solid rgba(126,200,154,0.28); color: #a3d4b0; padding: 3px 10px; border-radius: 100px; white-space: nowrap; align-self: flex-start; margin-top: 2px; }
+
+    .ladder { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; }
+    .ladder-item { padding: 24px 26px; display: flex; gap: 18px; align-items: flex-start; transition: border-color 0.2s, transform 0.2s; }
+    .ladder-item:hover { transform: translateX(4px); border-color: rgba(126,200,154,0.28); }
+    .ladder-item .step { background: linear-gradient(135deg, #2d7a5e, #4aab7e); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 100px; white-space: nowrap; letter-spacing: 0.05em; }
+    .ladder-item h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .ladder-item p { font-size: 0.85rem; color: rgba(238,244,240,0.55); margin-bottom: 14px; }
+    .vault-buy-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #2d7a5e, #5fd3a0);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 10px 22px;
+      border-radius: 100px;
+      text-decoration: none;
+      box-shadow: 0 0 20px rgba(45,122,94,0.4);
+      transition: all 0.2s;
+    }
+    .vault-buy-btn:hover { transform: translateY(-1px); box-shadow: 0 0 32px rgba(45,122,94,0.6); }
+
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); max-width: 760px; margin: 0 auto; position: relative; z-index: 2; }
+
+    .final-cta { position: relative; z-index: 2; text-align: center; padding: 100px 28px; }
+    .final-cta-inner {
+      max-width: 560px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(40px) saturate(200%);
+      border: 1px solid rgba(180,220,190,0.1);
+      border-radius: 28px;
+      padding: 60px 48px;
+      box-shadow: 0 0 80px rgba(45,122,94,0.18), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .final-cta h2 { color: #fff; margin-bottom: 16px; }
+    .final-cta p { color: rgba(238,244,240,0.55); font-size: 1rem; margin-bottom: 36px; }
+    .cta-btn-light { display: inline-block; background: rgba(255,255,255,0.92); color: #2d7a5e; font-size: 1rem; font-weight: 800; padding: 16px 40px; border-radius: 100px; text-decoration: none; transition: all 0.2s; }
+    .cta-btn-light:hover { background: #fff; transform: translateY(-2px); }
+
+    footer { position: relative; z-index: 2; text-align: center; padding: 32px 24px; font-size: 0.8rem; color: rgba(238,244,240,0.22); }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh"></div>
+
+  <nav>
+    <div class="logo">Sage <span>Systems</span></div>
+    <a href="intake.html" class="nav-cta">Get Started →</a>
+  </nav>
+
+  <section class="hero">
+    <div class="badge">✦ Custom AI Courses for Real Businesses</div>
+    <h1>A custom AI starter course<br/>for <em>your actual business.</em></h1>
+    <p class="subhead">Stop guessing how to use AI. I'll study your website, tools, and workflows — then build you a simple, click-through course with prompts you can actually copy and use.</p>
+    <a href="intake.html" class="cta-btn">Build My Course</a>
+    <p class="cta-note">Takes about 10 minutes. No payment needed to start.</p>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="section">
+    <div class="section-label">The Problem</div>
+    <h2>You don't need another generic AI course.</h2>
+    <p class="body-text">You need someone to look at your actual business and say: here's where AI helps first, here's what not to touch yet, and here are the prompts you can copy right now.</p>
+    <div class="quote-block">
+      <p>"Here is where AI can help first."</p>
+      <p>"Here is what not to touch yet."</p>
+      <p>"Here are the prompts you can copy."</p>
+      <p>"Here is how this fits your website, inbox, clients, and tools."</p>
+      <p>"Here is the lowest-stress way to start."</p>
+    </div>
+    <p class="body-text">Most business owners don't need more AI theory. They need a calm, practical first step — built around the way their business actually works.</p>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="section">
+    <div class="section-label">What You Receive</div>
+    <h2>Everything you need to start using AI inside your business.</h2>
+    <div class="what-grid">
+      <div class="what-card glass-light">
+        <div class="icon">🎓</div>
+        <h3>Custom Course Link</h3>
+        <p>A private, self-paced click-through course branded to your business.</p>
+      </div>
+      <div class="what-card glass-light">
+        <div class="icon">🧠</div>
+        <h3>Business Brain</h3>
+        <p>A reusable Claude briefing with your brand voice, services, tools, and privacy boundaries.</p>
+      </div>
+      <div class="what-card glass-light">
+        <div class="icon">📋</div>
+        <h3>Prompt Library</h3>
+        <p>Copy-paste prompts for your top 3 workflows — with bracket fields you fill in.</p>
+      </div>
+      <div class="what-card glass-light">
+        <div class="icon">🗺️</div>
+        <h3>Workflow Map</h3>
+        <p>What AI can draft, what stays human, and what to improve first.</p>
+      </div>
+      <div class="what-card glass-light">
+        <div class="icon">🔒</div>
+        <h3>Privacy Rules</h3>
+        <p>Clear guidance on what not to paste into AI — specific to your business type.</p>
+      </div>
+      <div class="what-card glass-light">
+        <div class="icon">✅</div>
+        <h3>First-Step Checklist</h3>
+        <p>The first 5–10 actions to take so you start with momentum, not overwhelm.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="section">
+    <div class="section-label">Who It's For</div>
+    <h2>Built for business owners who know AI could help — but don't know where to start.</h2>
+    <ul class="who-list">
+      <li class="glass-light">Solo service providers</li>
+      <li class="glass-light">Coaches &amp; consultants</li>
+      <li class="glass-light">Local businesses</li>
+      <li class="glass-light">Wellness studios</li>
+      <li class="glass-light">Agencies &amp; freelancers</li>
+      <li class="glass-light">Clinics &amp; practices</li>
+      <li class="glass-light">Creators &amp; educators</li>
+      <li class="glass-light">Small service teams</li>
+    </ul>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="section">
+    <div class="section-label">Why It's Different</div>
+    <h2>Built from your business, not a template.</h2>
+    <ul class="diff-list">
+      <li><span class="tag">Your site</span> I review your actual website and pull your real offer language.</li>
+      <li><span class="tag">Your brand</span> Your logo, colors, and voice — not generic stock design.</li>
+      <li><span class="tag">Your tools</span> Prompts built for the tools you already use, not new ones.</li>
+      <li><span class="tag">Your workflows</span> The 3 workflows that will save you the most time first.</li>
+      <li><span class="tag">Your limits</span> Clear rules for what AI should never touch in your business.</li>
+    </ul>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="section">
+    <div class="section-label">The Offer</div>
+    <h2>Two options. Both stupid simple.</h2>
+    <div class="ladder">
+      <div class="ladder-item glass">
+        <span class="step">FREE</span>
+        <div>
+          <h3>AI Bottleneck Snapshot</h3>
+          <p>Fill out the intake. Get your #1 AI opportunity on screen instantly — and a full breakdown in your inbox. No payment, no catch.</p>
+        </div>
+      </div>
+      <div class="ladder-item glass" style="border-color: rgba(126,200,154,0.28); box-shadow: 0 0 30px rgba(45,122,94,0.14);">
+        <span class="step" style="background: linear-gradient(135deg, #2d7a5e, #5fd3a0);">$49 ONE-TIME</span>
+        <div>
+          <h3>Your Custom AI Course</h3>
+          <p>A private, click-through course built from your actual business. Your brand voice, your tools, your top 3 workflows. Copy-paste prompts, workflow map, privacy rules, and a first-step checklist. Done in 48 hours.</p>
+          <a href="https://buy.stripe.com/4gM7sNfo18wF3eVdPd8k801" class="vault-buy-btn">Get My Course for $49 →</a>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.78rem;color:rgba(238,244,240,0.28);text-align:center;margin-top:20px;">Start with the free snapshot. Upgrade when you're ready.</p>
+  </section>
+
+  <section class="final-cta">
+    <div class="final-cta-inner">
+      <h2>Tell me about your business.<br/>I'll build your course.</h2>
+      <p>Free snapshot in minutes. Full custom course for $49. No subscriptions.</p>
+      <a href="intake.html" class="cta-btn-light">Get My Free Snapshot →</a>
+    </div>
+  </section>
+
+  <footer>© 2026 Sage Systems by Kelty Sage · Built for real businesses.</footer>
+</body>
+</html>
