@@ -314,6 +314,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 /* SHELL */
 .course-top{flex-shrink:0;position:relative;z-index:100;background:var(--glass);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid var(--glass-border);height:60px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 0 var(--glass-shine),inset 0 1px 0 var(--glass-shine)}
 .top-logo{height:36px;width:auto;mix-blend-mode:multiply;object-fit:contain}
+.top-logo-wm{font-size:1.05rem;font-weight:800;letter-spacing:-0.5px;color:var(--olive);line-height:1}.top-logo-wm span{color:var(--sage)}
 .top-right{display:flex;align-items:center;gap:10px}
 .top-biz{font-size:.7rem;font-weight:700;color:var(--sage);letter-spacing:.05em;text-transform:uppercase;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .btn-map-top{font-size:.72rem;font-weight:600;color:var(--olive);background:var(--glass);border:1px solid var(--glass-border);border-radius:100px;padding:5px 14px;cursor:pointer;transition:all .2s;font-family:inherit}
@@ -492,7 +493,7 @@ export default async function handler(req) {
 <body>
   <div class="bg-mesh"></div>
   <div class="course-top">
-    <img class="top-logo" src="${course.logo || '/assets/logo.png'}" alt="${esc(course.business_name)}" onerror="this.style.display='none'"/>
+    ${course.logo ? `<img class="top-logo" src="${course.logo}" alt="${esc(course.business_name)}" onerror="this.style.display='none'"/>` : `<div class="top-logo-wm">Sage <span>Systems</span></div>`}
     <div class="top-right">
       <span class="top-biz">${esc(course.business_name)}</span>
       <button class="btn-map-top" onclick="goTo(2)">Dashboard</button>
