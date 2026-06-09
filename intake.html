@@ -514,21 +514,22 @@
       if (!comfort) { document.getElementById('comfort-error').style.display = 'block'; return; }
 
       const form = e.target;
+      const f = name => form.querySelector(`[name="${name}"]`);
       const data = {
-        name: form.name.value.trim(),
-        email: form.email.value.trim(),
-        business_name: form.business_name.value.trim(),
-        website: form.website.value.trim(),
-        industry: form.industry.value,
+        name: f('name').value.trim(),
+        email: f('email').value.trim(),
+        business_name: f('business_name').value.trim(),
+        website: f('website').value.trim(),
+        industry: f('industry').value,
         brand_voice: [...form.querySelectorAll('[name="brand_voice"]:checked')].map(c => c.value),
-        tagline: form.tagline.value.trim(),
+        tagline: f('tagline').value.trim(),
         tools: [...form.querySelectorAll('[name="tools"]:checked')].map(c => c.value),
-        other_tools: form.other_tools.value.trim(),
-        time_sinks: form.time_sinks.value.trim(),
-        dreaded_tasks: form.dreaded_tasks.value.trim(),
+        other_tools: f('other_tools').value.trim(),
+        time_sinks: f('time_sinks').value.trim(),
+        dreaded_tasks: f('dreaded_tasks').value.trim(),
         workflows: [...form.querySelectorAll('[name="workflows"]:checked')].map(c => c.value),
         sensitive_data: [...form.querySelectorAll('[name="sensitive_data"]:checked')].map(c => c.value),
-        privacy_notes: form.privacy_notes.value.trim(),
+        privacy_notes: f('privacy_notes').value.trim(),
         comfort: comfort.value,
       };
 
