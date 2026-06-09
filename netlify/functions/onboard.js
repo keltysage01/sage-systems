@@ -105,15 +105,66 @@ Extra notes: ${extra_notes || "none"}
         from: process.env.FROM_EMAIL || "onboarding@resend.dev",
         to: email,
         subject: `Your Custom AI Course is Ready — ${business_name}`,
-        html: `<div style="font-family:-apple-system,sans-serif;max-width:560px;margin:0 auto;padding:40px 24px;color:#1a1a1a;">
-          <p style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#2d7a5e;margin-bottom:28px;">Sage Systems</p>
-          <h2 style="font-size:1.5rem;font-weight:800;letter-spacing:-0.5px;margin-bottom:20px;">Your course is ready, ${name}.</h2>
-          <p style="color:#555;line-height:1.7;margin-bottom:28px;">${welcome.replace(/\n\n/g, '</p><p style="color:#555;line-height:1.7;margin-bottom:16px;">').replace(/\n/g, '<br/>')}</p>
-          <a href="${courseUrl}" style="display:inline-block;background:#2d7a5e;color:#fff;font-size:1rem;font-weight:700;padding:15px 36px;border-radius:100px;text-decoration:none;letter-spacing:-0.2px;">Access Your Course</a>
-          <p style="font-size:12px;color:#aaa;margin-top:20px;">Bookmark this link — it's your permanent access to your custom AI course.</p>
-          <hr style="border:none;border-top:1px solid #eee;margin:36px 0;"/>
-          <p style="font-size:12px;color:#bbb;">Sage Systems · <a href="${siteUrl}" style="color:#2d7a5e;text-decoration:none;">sage-systems-ai.netlify.app</a></p>
-        </div>`,
+        html: `<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="margin:0;padding:0;background:#f0f4f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+<div style="max-width:560px;margin:0 auto;padding:24px 16px 48px;">
+
+  <!-- Header -->
+  <div style="background:#1C412C;border-radius:20px 20px 0 0;padding:28px 32px 24px;text-align:center;">
+    <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#a8c8a4;">Sage Systems</p>
+    <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.5);font-weight:500;">Custom AI Course</p>
+  </div>
+
+  <!-- Hero -->
+  <div style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
+    <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#7A9C78;">It's ready, ${name}.</p>
+    <h1 style="margin:0 0 16px;font-size:2rem;font-weight:900;letter-spacing:-1px;color:#1C412C;line-height:1.1;">Your AI course<br/>for ${business_name}.</h1>
+    <p style="margin:0;font-size:0.95rem;color:#6b7b6b;line-height:1.6;">Built from your answers. Specific to your workflows.<br/>Copy-paste prompts ready to use today.</p>
+  </div>
+
+  <!-- Stats -->
+  <div style="background:#ffffff;padding:0 32px 28px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:#f5faf5;border:1px solid #d4e8d4;border-radius:14px;padding:16px;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:900;color:#1C412C;letter-spacing:-1px;">5</div>
+        <div style="font-size:11px;font-weight:600;color:#7A9C78;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">Modules</div>
+      </div>
+      <div style="flex:1;background:#f5faf5;border:1px solid #d4e8d4;border-radius:14px;padding:16px;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:900;color:#1C412C;letter-spacing:-1px;">${prompts.length}</div>
+        <div style="font-size:11px;font-weight:600;color:#7A9C78;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">Prompts</div>
+      </div>
+      <div style="flex:1;background:#1C412C;border:1px solid #1C412C;border-radius:14px;padding:16px;text-align:center;">
+        <div style="font-size:1.6rem;font-weight:900;color:#00F057;letter-spacing:-1px;">✓</div>
+        <div style="font-size:11px;font-weight:600;color:#a8c8a4;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">Live Now</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div style="background:#ffffff;padding:0 32px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
+    <div style="border-top:1px solid #eef3ee;"></div>
+  </div>
+
+  <!-- Module List -->
+  <div style="background:#ffffff;padding:24px 32px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
+    <p style="margin:0 0 14px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7A9C78;">What's inside</p>
+    ${['AI Command Center','Prompt Library','Workflow Map','Privacy Rules','First Steps'].map((m,i)=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;${i<4?'border-bottom:1px solid #f0f5f0;':''}">
+      <div style="width:26px;height:26px;background:#f0f5f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#1C412C;flex-shrink:0;">${String(i+1).padStart(2,'0')}</div>
+      <span style="font-size:0.9rem;font-weight:600;color:#2d4a3e;">${m}</span>
+    </div>`).join('')}
+  </div>
+
+  <!-- CTA -->
+  <div style="background:#ffffff;padding:28px 32px 32px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;border-radius:0 0 20px 20px;border-bottom:1px solid #e4ede4;">
+    <a href="${courseUrl}" style="display:block;background:#1C412C;color:#ffffff;font-size:1rem;font-weight:800;padding:18px 32px;border-radius:14px;text-decoration:none;letter-spacing:-0.3px;text-align:center;">Open Your Course →</a>
+    <p style="margin:14px 0 0;font-size:12px;color:#9aab9a;text-align:center;">Bookmark this link — it's your permanent access.</p>
+  </div>
+
+  <!-- Footer -->
+  <p style="text-align:center;font-size:12px;color:#b0bdb0;margin-top:28px;">Sage Systems · <a href="${siteUrl}" style="color:#7A9C78;text-decoration:none;">sage-systems-ai.netlify.app</a></p>
+
+</div>
+</body></html>`,
       }),
     });
   } catch (err) { console.error("Customer email error:", err.message); }

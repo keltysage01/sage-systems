@@ -203,7 +203,7 @@
     /* COLOR SWATCHES */
     .color-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
     .color-swatch { cursor: pointer; }
-    .color-swatch input { display: none; }
+    .color-swatch input[type="radio"] { display: none; }
     .swatch-dot {
       width: 36px;
       height: 36px;
@@ -706,13 +706,12 @@
     }
 
     // Custom color picker
-    document.getElementById('color-native-picker').addEventListener('input', function() {
+    ['input','change'].forEach(ev => document.getElementById('color-native-picker').addEventListener(ev, function() {
       const hex = this.value;
       document.getElementById('custom-swatch-dot').style.background = hex;
       document.querySelector('[name="brand_color_custom"]').value = hex;
-      // deselect preset swatches
       document.querySelectorAll('[name="brand_color"]').forEach(r => r.checked = false);
-    });
+    }));
 
     // Logo preview
     document.getElementById('logo-input').addEventListener('change', function() {
