@@ -543,6 +543,8 @@
         comfort: comfort.value,
       };
 
+      localStorage.setItem('sage_intake', JSON.stringify(data));
+
       form.style.display = 'none';
       document.getElementById('loading-state').style.display = 'block';
 
