@@ -40,7 +40,7 @@ export default async function handler(req) {
     name, email, business_name, website, offer,
     brand_color, tone, tagline,
     ideal_client, priority_task, tools_needed, off_limits,
-    learning_style, extra_notes,
+    learning_style, extra_notes, logo,
   } = data;
 
   const ctx = `
@@ -83,6 +83,7 @@ Extra notes: ${extra_notes || "none"}
   const courseData = {
     id: courseId, name, email, business_name, brand_color,
     welcome, brain, prompts, map, rules, checklist,
+    logo: logo || null,
   };
 
   const siteUrl = process.env.SITE_URL || "https://sage-systems-ai.netlify.app";

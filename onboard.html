@@ -753,6 +753,17 @@
       const form = e.target;
       const q = name => form.querySelector(`[name="${name}"]`);
 
+      // Read logo as base64 if provided
+      let logoBase64 = null;
+      const logoFile = document.getElementById('logo-input').files[0];
+      if (logoFile) {
+        logoBase64 = await new Promise(resolve => {
+          const r = new FileReader();
+          r.onload = () => resolve(r.result);
+          r.readAsDataURL(logoFile);
+        });
+      }
+
       const data = {
         name: q('name').value.trim(),
         email: q('email').value.trim(),
@@ -768,6 +779,7 @@
         off_limits: q('off_limits').value.trim(),
         learning_style: form.querySelector('[name="learning_style"]:checked')?.value || '',
         extra_notes: q('extra_notes').value.trim(),
+        logo: logoBase64,
       };
 
       form.style.display = 'none';
