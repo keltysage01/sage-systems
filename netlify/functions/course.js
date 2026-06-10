@@ -608,14 +608,19 @@ body{font-family:var(--body);background:#fff;color:var(--olive);-webkit-font-smo
 .match-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
 .match-col-lbl{font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin-bottom:7px;text-align:center}
 .match-col-cards{display:flex;flex-direction:column;gap:6px}
-.match-card{padding:11px 10px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--olive);font-size:.79rem;font-weight:600;line-height:1.35;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;overflow:hidden}
-.match-card:active:not(.matched):not(.selected){transform:scale(.97)}
-.match-card.selected{background:var(--olive);border-color:var(--olive);color:#fff;box-shadow:0 4px 16px rgba(28,65,44,.22)}
-.match-card.matched{opacity:0;max-height:0;min-height:0;padding-top:0;padding-bottom:0;border-top-width:0;border-bottom-width:0;margin-bottom:-6px;pointer-events:none;cursor:default}
-.match-card.wrong{animation:mshake .36s}
-@keyframes mshake{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
-.match-done{text-align:center;padding:36px 0 20px}
-.match-done-title{font-family:var(--display);font-size:1.5rem;font-weight:800;color:var(--olive);margin-bottom:8px;letter-spacing:-.03em}
+.match-card{padding:11px 10px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--olive);font-size:.79rem;font-weight:600;line-height:1.35;cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .18s,box-shadow .2s;text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;overflow:hidden}
+.match-card:active:not(.matched):not(.selected):not(.match-correct){transform:scale(.97)}
+.match-card.selected{background:var(--olive);border-color:var(--olive);color:#fff;transform:scale(1.04);box-shadow:0 6px 22px rgba(28,65,44,.32),0 0 0 3px rgba(28,65,44,.12);animation:mpulse 1.2s ease-in-out infinite}
+@keyframes mpulse{0%,100%{box-shadow:0 6px 22px rgba(28,65,44,.32),0 0 0 3px rgba(28,65,44,.12)}50%{box-shadow:0 8px 30px rgba(28,65,44,.45),0 0 0 6px rgba(28,65,44,.18)}}
+.match-card.match-correct{background:var(--neon);border-color:var(--neon);color:var(--olive);font-weight:800;animation:mpop .55s cubic-bezier(.4,0,.2,1);pointer-events:none}
+@keyframes mpop{0%{transform:scale(1)}35%{transform:scale(1.14)}65%{transform:scale(.96)}100%{transform:scale(1)}}
+.match-card.matched{background:#f0faf3;border-color:#b6dfc4;color:#4a8a5a;font-size:.7rem;min-height:32px;padding:6px 8px;opacity:.75;pointer-events:none;cursor:default}
+.match-card.wrong{animation:mshake .4s}
+@keyframes mshake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.match-done{text-align:center;padding:28px 0 20px}
+.match-done-icon{font-size:2.8rem;margin-bottom:10px;line-height:1}
+.match-done-title{font-family:var(--display);font-size:2.2rem;color:var(--olive);margin-bottom:10px;letter-spacing:.03em}
+.match-done-pts{display:inline-block;background:var(--olive);color:var(--neon);font-size:1rem;font-weight:800;padding:7px 24px;border-radius:50px;margin-bottom:12px;letter-spacing:.04em}
 .match-done-score{font-size:.87rem;color:var(--sage);margin-bottom:22px}
 .btn-restart{padding:9px 22px;border-radius:99px;background:#fff;border:1.5px solid var(--line);color:var(--olive);font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:inline-block;touch-action:manipulation}
 
@@ -978,6 +983,8 @@ export default async function handler(req) {
 
     let curMode = 'learn';
     try { render(); loadPts(); restoreChecks(); } catch(e) { console.error(e); }
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('s'+cur)?.classList.add('active');
 
     // ── MODE SWITCHING ──────────────────────────────────────
     function setMode(m) {
@@ -1098,11 +1105,38 @@ export default async function handler(req) {
     function nextQ() { qIdx++; qAnswered=false; renderQuiz(); }
 
     // ── MATCH ───────────────────────────────────────────────
-    let mSel=null, mDone=new Set(), mTerms=[], mDefs=[];
+    let mSel=null, mDone=new Set(), mTerms=[], mDefs=[], mPts=0;
+    function matchConfetti() {
+      const c=document.createElement('canvas');
+      c.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+      c.width=window.innerWidth; c.height=window.innerHeight;
+      document.body.appendChild(c);
+      const ctx=c.getContext('2d');
+      const cols=['#00F057','#1C412C','#7A9C78','#ffffff','#FFD700','#FF8C42','#A8E6CF'];
+      const pts=Array.from({length:45},()=>({
+        x:Math.random()*c.width, y:c.height*.45+Math.random()*c.height*.2,
+        vx:(Math.random()-.5)*12, vy:-(Math.random()*10+4),
+        col:cols[Math.floor(Math.random()*cols.length)],
+        life:1, decay:Math.random()*.02+.01,
+        rot:Math.random()*360, rotV:(Math.random()-.5)*10,
+        w:Math.random()*9+3, h:Math.random()*5+2
+      }));
+      let fr=0;
+      (function draw(){
+        ctx.clearRect(0,0,c.width,c.height);
+        let alive=false;
+        pts.forEach(p=>{
+          p.x+=p.vx; p.y+=p.vy; p.vy+=.45; p.life-=p.decay; p.rot+=p.rotV;
+          if(p.life>0){alive=true;ctx.save();ctx.globalAlpha=Math.max(0,p.life);ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.col;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();}
+        });
+        fr++;
+        if(alive&&fr<130)requestAnimationFrame(draw);else c.remove();
+      })();
+    }
     function initMatch() {
       const pairs=STUDY.match;
       if(!pairs||!pairs.length){document.getElementById('match-panel').innerHTML='<div class="imode-inner"><p class="no-study">No matching pairs yet.</p></div>';return;}
-      mSel=null; mDone.clear();
+      mSel=null; mDone.clear(); mPts=0;
       mTerms=pairs.map((p,i)=>({txt:p.term,idx:i})).sort(()=>Math.random()-.5);
       mDefs=pairs.map((p,i)=>({txt:p.def,idx:i})).sort(()=>Math.random()-.5);
       renderMatch();
@@ -1111,12 +1145,19 @@ export default async function handler(req) {
       const p=document.getElementById('match-panel');
       const total=STUDY.match.length;
       if(mDone.size===total){
-        p.innerHTML='<div class="imode-inner"><div class="match-done"><div class="match-done-title">All matched.</div><div class="match-done-score">'+total+' / '+total+' correct</div><button class="btn-restart" onclick="initMatch()">Play again</button></div></div>';
+        matchConfetti(); setTimeout(matchConfetti,280);
+        p.innerHTML='<div class="imode-inner"><div class="match-done">'
+          +'<div class="match-done-icon">★</div>'
+          +'<div class="match-done-title">ALL MATCHED!</div>'
+          +'<div class="match-done-pts">+'+mPts+' pts earned</div>'
+          +'<div class="match-done-score">Perfect &middot; '+total+' / '+total+'</div>'
+          +'<button class="btn-restart" onclick="initMatch()">Play again</button>'
+          +'</div></div>';
         return;
       }
       const pct=Math.round(mDone.size/total*100);
-      const tCols = mTerms.map((t,i)=>'<div class="match-card'+(mDone.has(t.idx)?' matched':(mSel&&mSel.side==='t'&&mSel.i===i?' selected':''))+'" onclick="selM(&apos;t&apos;,'+i+')" id="mt'+i+'">'+eh(t.txt)+'</div>').join('');
-      const dCols = mDefs.map((d,i)=>'<div class="match-card'+(mDone.has(d.idx)?' matched':'')+'" onclick="selM(&apos;d&apos;,'+i+')" id="md'+i+'">'+eh(d.txt)+'</div>').join('');
+      const tCols=mTerms.map((t,i)=>'<div class="match-card'+(mDone.has(t.idx)?' matched':(mSel&&mSel.side==="t"&&mSel.i===i?' selected':''))+'" onclick="selM(&apos;t&apos;,'+i+')" id="mt'+i+'">'+eh(t.txt)+'</div>').join('');
+      const dCols=mDefs.map((d,i)=>'<div class="match-card'+(mDone.has(d.idx)?' matched':'')+'" onclick="selM(&apos;d&apos;,'+i+')" id="md'+i+'">'+eh(d.txt)+'</div>').join('');
       p.innerHTML='<div class="imode-inner">'
         +'<div class="match-header"><span class="match-ctr">'+mDone.size+' / '+total+'</span><div class="match-bar"><div class="match-bar-fill" style="width:'+pct+'%"></div></div></div>'
         +'<div class="match-hint">Tap a term, then its matching definition.</div>'
@@ -1124,24 +1165,29 @@ export default async function handler(req) {
         +'<div><div class="match-col-lbl">Definitions</div><div class="match-col-cards">'+dCols+'</div></div></div></div>';
     }
     function selM(side, i) {
-      const item = side==='t' ? mTerms[i] : mDefs[i];
-      if (mDone.has(item.idx)) return;
-      if (!mSel) {
-        if (side!=='t') return;
+      const item=side==='t'?mTerms[i]:mDefs[i];
+      if(mDone.has(item.idx)) return;
+      if(!mSel){
+        if(side!=='t') return;
         mSel={side,i};
         document.getElementById('mt'+i)?.classList.add('selected');
         return;
       }
-      if (mSel.side==='t' && side==='d') {
+      if(mSel.side==='t'&&side==='d'){
         const tIdx=mTerms[mSel.i].idx, dIdx=mDefs[i].idx;
-        if (tIdx===dIdx) {
-          mDone.add(tIdx); mSel=null; renderMatch();
+        if(tIdx===dIdx){
+          const te=document.getElementById('mt'+mSel.i), de=document.getElementById('md'+i);
+          [te,de].forEach(el=>{if(el){el.classList.remove('selected');el.classList.add('match-correct');}});
+          mSel=null;
+          matchConfetti();
+          mPts+=12; addPts(12);
+          setTimeout(()=>{mDone.add(tIdx);renderMatch();},650);
         } else {
           const te=document.getElementById('mt'+mSel.i), de=document.getElementById('md'+i);
           [te,de].forEach(el=>{if(el){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong','selected'),500);}});
           mSel=null;
         }
-      } else if (mSel.side==='t' && side==='t') {
+      } else if(mSel.side==='t'&&side==='t'){
         document.getElementById('mt'+mSel.i)?.classList.remove('selected');
         mSel={side,i};
         document.getElementById('mt'+i)?.classList.add('selected');
