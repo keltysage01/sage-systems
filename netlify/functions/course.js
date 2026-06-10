@@ -823,7 +823,7 @@ export default async function handler(req) {
           + '<div class="flash-done-title">'+(k===t?'All '+t+' cards known!':k+' of '+t+' known')+'</div>'
           + '<div class="flash-done-sub">'+(k<t?'A few more to go. Shuffle and keep going.':'Ready to quiz yourself?')+'</div>'
           + '<button class="btn-restart" onclick="initFlash()">Shuffle &amp; restart</button>'
-          + (k===t?'<br/><br/><button class="mode-btn active" style="margin:0 auto" onclick="setMode(\'quiz\')">Try the quiz →</button>':'')
+          + (k===t?'<br/><br/><button class="mode-btn active" style="margin:0 auto" onclick="setMode(&apos;quiz&apos;)">Try the quiz →</button>':'')
           + '</div></div>';
         return;
       }
@@ -871,7 +871,7 @@ export default async function handler(req) {
           + '<div class="quiz-score-pct">'+pct+'% correct</div>'
           + '<div class="quiz-score-msg">'+msg+'</div>'
           + '<button class="btn-restart" onclick="initQuiz()">Retake quiz</button>'
-          + (pct>=80?'<br/><br/><button class="mode-btn active" style="margin:0 auto" onclick="setMode(\'match\')">Try matching →</button>':'')
+          + (pct>=80?'<br/><br/><button class="mode-btn active" style="margin:0 auto" onclick="setMode(&apos;match&apos;)">Try matching →</button>':'')
           + '</div></div>';
         return;
       }
@@ -915,8 +915,8 @@ export default async function handler(req) {
         p.innerHTML='<div class="imode-inner"><div class="match-done"><div class="match-done-icon">🎯</div><div class="match-done-title">All matched!</div><div class="match-done-sub">Perfect score on the matching game.</div><button class="btn-restart" onclick="initMatch()">Play again</button></div></div>';
         return;
       }
-      const tCols = mTerms.map((t,i)=>'<div class="match-card'+(mDone.has(t.idx)?' matched':(mSel&&mSel.side==='t'&&mSel.i===i?' selected':''))+'" onclick="selM(\'t\','+i+')" id="mt'+i+'">'+eh(t.txt)+'</div>').join('');
-      const dCols = mDefs.map((d,i)=>'<div class="match-card'+(mDone.has(d.idx)?' matched':'')+'" onclick="selM(\'d\','+i+')" id="md'+i+'">'+eh(d.txt)+'</div>').join('');
+      const tCols = mTerms.map((t,i)=>'<div class="match-card'+(mDone.has(t.idx)?' matched':(mSel&&mSel.side==='t'&&mSel.i===i?' selected':''))+'" onclick="selM(&apos;t&apos;,'+i+')" id="mt'+i+'">'+eh(t.txt)+'</div>').join('');
+      const dCols = mDefs.map((d,i)=>'<div class="match-card'+(mDone.has(d.idx)?' matched':'')+'" onclick="selM(&apos;d&apos;,'+i+')" id="md'+i+'">'+eh(d.txt)+'</div>').join('');
       p.innerHTML='<div class="imode-inner">'
         +'<div class="match-intro"><p>Tap a term on the left, then its matching definition on the right.</p><p>'+(mDone.size)+' / '+STUDY.match.length+' matched</p></div>'
         +'<div class="match-cols"><div><div class="match-col-lbl">Terms</div><div class="match-col-cards">'+tCols+'</div></div>'
