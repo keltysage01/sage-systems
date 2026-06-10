@@ -880,6 +880,7 @@ export default async function handler(req) {
     // ── DATA ──────────────────────────────────────────────
     const TOTAL = ${total};
     const SLUG = ${JSON.stringify(slug)};
+    const BIZ = ${JSON.stringify(business_name)};
     const MS = ${JSON.stringify(moduleStarts)};
     const CL = ${checklistLen};
     const STUDY = ${JSON.stringify(course.study || {flashcards:[],quiz:[],match:[]}).replace(/</g,'\\u003c')};
@@ -1332,7 +1333,7 @@ export default async function handler(req) {
       const panel = document.getElementById('news-panel');
       if (!panel) return;
       if (newsLoaded && !force) return;
-      panel.innerHTML = '<div class="news-wrap"><div class="news-loading"><div class="news-loading-ring"></div><div class="news-loading-text">Scanning AI for<br/>${esc(course.business_name)}…</div></div></div>';
+      panel.innerHTML = '<div class="news-wrap"><div class="news-loading"><div class="news-loading-ring"></div><div class="news-loading-text">Scanning AI for<br/>'+BIZ+'…</div></div></div>';
       fetch('/api/ai-news?id=${slug}' + (force ? '&refresh=1' : ''))
         .then(r => r.ok ? r.json() : Promise.reject(r.status))
         .then(data => {
@@ -1349,7 +1350,7 @@ export default async function handler(req) {
           panel.innerHTML = '<div class="news-wrap">'
             + '<div class="news-eyebrow">AI Intelligence</div>'
             + '<div class="news-headline-main">What\'s New in AI</div>'
-            + '<div class="news-subhead">Fresh picks for ${esc(course.business_name)} — updated daily.</div>'
+            + '<div class="news-subhead">Fresh picks for '+BIZ+' — updated daily.</div>'
             + '<div class="news-grid">'
             + items.map(item =>
                 '<div class="news-card">'
