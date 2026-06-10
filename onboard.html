@@ -465,7 +465,9 @@
         btn.style.display = 'inline-block';
         document.getElementById('course-link-note').style.display = 'block';
       } else {
-        btn.style.display = 'none';
+        btn.textContent = 'Check Your Email →';
+        btn.href = 'mailto:';
+        btn.style.display = 'inline-block';
         document.getElementById('email-fallback').style.display = 'block';
       }
     });

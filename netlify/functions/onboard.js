@@ -140,7 +140,13 @@ DEPARTMENT USE CASES: Marketing (campaigns, content repurposing, social posts, e
 
 ${TOOLS_KB}`;
 
-  const [welcomeRaw, brainRaw, promptsRaw, toolsRaw, mapRaw, rulesRaw, checklistRaw, studyRaw] = await Promise.all([
+  // Generate course ID up front so we can return the URL immediately
+  const courseId = genId();
+  const siteUrl = process.env.SITE_URL || "https://sage-systems-ai.netlify.app";
+  const courseUrl = `${siteUrl}/course?id=${courseId}`;
+
+  // Core 7 calls — run in parallel, must finish before we return the URL
+  const [welcomeRaw, brainRaw, promptsRaw, toolsRaw, mapRaw, rulesRaw, checklistRaw] = await Promise.all([
     callClaude(`Write a course intro for ${name} at ${business_name}. Return ONLY a JSON array of 4-5 short bullet points. No emojis. First item: their single biggest AI opportunity stated directly. Next 2-3 items: specific things they will learn or have after this course. Last item: one short motivating sentence. No preamble, no markdown, just the JSON array.\n\nExample: ["Automate intake and FAQ responses saving 5+ hours weekly","10 prompts built for your exact workflows — ready to use today","A Business Brain prompt that gives AI full context every session","Your personal AI tools arsenal mapped to your business","You have everything you need to start this week"]\n\n${ctx}`, 400),
 
     callClaude(`Create a reusable "Business Brain" system prompt for ${name} at ${business_name} to paste at the start of every Claude or ChatGPT session. Include: who the business is, what they offer, who they serve, brand voice/tone, and any hard limits. Make it practical and ready to copy. Start with: "You are an AI assistant for..."\n\n${ctx}`, 420),
@@ -154,8 +160,6 @@ ${TOOLS_KB}`;
     callClaude(`Write 5 privacy rules for ${name} at ${business_name} — specific things that should NEVER go into any AI tool, specific to their business type and clients.\n\nReturn ONLY valid JSON array of strings:\n["Rule 1","Rule 2"]\n\n${ctx}`, 300),
 
     callClaude(`Write a first-steps checklist for ${name} at ${business_name} — 8 concrete actions to take this week to start using AI. Each should be specific and actionable for their situation.\n\nReturn ONLY valid JSON array of strings (no "Step N:" prefix):\n["Action 1","Action 2"]\n\n${ctx}`, 450),
-
-    callClaude(`Create interactive study materials for ${name} at ${business_name} to reinforce their AI course. No emojis anywhere.\n\n1. FLASHCARDS (18): Mix of: AI vocabulary with plain-English definitions, business AI applications, AI tool names and their best use cases (e.g. Perplexity, ElevenLabs, Fireflies, Gamma), and prompting techniques. Keep definitions under 20 words.\n2. QUIZ (6 questions): Scenario-based multiple-choice, 4 choices each, one correct (0-indexed), brief explanation. Include at least 2 questions about choosing the right AI tool.\n3. MATCH (8 pairs): Short terms (2-4 words) paired with definitions (5-10 words). Include AI tool names.\n\nReturn ONLY valid JSON, no extra text:\n{"flashcards":[{"term":"Business Brain","def":"A reusable prompt that gives AI context about your business every session."},{"term":"Perplexity","def":"AI search tool that provides real-time answers with cited sources."}],"quiz":[{"q":"You need to draft a proposal for a new client. What do you do first?","choices":["Open ChatGPT and start typing","Paste your Business Brain first","Use a generic template","Ask a colleague"],"correct":1,"explain":"Paste your Business Brain first so AI has full context before generating anything."}],"match":[{"term":"Fireflies.ai","def":"Records and summarizes meetings, syncs notes to your CRM"}]}\n\n${ctx}\n\n${KB}`, 3800),
   ]);
 
   const welcome = welcomeRaw;
@@ -165,20 +169,15 @@ ${TOOLS_KB}`;
   const map = parseJSON(mapRaw, { ai: [], human: [], improve: [] });
   const rules = parseJSON(rulesRaw, []);
   const checklist = parseJSON(checklistRaw, []);
-  const study = parseJSON(studyRaw, { flashcards: [], quiz: [], match: [] });
 
-  const courseId = genId();
   const courseData = {
     id: courseId, name, email, business_name, brand_color,
     welcome, brain, prompts, tools, map, rules, checklist,
-    logo: logo || null, study,
+    logo: logo || null, study: { flashcards: [], quiz: [], match: [] },
   };
 
-  const siteUrl = process.env.SITE_URL || "https://sage-systems-ai.netlify.app";
-  const courseUrl = `${siteUrl}/course?id=${courseId}`;
-
+  const store = getStore("courses");
   try {
-    const store = getStore("courses");
     await store.setJSON(courseId, courseData);
   } catch (err) {
     console.error("Blob store error:", err.message);
@@ -304,10 +303,20 @@ a{color:inherit}
     } catch (err) {}
   };
 
-  if (context?.waitUntil) {
-    context.waitUntil(sendEmails());
-  } else {
+  // Study materials + emails run in background after we return the course URL
+  const backgroundWork = async () => {
+    try {
+      const studyRaw = await callClaude(`Create interactive study materials for ${name} at ${business_name} to reinforce their AI course. No emojis anywhere.\n\n1. FLASHCARDS (18): Mix of: AI vocabulary with plain-English definitions, business AI applications, AI tool names and their best use cases (e.g. Perplexity, ElevenLabs, Fireflies, Gamma), and prompting techniques. Keep definitions under 20 words.\n2. QUIZ (6 questions): Scenario-based multiple-choice, 4 choices each, one correct (0-indexed), brief explanation. Include at least 2 questions about choosing the right AI tool.\n3. MATCH (8 pairs): Short terms (2-4 words) paired with definitions (5-10 words). Include AI tool names.\n\nReturn ONLY valid JSON, no extra text:\n{"flashcards":[{"term":"Business Brain","def":"A reusable prompt that gives AI context about your business every session."},{"term":"Perplexity","def":"AI search tool that provides real-time answers with cited sources."}],"quiz":[{"q":"You need to draft a proposal for a new client. What do you do first?","choices":["Open ChatGPT and start typing","Paste your Business Brain first","Use a generic template","Ask a colleague"],"correct":1,"explain":"Paste your Business Brain first so AI has full context before generating anything."}],"match":[{"term":"Fireflies.ai","def":"Records and summarizes meetings, syncs notes to your CRM"}]}\n\n${ctx}\n\n${KB}`, 3800);
+      const study = parseJSON(studyRaw, { flashcards: [], quiz: [], match: [] });
+      await store.setJSON(courseId, { ...courseData, study });
+    } catch (err) { console.error("Study generation error:", err.message); }
     await sendEmails();
+  };
+
+  if (context?.waitUntil) {
+    context.waitUntil(backgroundWork());
+  } else {
+    await backgroundWork();
   }
 
   return new Response(JSON.stringify({ ok: true, courseUrl }), {
