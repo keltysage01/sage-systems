@@ -58,12 +58,22 @@ Learning style preference: ${learning_style || "not specified"}
 Extra notes: ${extra_notes || "none"}
   `.trim();
 
-  const [welcomeRaw, brainRaw, promptsRaw, mapRaw, rulesRaw, checklistRaw, studyRaw] = await Promise.all([
-    callClaude(`Write a course intro for ${name} at ${business_name}. Return ONLY a JSON array of 4-5 short bullet points. No emojis. First item: their single biggest AI opportunity stated directly. Next 2-3 items: specific things they will learn or have after this course. Last item: one short motivating sentence. No preamble, no markdown, just the JSON array.\n\nExample: ["Automate intake and FAQ responses saving 5+ hours weekly","5 prompts built for your exact workflows — ready to use today","A Business Brain prompt that gives AI full context every session","Privacy rules specific to your clients and business","You have everything you need to start this week"]\n\n${ctx}`, 400),
+  const KB = `AI FLUENCY FRAMEWORK (4 D's): Delegation (which tasks to hand to AI), Description (how to prompt clearly), Discernment (evaluate outputs critically — AI hallucinates), Diligence (accountability, privacy, quality control).
+
+PROMPTING FRAMEWORK: Role + Context + Task + Format + Constraints. Advanced: chain-of-thought ("think step by step"), examples-based prompting, iterative refinement.
+
+DEPARTMENT USE CASES: Marketing (campaigns, content repurposing, social posts, email sequences, SEO briefs), Sales (outreach, proposals, follow-ups, CRM notes, call prep), HR (job descriptions, onboarding docs, performance reviews), Operations (meeting summaries, SOPs, project plans), Customer Support (response templates, FAQs, training docs), Finance/Legal (document summaries, contract review — always human final sign-off).
+
+AI TOOLS ECOSYSTEM: Chat/Writing — Claude (Anthropic), ChatGPT (OpenAI), Gemini (Google), Perplexity (real-time research with citations). Design — Canva AI, Adobe Firefly, Midjourney. Presentations — Gamma (AI decks from prompts), Beautiful.ai. Video — Runway (AI video generation), Synthesia (AI avatars), HeyGen, CapCut AI. Audio/Voice — ElevenLabs (voice cloning/narration), Descript (edit audio like a doc), Adobe Podcast (voice cleanup). Automation — Zapier AI (connect apps with natural language), Make.com, n8n. Writing assist — Notion AI, Grammarly Business, Copy.ai, Jasper. Meetings — Otter.ai (live transcription), Fireflies.ai (meeting summaries + CRM sync), Fathom (free meeting recorder). Data/Analysis — Julius AI (chat with your spreadsheets), ChatGPT Advanced Data Analysis. CRM/Sales — HubSpot AI, Salesforce Einstein, Apollo AI. Customer service — Intercom Fin (AI support agent), Zendesk AI, Tidio.`;
+
+  const [welcomeRaw, brainRaw, promptsRaw, toolsRaw, mapRaw, rulesRaw, checklistRaw, studyRaw] = await Promise.all([
+    callClaude(`Write a course intro for ${name} at ${business_name}. Return ONLY a JSON array of 4-5 short bullet points. No emojis. First item: their single biggest AI opportunity stated directly. Next 2-3 items: specific things they will learn or have after this course. Last item: one short motivating sentence. No preamble, no markdown, just the JSON array.\n\nExample: ["Automate intake and FAQ responses saving 5+ hours weekly","10 prompts built for your exact workflows — ready to use today","A Business Brain prompt that gives AI full context every session","Your personal AI tools arsenal mapped to your business","You have everything you need to start this week"]\n\n${ctx}`, 400),
 
     callClaude(`Create a reusable "Business Brain" system prompt for ${name} at ${business_name} to paste at the start of every Claude or ChatGPT session. Include: who the business is, what they offer, who they serve, brand voice/tone, and any hard limits. Make it practical and ready to copy. Start with: "You are an AI assistant for..."\n\n${ctx}`, 420),
 
-    callClaude(`Create 5 copy-paste prompts for ${name} at ${business_name}. Each targets a specific workflow, includes [bracket fields] to fill in, and is ready to use today. Focus on their priority task, their tools, and their offer.\n\nReturn ONLY valid JSON array:\n[{"title":"Short name 3-5 words","prompt":"Full ready-to-use prompt with [bracket fields]"}]\n\n${ctx}`, 900),
+    callClaude(`Create 10 copy-paste prompts for ${name} at ${business_name}. Each targets a different business function and includes [bracket fields] to fill in. Cover a diverse mix: (1) client intake or onboarding, (2) content creation or copywriting, (3) email sequence or follow-up, (4) social media post or campaign, (5) proposal or sales outreach, (6) customer service or FAQ response, (7) meeting summary or SOP, (8) research or competitive analysis, (9) hiring or HR task, (10) one wildcard specific to their exact offer and industry. Each prompt must be detailed and produce a real, usable result — not a generic template. Always include [bracket fields] for customization.\n\nReturn ONLY valid JSON array:\n[{"title":"Short name 3-5 words","prompt":"Full detailed prompt with [bracket fields]"}]\n\n${ctx}\n\n${KB}`, 2400),
+
+    callClaude(`Recommend exactly 6 AI tools for ${name} at ${business_name}. Choose the 6 most relevant tools given their priority task, offer, and industry. Be specific and opinionated.\n\nFor each: tool name, category (one of: Writing, Research, Design, Automation, Meetings, Video, Audio, Data, Sales-CRM, Customer-Service), one sentence describing the specific use case for this business, and one power tip they can try today.\n\nReturn ONLY valid JSON array:\n[{"tool":"Perplexity","category":"Research","use":"Research competitor pricing and client pain points with cited sources.","tip":"Ask: Research [your industry] — what are the top 3 problems customers complain about? Give me sources."}]\n\n${ctx}\n\n${KB}`, 900),
 
     callClaude(`Create a workflow map for ${name} at ${business_name} — what AI handles, what stays human, what to improve first. 4-5 items per column, specific to their business.\n\nReturn ONLY valid JSON:\n{"ai":["..."],"human":["..."],"improve":["..."]}\n\n${ctx}`, 500),
 
@@ -71,12 +81,13 @@ Extra notes: ${extra_notes || "none"}
 
     callClaude(`Write a first-steps checklist for ${name} at ${business_name} — 8 concrete actions to take this week to start using AI. Each should be specific and actionable for their situation.\n\nReturn ONLY valid JSON array of strings (no "Step N:" prefix):\n["Action 1","Action 2"]\n\n${ctx}`, 450),
 
-    callClaude(`Create interactive study materials for ${name} at ${business_name} to reinforce their AI course. No emojis anywhere.\n\n1. FLASHCARDS (12): Mix of AI vocabulary with plain-English definitions AND business-specific terms. Keep definitions under 20 words.\n2. QUIZ (5 questions): Scenario-based multiple-choice, 4 choices each, one correct (0-indexed), brief explanation.\n3. MATCH (6 pairs): Short terms (2-4 words) paired with definitions (5-10 words).\n\nReturn ONLY valid JSON, no extra text:\n{"flashcards":[{"term":"Business Brain","def":"A reusable prompt that gives AI context about your business every session."}],"quiz":[{"q":"You need to draft a proposal for a new client. What do you do first?","choices":["Open ChatGPT and start typing","Paste your Business Brain first","Use a generic template","Ask a colleague"],"correct":1,"explain":"Paste your Business Brain first so AI has full context before generating anything."}],"match":[{"term":"Context window","def":"Text AI can hold in one session"}]}\n\n${ctx}`, 2600),
+    callClaude(`Create interactive study materials for ${name} at ${business_name} to reinforce their AI course. No emojis anywhere.\n\n1. FLASHCARDS (18): Mix of: AI vocabulary with plain-English definitions, business AI applications, AI tool names and their best use cases (e.g. Perplexity, ElevenLabs, Fireflies, Gamma), and prompting techniques. Keep definitions under 20 words.\n2. QUIZ (6 questions): Scenario-based multiple-choice, 4 choices each, one correct (0-indexed), brief explanation. Include at least 2 questions about choosing the right AI tool.\n3. MATCH (8 pairs): Short terms (2-4 words) paired with definitions (5-10 words). Include AI tool names.\n\nReturn ONLY valid JSON, no extra text:\n{"flashcards":[{"term":"Business Brain","def":"A reusable prompt that gives AI context about your business every session."},{"term":"Perplexity","def":"AI search tool that provides real-time answers with cited sources."}],"quiz":[{"q":"You need to draft a proposal for a new client. What do you do first?","choices":["Open ChatGPT and start typing","Paste your Business Brain first","Use a generic template","Ask a colleague"],"correct":1,"explain":"Paste your Business Brain first so AI has full context before generating anything."}],"match":[{"term":"Fireflies.ai","def":"Records and summarizes meetings, syncs notes to your CRM"}]}\n\n${ctx}\n\n${KB}`, 3800),
   ]);
 
   const welcome = welcomeRaw;
   const brain = brainRaw;
   const prompts = parseJSON(promptsRaw, []);
+  const tools = parseJSON(toolsRaw, []);
   const map = parseJSON(mapRaw, { ai: [], human: [], improve: [] });
   const rules = parseJSON(rulesRaw, []);
   const checklist = parseJSON(checklistRaw, []);
@@ -85,7 +96,7 @@ Extra notes: ${extra_notes || "none"}
   const courseId = genId();
   const courseData = {
     id: courseId, name, email, business_name, brand_color,
-    welcome, brain, prompts, map, rules, checklist,
+    welcome, brain, prompts, tools, map, rules, checklist,
     logo: logo || null, study,
   };
 
@@ -128,7 +139,7 @@ Extra notes: ${extra_notes || "none"}
   <div style="background:#ffffff;padding:0 32px 28px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
     <div style="display:flex;gap:10px;">
       <div style="flex:1;background:#f5faf5;border:1px solid #d4e8d4;border-radius:14px;padding:16px;text-align:center;">
-        <div style="font-size:1.6rem;font-weight:900;color:#1C412C;letter-spacing:-1px;">5</div>
+        <div style="font-size:1.6rem;font-weight:900;color:#1C412C;letter-spacing:-1px;">6</div>
         <div style="font-size:11px;font-weight:600;color:#7A9C78;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">Modules</div>
       </div>
       <div style="flex:1;background:#f5faf5;border:1px solid #d4e8d4;border-radius:14px;padding:16px;text-align:center;">
@@ -150,7 +161,7 @@ Extra notes: ${extra_notes || "none"}
   <!-- Module List -->
   <div style="background:#ffffff;padding:24px 32px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
     <p style="margin:0 0 14px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7A9C78;">What's inside</p>
-    ${['AI Command Center','Prompt Library','Workflow Map','Privacy Rules','First Steps'].map((m,i)=>`
+    ${['AI Command Center','Prompt Library','Workflow Map','Privacy Rules','First Steps','AI Tools Arsenal'].map((m,i)=>`
     <div style="display:flex;align-items:center;gap:12px;padding:10px 0;${i<4?'border-bottom:1px solid #f0f5f0;':''}">
       <div style="width:26px;height:26px;background:#f0f5f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#1C412C;flex-shrink:0;">${String(i+1).padStart(2,'0')}</div>
       <span style="font-size:0.9rem;font-weight:600;color:#2d4a3e;">${m}</span>

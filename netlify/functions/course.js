@@ -29,7 +29,7 @@ function brandCSS(brand) {
 }
 
 function buildScreens(course) {
-  const { name, business_name, welcome, brain, prompts = [], map = {}, rules = [], checklist = [], logo } = course;
+  const { name, business_name, welcome, brain, prompts = [], tools = [], map = {}, rules = [], checklist = [], logo } = course;
   const biz = esc(business_name);
   const owner = esc(name);
   const slug = (business_name || "course").toLowerCase().replace(/[^a-z0-9]+/g, "_");
@@ -92,10 +92,11 @@ function buildScreens(course) {
   // ── MODULE MAP ───────────────────────────────────────────────────
   const modulesMeta = [
     { n:1, title:"AI Command Center",  desc:"Your Business Brain — paste it before every AI session" },
-    { n:2, title:"Prompt Library",     desc:"Five ready-to-use prompts built for your workflows" },
+    { n:2, title:"Prompt Library",     desc:"Ten ready-to-use prompts built for your workflows" },
     { n:3, title:"Workflow Map",        desc:"What AI handles, what stays human, what to fix first" },
     { n:4, title:"Privacy Rules",       desc:"What should never go into any AI tool" },
     { n:5, title:"First Steps",         desc:"Eight actions to take this week to get started" },
+    { n:6, title:"AI Tools Arsenal",    desc:"Six tools mapped to your exact business workflows" },
   ];
   const modIcons = [
     `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>`,
@@ -103,11 +104,12 @@ function buildScreens(course) {
     `<svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
     `<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
     `<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
+    `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>`,
   ];
   screens.push({ id: "module-map", module: 0, html: `
     <div class="mmap-header">
       <div class="mmap-dash-title">Course Dashboard</div>
-      <div class="mmap-dash-sub">${biz} — 5 modules</div>
+      <div class="mmap-dash-sub">${biz} — 6 modules</div>
     </div>
     <div class="mmap-featured">
       <div class="mmap-card" onclick="jumpToModule(1)" id="mcard-1">
@@ -183,9 +185,9 @@ function buildScreens(course) {
       <div class="mod-badge">02</div>
       <div class="screen-tag">Module 2</div>
       <h2 class="screen-title">Your Prompt Library</h2>
-      <p class="screen-desc">${prompts.length} prompts built specifically for ${biz}. Each one targets a workflow you already have. Fill in the [bracket fields] and paste into Claude or ChatGPT.</p>
+      <p class="screen-desc">${prompts.length} prompts built specifically for ${biz} — covering content, sales, operations, client service, and more. Fill in the [bracket fields] and paste into Claude or ChatGPT.</p>
       <div class="lesson-list">
-        ${lessonItem(`${prompts.length} prompts, each targeting a real workflow`)}
+        ${lessonItem(`${prompts.length} prompts across every business function`)}
         ${lessonItem("Always paste your Business Brain first")}
         ${lessonItem("Fill in the [bracket fields] before sending")}
       </div>
@@ -345,6 +347,54 @@ function buildScreens(course) {
         </li>`).join("")}
     </ul>` });
 
+  // ── MODULE 6: AI TOOLS ARSENAL ───────────────────────────────────
+  moduleStarts[6] = screens.length;
+  screens.push({ id:"m6-intro", module:6, html:`
+    <div class="module-intro-shell">
+      <div class="mod-badge">06</div>
+      <div class="screen-tag">Module 6</div>
+      <h2 class="screen-title">Your AI Tools Arsenal</h2>
+      <p class="screen-desc">Six AI tools selected specifically for ${biz}. Each one mapped to a workflow you actually have — with a power tip to get results today.</p>
+      <div class="lesson-list">
+        ${lessonItem("Six tools chosen for your exact business")}
+        ${lessonItem("Know which tool to reach for and when")}
+        ${lessonItem("One power tip per tool — use it today")}
+      </div>
+    </div>` });
+
+  screens.push({ id:"m6-hook", module:6, html:`
+    <div class="screen-tag">Module 6 · Lesson 1</div>
+    <h2 class="screen-title">Choosing the right tool</h2>
+    <div class="hook-card hook-bullets">
+      <ul>
+        <li>Not every task needs Claude — some tools are built for one thing and do it brilliantly</li>
+        <li>The wrong tool wastes time; the right tool replaces an hour of work in minutes</li>
+        <li>Use Claude and ChatGPT for thinking, writing, and complex tasks</li>
+        <li>Use specialist tools (Fireflies, Gamma, ElevenLabs) when the job has one clear output</li>
+      </ul>
+    </div>
+    <div class="concept-note"><span class="d-pill">Delegation</span><strong>Right task, right tool.</strong> The 4 D's apply here: Delegate the right job to the right AI — don't use a hammer for every nail.</div>` });
+
+  screens.push({ id:"m6-tools", module:6, html:`
+    <div class="screen-tag">Module 6 · Your Arsenal</div>
+    <h2 class="screen-title">Tools for ${biz}</h2>
+    <p class="screen-desc">Selected for your workflows. Each tip is a prompt you can run today.</p>
+    <div class="tool-grid">
+      ${tools.length ? tools.map(t=>`
+        <div class="tool-card">
+          <div class="tool-card-head">
+            <div class="tool-card-name">${esc(t.tool)}</div>
+            <div class="tool-card-cat">${esc(t.category)}</div>
+          </div>
+          <div class="tool-card-use">${esc(t.use)}</div>
+          <div class="tool-card-tip"><strong>Try today:</strong> ${esc(t.tip)}</div>
+        </div>`).join("") : `<p class="no-study">Tool recommendations loading on next course generation.</p>`}
+    </div>` });
+
+  screens.push({ id:"m6-win", module:6, html:winScreen(6,
+    `Use the right AI tool for every task at ${biz} — not just one.`,
+    "You've completed all six modules. See your full summary below.") });
+
   // ── GRADUATION ───────────────────────────────────────────────────
   screens.push({ id:"grad", module:0, html:`
     <div class="grad-shell">
@@ -353,10 +403,11 @@ function buildScreens(course) {
       <p class="grad-sub">You now have a complete AI starter system for ${biz}.</p>
       <div class="grad-list">
         <div class="grad-item"><span class="gi-check">✓</span>Business Brain ready to use</div>
-        <div class="grad-item"><span class="gi-check">✓</span>${prompts.length} custom prompts in your library</div>
+        <div class="grad-item"><span class="gi-check">✓</span>${prompts.length} custom prompts across every function</div>
         <div class="grad-item"><span class="gi-check">✓</span>Workflow map showing what AI handles</div>
         <div class="grad-item"><span class="gi-check">✓</span>Privacy rules for ${biz}</div>
         <div class="grad-item"><span class="gi-check">✓</span>First-steps checklist to start this week</div>
+        <div class="grad-item"><span class="gi-check">✓</span>${tools.length || 6} AI tools mapped to your workflows</div>
       </div>
       <div class="concept-note" style="text-align:left;margin-bottom:20px">You've now built the four pillars of AI fluency at ${biz}: <strong>Delegation</strong> (what to hand off), <strong>Description</strong> (how to communicate clearly), <strong>Discernment</strong> (what to trust), and <strong>Diligence</strong> (what you're accountable for).</div>
       <button class="btn-map" onclick="goTo(2)">Back to course map</button>
@@ -628,6 +679,16 @@ body{font-family:var(--body);background:#fff;color:var(--text);-webkit-font-smoo
 .match-done-pts{display:inline-block;background:var(--olive);color:var(--neon);font-size:1rem;font-weight:800;padding:7px 24px;border-radius:50px;margin-bottom:12px;letter-spacing:.04em}
 .match-done-score{font-size:.87rem;color:var(--sage);margin-bottom:22px}
 .btn-restart{padding:9px 22px;border-radius:99px;background:#fff;border:1.5px solid var(--line);color:var(--text);font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;display:inline-block;touch-action:manipulation}
+
+/* TOOL CARDS */
+.tool-grid{display:flex;flex-direction:column;gap:9px}
+.tool-card{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px}
+.tool-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.tool-card-name{font-family:var(--display);font-size:1.05rem;color:var(--text);letter-spacing:.02em}
+.tool-card-cat{font-family:var(--mono);font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);background:var(--sand);border:1px solid var(--line);border-radius:99px;padding:3px 9px;white-space:nowrap;flex-shrink:0}
+.tool-card-use{font-size:.84rem;color:var(--text-mid);line-height:1.5;margin-bottom:8px}
+.tool-card-tip{background:var(--sand);border-left:2.5px solid var(--olive);border-radius:0 8px 8px 0;padding:8px 12px;font-size:.77rem;color:var(--text-mid);line-height:1.45}
+.tool-card-tip strong{color:var(--text);font-weight:700}
 
 /* MODULE MODAL */
 .mapback{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center}
