@@ -351,8 +351,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .progress-rail{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(122,156,120,.2)}
 .progress-fill{height:2px;background:linear-gradient(90deg,var(--olive),var(--neon));transition:width .4s ease}
 
-.course-main{position:relative;z-index:2;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.card-wrap{max-width:740px;margin:0 auto;padding:24px 16px 20px}
+.course-main{position:relative;z-index:2;flex:1;overflow-y:auto}
+.card-wrap{max-width:740px;margin:0 auto;padding:24px 16px 100px}
 
 /* SCREENS */
 .screen{display:none}
@@ -363,7 +363,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 @keyframes sInL{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:translateX(0)}}
 
 /* BOTTOM NAV — iOS glass tab bar */
-.course-nav{flex-shrink:0;position:relative;z-index:100;background:rgba(255,255,255,.38);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--glass-border);padding:12px 24px max(14px,env(safe-area-inset-bottom,14px));display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:inset 0 1px 0 var(--glass-shine)}
+.course-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.38);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--glass-border);padding:12px 24px max(14px,env(safe-area-inset-bottom,14px));display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:inset 0 1px 0 var(--glass-shine);will-change:transform}
 .btn-arrow{width:52px;height:52px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--olive);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;flex-shrink:0;box-shadow:var(--shadow);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn-arrow:hover{background:rgba(255,255,255,.55);transform:scale(1.05)}
 .btn-arrow:disabled{opacity:.22;pointer-events:none}
@@ -478,8 +478,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .check-box.checked::after{content:"✓";color:var(--olive);font-size:.65rem;font-weight:900}
 
 /* MODE BAR */
-.mode-bar{flex-shrink:0;position:relative;z-index:50;background:rgba(255,255,255,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);padding:10px 16px;display:none;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center}
-.mode-bar::-webkit-scrollbar{display:none}
+.mode-bar{flex-shrink:0;position:relative;z-index:50;background:rgba(255,255,255,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);padding:10px 16px;display:none;gap:6px;align-items:center;flex-wrap:wrap}
 .mode-btn{flex-shrink:0;padding:9px 18px;min-height:40px;border-radius:100px;font-size:.8rem;font-weight:700;border:1px solid transparent;background:transparent;color:var(--sage);cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .mode-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
 .mode-btn.active{background:var(--olive);color:#fff;border-color:var(--olive);box-shadow:0 2px 8px rgba(28,65,44,.2)}
@@ -578,7 +577,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 /* MOBILE */
 @media(max-width:520px){
-  .card-wrap{padding:16px 12px 16px}
+  .card-wrap{padding:16px 12px 100px}
   .course-nav{padding:10px 16px max(12px,env(safe-area-inset-bottom,12px));gap:8px}
   .btn-arrow{width:42px;height:42px;font-size:1rem}
   .nav-ctr{min-width:48px;font-size:.85rem}
