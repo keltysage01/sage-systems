@@ -310,7 +310,7 @@ const CSS = `
   --text:#1C412C;--muted:#7A9C78;--shadow:0 4px 24px rgba(28,65,44,.08);
 }
 html,body{height:100%;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(155deg,#e2ead8 0%,#d0e2c4 40%,#c4d9b4 100%);color:var(--text);display:flex;flex-direction:column;height:100vh;overflow:hidden;line-height:1.6}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(155deg,#e2ead8 0%,#d0e2c4 40%,#c4d9b4 100%);color:var(--text);display:flex;flex-direction:column;height:100vh;height:-webkit-fill-available;overflow:hidden;line-height:1.6}
 .bg-mesh{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 70% 50% at 20% 15%,rgba(200,230,180,.5) 0%,transparent 55%),radial-gradient(ellipse 55% 45% at 80% 80%,rgba(160,210,150,.35) 0%,transparent 55%),radial-gradient(ellipse 60% 55% at 60% 30%,rgba(220,240,200,.4) 0%,transparent 60%);animation:mesh 18s ease-in-out infinite alternate;pointer-events:none}
 @keyframes mesh{0%{opacity:.8}100%{opacity:1;filter:hue-rotate(8deg)}}
 
@@ -336,7 +336,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 @keyframes sInL{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:translateX(0)}}
 
 /* BOTTOM NAV — iOS glass tab bar */
-.course-nav{flex-shrink:0;position:relative;z-index:100;background:rgba(255,255,255,.38);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--glass-border);padding:12px 24px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:inset 0 1px 0 var(--glass-shine)}
+.course-nav{flex-shrink:0;position:relative;z-index:100;background:rgba(255,255,255,.38);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--glass-border);padding:12px 24px max(14px,env(safe-area-inset-bottom,14px));display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:inset 0 1px 0 var(--glass-shine)}
 .btn-arrow{width:48px;height:48px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--olive);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;flex-shrink:0;box-shadow:var(--shadow)}
 .btn-arrow:hover{background:rgba(255,255,255,.55);transform:scale(1.05)}
 .btn-arrow:disabled{opacity:.22;pointer-events:none}
@@ -451,8 +451,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .mode-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
 .mode-btn.active{background:var(--olive);color:#fff;border-color:var(--olive);box-shadow:0 2px 8px rgba(28,65,44,.2)}
 /* INTERACTIVE PANELS */
-.imode-panel{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;z-index:2}
-.imode-inner{max-width:740px;margin:0 auto;padding:20px 16px 80px}
+.imode-panel{position:relative;z-index:2}
+.imode-inner{max-width:740px;margin:0 auto;padding:20px 16px 120px}
 .no-study{text-align:center;color:var(--sage);padding:40px 0;font-size:.9rem}
 /* FLASHCARDS */
 .flash-header{text-align:center;margin-bottom:18px}
@@ -546,7 +546,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 /* MOBILE */
 @media(max-width:520px){
   .card-wrap{padding:16px 12px 16px}
-  .course-nav{padding:10px 16px 12px;gap:8px}
+  .course-nav{padding:10px 16px max(12px,env(safe-area-inset-bottom,12px));gap:8px}
   .btn-arrow{width:42px;height:42px;font-size:1rem}
   .nav-ctr{min-width:48px;font-size:.85rem}
   .screen-title{font-size:1.45rem}
