@@ -364,12 +364,14 @@ function buildScreens(course) {
 
 // ── CSS ──────────────────────────────────────────────────────────────
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --olive:#1C412C;--olive-mid:#3a5e45;--sage:#7A9C78;--sage-light:#a8c8a4;
   --neon:#00F057;--paper:#fff;--sand:#F4F9F4;--sand2:#EDF4ED;--line:#DCE9DC;
-  --display:"Playfair Display",Georgia,serif;--body:"Hanken Grotesk",system-ui,sans-serif;
+  --display:"Bebas Neue",Impact,"Arial Narrow",sans-serif;
+  --body:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
   --r:16px;
 }
 html,body{height:100%}
