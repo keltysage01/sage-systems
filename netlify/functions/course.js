@@ -39,11 +39,12 @@ function buildScreens(course) {
 
   const lessonItem = (t) => `<div class="lesson-item"><span class="li-dot"></span>${t}</div>`;
 
-  const winScreen = (module, capability, next) => `
+  const winScreen = (module, capability, next, opts) => `
     <div class="win-screen">
       <div class="win-icon"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 15l6 6L23 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="win-eyebrow">You can now</div>
       <div class="win-text">${capability}</div>
+      ${opts && opts.action ? `<div class="action-step win-action"><span class="action-label">Do this now</span><span>${esc(opts.action)}</span></div>` : ""}
       ${next ? `<p class="win-next">${next}</p>` : ""}
     </div>`;
 
@@ -171,8 +172,9 @@ function buildScreens(course) {
   screens.push({ id:"m1-prompt", module:1, html:`
     <div class="screen-tag">Module 1 · Lesson 2</div>
     <h2 class="screen-title">Your Business Brain</h2>
-    <p class="screen-desc">Paste this at the start of every new AI session. Save it somewhere easy — a note, a doc, a pinned chat.</p>
-    ${promptCard("m1-brain","Claude · ChatGPT · any new session", brain, "Business Brain")}` });
+    <div class="prompt-what">Paste this once at the start of any new AI session — it gives Claude or ChatGPT full context about ${biz} so every response fits your brand, voice, and goals.</div>
+    ${promptCard("m1-brain","Claude · ChatGPT · any new session", brain, "Business Brain")}
+    <div class="action-step"><span class="action-label">Do this now</span><span>Open Claude or ChatGPT → start a new chat → paste this prompt → save it as a note or pinned message so it's always one tap away</span></div>` });
 
   screens.push({ id:"m1-win", module:1, html:winScreen(1,
     `Start every AI session with ${biz}'s full context already in place.`,
@@ -211,12 +213,15 @@ function buildScreens(course) {
     screens.push({ id:`m2-p${i}`, module:2, html:`
       <div class="screen-tag">Module 2 · Prompt ${i+1} of ${prompts.length}</div>
       <h2 class="screen-title">${esc(p.title)}</h2>
-      ${promptCard(`p${i}`,"Claude · ChatGPT (after your Business Brain)", p.prompt, "prompt")}` });
+      ${p.what ? `<div class="prompt-what">${esc(p.what)}</div>` : ''}
+      ${promptCard(`p${i}`,"Claude · ChatGPT (after your Business Brain)", p.prompt, "prompt")}
+      <div class="action-step"><span class="action-label">Do this now</span><span>Open Claude or ChatGPT → paste your Business Brain first → paste this prompt → fill in the [bracket fields] → send it</span></div>` });
   });
 
   screens.push({ id:"m2-win", module:2, html:winScreen(2,
     `Run any of your ${prompts.length} custom prompts and get results specific to ${biz}.`,
-    "Next: a map of what AI handles in your business, what stays human, and what to improve first.") });
+    "Next: a map of what AI handles in your business, what stays human, and what to improve first.",
+    {action:"Pick one prompt from this module, run it in Claude right now, and see what comes back."}) });
 
   // ── MODULE 3: WORKFLOW MAP ────────────────────────────────────────
   moduleStarts[3] = screens.length;
@@ -266,7 +271,8 @@ function buildScreens(course) {
 
   screens.push({ id:"m3-win", module:3, html:winScreen(3,
     `See exactly where AI fits into ${biz} — and where it doesn't belong.`,
-    "Next: your privacy rules — what should never go into any AI tool.") });
+    "Next: your privacy rules — what should never go into any AI tool.",
+    {action:"Look at your Improve First column — pick one item and open Claude. Describe the problem and ask it to help you build a simple process."}) });
 
   // ── MODULE 4: PRIVACY ─────────────────────────────────────────────
   moduleStarts[4] = screens.length;
@@ -306,7 +312,8 @@ function buildScreens(course) {
 
   screens.push({ id:"m4-win", module:4, html:winScreen(4,
     `Use AI confidently knowing exactly what stays private at ${biz}.`,
-    "Last module: eight concrete actions to take this week.") });
+    "Last module: eight concrete actions to take this week.",
+    {action:"Share your privacy rules with anyone at your business who uses AI. Screenshot it or drop it in a team Slack/group chat."}) });
 
   // ── MODULE 5: FIRST STEPS ─────────────────────────────────────────
   moduleStarts[5] = screens.length;
@@ -429,11 +436,11 @@ const CSS = `
   --mono:"JetBrains Mono",ui-monospace,monospace;
   --r:16px;
 }
-html,body{height:100%}
+html,body{height:100%;height:100dvh}
 body{font-family:var(--body);background:#fff;color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden}
 
 /* APP SHELL */
-.app{display:flex;flex-direction:column;height:100dvh;height:100vh;max-width:600px;margin:0 auto;background:#fff}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:600px;margin:0 auto;background:#fff}
 
 /* TOP BAR */
 .top{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1.5px solid var(--line);background:#fff;z-index:50}
@@ -449,14 +456,15 @@ body{font-family:var(--body);background:#fff;color:var(--text);-webkit-font-smoo
 .btn-mods:active{background:var(--sand)}
 
 /* MODE BAR */
-.mode-bar{flex-shrink:0;display:none;gap:6px;align-items:center;padding:8px 14px;border-bottom:1.5px solid var(--line);background:var(--sand);flex-wrap:wrap}
-.mode-btn{flex-shrink:0;padding:7px 14px;min-height:36px;border-radius:99px;font-size:.78rem;font-weight:700;border:1.5px solid transparent;background:transparent;color:var(--sage);cursor:pointer;transition:all .18s;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.mode-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.mode-bar{flex-shrink:0;display:none;gap:5px;align-items:center;padding:6px 12px;border-bottom:1.5px solid var(--line);background:var(--sand);flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.mode-bar::-webkit-scrollbar{display:none}
+.mode-btn{flex-shrink:0;padding:6px 12px;min-height:34px;border-radius:99px;font-size:.75rem;font-weight:700;border:1.5px solid transparent;background:transparent;color:var(--sage);cursor:pointer;transition:all .18s;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.mode-btn svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
 .mode-btn.active{background:var(--olive);color:#fff;border-color:var(--text)}
 
 /* MAIN */
-.course-main{flex:1 1 0;overflow-y:auto;overflow-x:hidden;min-height:0}
-.stage{max-width:600px;margin:0 auto;padding:20px 18px 24px}
+.course-main{flex:1 1 0;overflow-y:auto;overflow-x:hidden;min-height:0;-webkit-overflow-scrolling:touch}
+.stage{max-width:600px;margin:0 auto;padding:20px 18px 32px}
 
 /* SCREENS */
 .screen{display:none}
@@ -549,14 +557,18 @@ body{font-family:var(--body);background:#fff;color:var(--text);-webkit-font-smoo
 .tool-pill{font-size:.7rem;font-weight:700;color:var(--text);background:var(--sand);border:1.5px solid var(--line);padding:4px 11px;border-radius:99px}
 
 /* PROMPT CARD */
+.prompt-what{font-size:.88rem;color:var(--text-mid);line-height:1.55;margin-bottom:13px;padding:11px 14px;background:var(--sand);border-left:3px solid var(--olive);border-radius:0 10px 10px 0}
 .prompt-card{background:var(--sand);border:1.5px solid var(--line);border-radius:var(--r);padding:18px}
 .prompt-dest{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
 .prompt-dest strong{color:var(--text)}
 .prompt-box{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px;font-family:"SF Mono","Fira Code",monospace;font-size:.77rem;color:var(--text);white-space:pre-wrap;line-height:1.6;max-height:220px;overflow-y:auto;margin-bottom:11px}
-.copy-btn{display:inline-flex;align-items:center;gap:6px;background:var(--olive);color:#fff;font-size:.8rem;font-weight:700;padding:9px 20px;border-radius:99px;border:none;cursor:pointer;font-family:inherit;transition:background .15s;touch-action:manipulation}
-.copy-btn:active{background:var(--olive-mid)}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;background:var(--olive);color:#fff;font-size:.8rem;font-weight:700;padding:9px 20px;border-radius:99px;border:none;cursor:pointer;font-family:inherit;transition:background .15s,transform .12s;touch-action:manipulation}
+.copy-btn:active{background:var(--olive-mid);transform:scale(.97)}
 .copy-btn.copied{background:#2d9a5e}
 .star-reminder{margin-top:12px;padding:10px 13px;background:#FFFBEB;border:1.5px solid #F0E68C;border-radius:10px;font-size:.77rem;color:#6b5700;line-height:1.5}
+.action-step{margin-top:13px;padding:12px 14px;background:var(--sand2);border:1.5px solid var(--line);border-radius:12px;font-size:.84rem;color:var(--text-mid);line-height:1.6;display:flex;flex-direction:column;gap:5px}
+.action-step.win-action{margin-bottom:0}
+.action-label{font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--olive);padding:3px 10px;border-radius:99px;display:inline-block;align-self:flex-start}
 
 /* WORKFLOW MAP */
 .wmap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
@@ -710,14 +722,20 @@ body{font-family:var(--body);background:#fff;color:var(--text);-webkit-font-smoo
 
 /* MOBILE */
 @media(max-width:480px){
-  .stage{padding:16px 14px 20px}
-  .screen-title{font-size:1.55rem}
+  .stage{padding:16px 14px 28px}
+  .screen-title{font-size:1.5rem}
   .wmap-grid{grid-template-columns:1fr}
-  .prompt-box{font-size:.8rem;padding:12px}
+  .prompt-box{font-size:.8rem;padding:12px;max-height:180px}
   .copy-btn{width:100%;justify-content:center}
   .hook-card{padding:14px}
   .concept-note{font-size:.78rem;padding:10px 12px}
   .top-where{display:none}
+  .pts-badge{font-size:10px;padding:3px 8px}
+  .btn-mods{font-size:10px;padding:4px 9px}
+  .action-step{font-size:.82rem}
+  .flash-scene{height:190px}
+  .tool-card{padding:12px 13px}
+  .match-card{font-size:.75rem;min-height:50px;padding:10px 8px}
 }
 `;
 
@@ -746,7 +764,7 @@ export default async function handler(req) {
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
   <title>AI Course — ${esc(course.business_name)}</title>
   <style>${CSS}</style>${brandCSS(course.brand_color) ? `<style>${brandCSS(course.brand_color)}</style>` : ''}
 </head>
@@ -1018,15 +1036,18 @@ export default async function handler(req) {
     // ── COPY / CHECKLIST ────────────────────────────────────
     function copyEl(id, btn) {
       const text = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const o = btn.textContent; btn.textContent = 'Copied'; btn.classList.add('copied');
-        setTimeout(() => { btn.textContent = o; btn.classList.remove('copied'); }, 2000);
-      }).catch(() => {
+      const celebrate = () => {
+        const o = btn.textContent;
+        btn.textContent = 'Copied! ✓';
+        btn.classList.add('copied');
+        addPts(8);
+        setTimeout(() => { btn.textContent = o; btn.classList.remove('copied'); }, 2400);
+      };
+      navigator.clipboard.writeText(text).then(celebrate).catch(() => {
         const el = document.getElementById(id), r = document.createRange();
         r.selectNodeContents(el); const sel = window.getSelection();
         sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); sel.removeAllRanges();
-        const o = btn.textContent; btn.textContent = 'Copied';
-        setTimeout(() => btn.textContent = o, 2000);
+        celebrate();
       });
     }
 
