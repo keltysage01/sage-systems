@@ -880,7 +880,7 @@ export default async function handler(req) {
     // ── DATA ──────────────────────────────────────────────
     const TOTAL = ${total};
     const SLUG = ${JSON.stringify(slug)};
-    const BIZ = ${JSON.stringify(business_name)};
+    const BIZ = ${JSON.stringify(course.business_name)};
     const MS = ${JSON.stringify(moduleStarts)};
     const CL = ${checklistLen};
     const STUDY = ${JSON.stringify(course.study || {flashcards:[],quiz:[],match:[]}).replace(/</g,'\\u003c')};
