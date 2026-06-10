@@ -1349,7 +1349,7 @@ export default async function handler(req) {
           };
           panel.innerHTML = '<div class="news-wrap">'
             + '<div class="news-eyebrow">AI Intelligence</div>'
-            + '<div class="news-headline-main">What\'s New in AI</div>'
+            + '<div class="news-headline-main">What\\'s New in AI</div>'
             + '<div class="news-subhead">Fresh picks for '+BIZ+' — updated daily.</div>'
             + '<div class="news-grid">'
             + items.map(item =>
@@ -1370,7 +1370,7 @@ export default async function handler(req) {
           newsLoaded = true;
         })
         .catch(() => {
-          panel.innerHTML = '<div class="news-wrap"><p style="text-align:center;color:var(--sage);font-size:.88rem;padding:40px 0">Couldn\'t load updates right now.<br/><br/><button class="news-refresh-btn" onclick="initNews(true)">Try again</button></p></div>';
+          panel.innerHTML = '<div class="news-wrap"><p style="text-align:center;color:var(--sage);font-size:.88rem;padding:40px 0">Couldn\\'t load updates right now.<br/><br/><button class="news-refresh-btn" onclick="initNews(true)">Try again</button></p></div>';
         });
     }
     function escHtml(s) {
