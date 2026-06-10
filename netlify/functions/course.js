@@ -57,13 +57,17 @@ function buildScreens(course) {
     </div>`;
 
   // ── WELCOME ─────────────────────────────────────────────────────
+  let welcomeBullets = null;
+  try { const p = JSON.parse(welcome); if (Array.isArray(p)) welcomeBullets = p; } catch {}
+  const welcomeContent = welcomeBullets
+    ? `<ul class="welcome-bullets">${welcomeBullets.map(b=>`<li>${esc(b)}</li>`).join('')}</ul>`
+    : `<p class="welcome-body">${esc(welcome).replace(/\n\n/g,"</p><p class=\"welcome-body\">").replace(/\n/g,"<br/>")}</p>`;
   screens.push({ id: "welcome", module: 0, html: `
     <div class="welcome-shell">
       <div class="welcome-identity">
         ${logo ? `<img class="welcome-logo" src="${logo}" alt="${biz}" onerror="this.style.display='none'" style="mix-blend-mode:multiply;object-fit:contain"/>` : `<div class="welcome-biz-name">${biz}</div>`}
         <div class="welcome-tag">Custom AI Course</div>
       </div>
-      <h1 class="welcome-title">Your AI course<br/>is ready, ${owner}.</h1>
       <div class="welcome-stats">
         <div class="wstat"><span class="wstat-n">5</span><span class="wstat-l">Modules</span></div>
         <div class="wstat-div"></div>
@@ -72,7 +76,7 @@ function buildScreens(course) {
         <div class="wstat"><span class="wstat-n">✓</span><span class="wstat-l">Self-paced</span></div>
       </div>
       <div class="welcome-body-card gl">
-        <p class="welcome-body">${esc(welcome).replace(/\n\n/g,"</p><p class=\"welcome-body\">").replace(/\n/g,"<br/>")}</p>
+        ${welcomeContent}
       </div>
     </div>` });
 
@@ -151,10 +155,17 @@ function buildScreens(course) {
 
   screens.push({ id:"m1-hook", module:1, html:`
     <div class="screen-tag">Module 1 · Lesson 1</div>
-    <h2 class="screen-title">Picture this</h2>
-    <div class="hook-card">Every time you open a new AI chat, AI has no idea who you are, what your business does, or what your rules are. You start from scratch every single time.<br/><br/>The Business Brain fixes that. One paste at the start of every session — and AI already knows ${biz}, your clients, your voice, and your limits.</div>
+    <h2 class="screen-title">The problem</h2>
+    <div class="hook-card hook-bullets">
+      <ul>
+        <li>Every new AI session starts from zero — AI doesn't know your business</li>
+        <li>You re-explain your context every single time</li>
+        <li>The Business Brain fixes that with one paste</li>
+        <li>After that, AI already knows ${biz}, your clients, your voice, and your rules</li>
+      </ul>
+    </div>
     <div class="tool-pills"><span class="tool-pill">Claude</span><span class="tool-pill">ChatGPT</span><span class="tool-pill">Any AI chat</span></div>
-    <div class="concept-note"><span class="d-pill">Delegation</span><strong>Should AI do this?</strong> The first skill in AI fluency is knowing which tasks to hand off. The Business Brain earns AI more delegation — by giving it the context to make good calls on your behalf.</div>` });
+    <div class="concept-note"><span class="d-pill">Delegation</span><strong>Should AI do this?</strong> The Business Brain earns AI more delegation — by giving it the context to make good calls on your behalf.</div>` });
 
   screens.push({ id:"m1-prompt", module:1, html:`
     <div class="screen-tag">Module 1 · Lesson 2</div>
@@ -183,10 +194,17 @@ function buildScreens(course) {
 
   screens.push({ id:"m2-hook", module:2, html:`
     <div class="screen-tag">Module 2 · Lesson 1</div>
-    <h2 class="screen-title">The idea</h2>
-    <div class="hook-card">Generic prompts give generic results. These were written for ${biz} — your workflows, your tools, your clients.<br/><br/>Start with one. Copy it. Fill in the brackets. Paste it. See what comes back. Then improve from there. Do this before making it fancy.</div>
+    <h2 class="screen-title">How to use these</h2>
+    <div class="hook-card hook-bullets">
+      <ul>
+        <li>Generic prompts give generic results — these were built for ${biz}</li>
+        <li>Copy the prompt, fill in the [bracket fields], paste it</li>
+        <li>See what comes back — then improve from there</li>
+        <li>Do the simple version first before making it fancy</li>
+      </ul>
+    </div>
     <div class="tool-pills"><span class="tool-pill">Claude</span><span class="tool-pill">ChatGPT</span></div>
-    <div class="concept-note"><span class="d-pill">Description</span><strong>Am I communicating clearly?</strong> The quality of AI's output is directly tied to the quality of your prompt. These are pre-built with the three ingredients of clear description: what you want, how you want it done, and what a good result looks like.</div>` });
+    <div class="concept-note"><span class="d-pill">Description</span><strong>Am I communicating clearly?</strong> Clear prompts have three parts: what you want, how you want it done, and what a good result looks like.</div>` });
 
   (prompts).forEach((p, i) => {
     screens.push({ id:`m2-p${i}`, module:2, html:`
@@ -216,9 +234,16 @@ function buildScreens(course) {
 
   screens.push({ id:"m3-hook", module:3, html:`
     <div class="screen-tag">Module 3 · Lesson 1</div>
-    <h2 class="screen-title">The idea</h2>
-    <div class="hook-card">Not everything in your business should be automated. Some things AI does well — drafting, summarizing, generating options. Some things need your judgment, your relationships, your expertise.<br/><br/>This map shows you what's what for ${biz}.</div>
-    <div class="concept-note"><span class="d-pill">Discernment</span><strong>Is this output trustworthy?</strong> AI can hallucinate — state wrong information with full confidence. The workflow map shows where human review belongs. Always check AI outputs before they reach a client.</div>` });
+    <h2 class="screen-title">What AI is good at</h2>
+    <div class="hook-card hook-bullets">
+      <ul>
+        <li>Not everything in your business should be automated</li>
+        <li>AI is good at drafting, summarizing, and generating options</li>
+        <li>Some things need your judgment, relationships, and expertise</li>
+        <li>This map shows exactly what's what for ${biz}</li>
+      </ul>
+    </div>
+    <div class="concept-note"><span class="d-pill">Discernment</span><strong>Is this output trustworthy?</strong> AI can hallucinate — state wrong information confidently. Always check AI outputs before they reach a client.</div>` });
 
   screens.push({ id:"m3-map", module:3, html:`
     <div class="screen-tag">Module 3 · Your Map</div>
@@ -259,9 +284,16 @@ function buildScreens(course) {
 
   screens.push({ id:"m4-hook", module:4, html:`
     <div class="screen-tag">Module 4 · Lesson 1</div>
-    <h2 class="screen-title">The idea</h2>
-    <div class="hook-card">AI is powerful, but it's a third-party system. Anything you paste into a public AI tool could be used to improve that tool's models.<br/><br/>Before you automate anything, know what information should never leave your hands.</div>
-    <div class="concept-note"><span class="d-pill">Diligence</span><strong>Am I responsible for this?</strong> You're accountable for what AI produces on your behalf — even if AI wrote the first draft. That means verifying outputs, disclosing AI use when appropriate, and keeping client data private.</div>` });
+    <h2 class="screen-title">What to protect</h2>
+    <div class="hook-card hook-bullets">
+      <ul>
+        <li>AI is a third-party system — what you paste can be seen</li>
+        <li>Public AI tools may use your inputs to improve their models</li>
+        <li>Client data, financial details, and private records should never go in</li>
+        <li>Know what stays private before you start automating anything</li>
+      </ul>
+    </div>
+    <div class="concept-note"><span class="d-pill">Diligence</span><strong>Am I responsible for this?</strong> You're accountable for what AI produces on your behalf. Verify outputs, keep client data private, and disclose AI use when appropriate.</div>` });
 
   screens.push({ id:"m4-rules", module:4, html:`
     <div class="screen-tag">Module 4 · Your Rules</div>
@@ -292,8 +324,15 @@ function buildScreens(course) {
 
   screens.push({ id:"m5-hook", module:5, html:`
     <div class="screen-tag">Module 5 · Lesson 1</div>
-    <h2 class="screen-title">Do this before making it fancy</h2>
-    <div class="hook-card">Start with the manual version of every workflow. See if AI actually helps. Keep what works. Skip what doesn't.<br/><br/>One step at a time. You don't have to automate everything today — you just have to start.</div>` });
+    <h2 class="screen-title">How to start</h2>
+    <div class="hook-card hook-bullets">
+      <ul>
+        <li>Start with the manual version of every workflow</li>
+        <li>See if AI actually helps before scaling it</li>
+        <li>Keep what works, skip what doesn't</li>
+        <li>One step at a time — you don't have to automate everything today</li>
+      </ul>
+    </div>` });
 
   screens.push({ id:"m5-checklist", module:5, html:`
     <div class="screen-tag">Module 5 · Your Checklist</div>
@@ -400,6 +439,9 @@ body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 .welcome-body-card{padding:20px 22px;margin-bottom:8px;text-align:left}
 .welcome-body{font-size:.92rem;color:var(--olive-mid);line-height:1.78;margin:0}
 .welcome-body+.welcome-body{margin-top:14px}
+.welcome-bullets{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px}
+.welcome-bullets li{font-size:.9rem;color:var(--olive-mid);line-height:1.5;padding-left:18px;position:relative}
+.welcome-bullets li::before{content:"—";position:absolute;left:0;color:var(--sage);font-weight:700}
 
 /* SETUP */
 .setup-list{margin-top:18px;display:flex;flex-direction:column;gap:10px}
@@ -438,6 +480,9 @@ body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 
 /* HOOK */
 .hook-card{background:var(--glass);backdrop-filter:blur(18px);border-left:3px solid var(--neon);border-radius:0 var(--r) var(--r) 0;padding:22px;font-size:.95rem;color:var(--olive-mid);line-height:1.8;margin-bottom:18px;box-shadow:var(--shadow)}
+.hook-bullets ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
+.hook-bullets li{padding-left:20px;position:relative;font-size:.92rem;line-height:1.5}
+.hook-bullets li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:50%;background:var(--neon);flex-shrink:0}
 .tool-pills{display:flex;gap:8px;flex-wrap:wrap}
 .tool-pill{font-size:.72rem;font-weight:600;color:var(--olive);background:rgba(255,255,255,.45);border:1px solid var(--glass-border);padding:5px 12px;border-radius:100px}
 
@@ -507,10 +552,9 @@ body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 .btn-know{flex:1;min-height:52px;padding:14px 12px;border-radius:16px;border:1.5px solid rgba(0,240,87,.5);background:rgba(0,240,87,.15);color:var(--olive-mid);font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn-still:active{background:rgba(255,255,255,.8)}
 .btn-know:active{background:rgba(0,240,87,.3)}
-.flash-done{text-align:center;padding:32px 0}
-.flash-done-icon{font-size:2.8rem;margin-bottom:12px}
-.flash-done-title{font-size:1.3rem;font-weight:800;color:var(--olive);margin-bottom:8px}
-.flash-done-sub{font-size:.88rem;color:var(--sage);margin-bottom:20px;line-height:1.5}
+.flash-done{text-align:center;padding:40px 0 24px}
+.flash-done-title{font-size:1.4rem;font-weight:900;color:var(--olive);letter-spacing:-.4px;margin-bottom:8px}
+.flash-done-sub{font-size:.88rem;color:var(--sage);margin-bottom:24px;line-height:1.5}
 /* QUIZ */
 .quiz-qnum{font-size:.63rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
 .quiz-qtext{font-size:1rem;font-weight:700;color:var(--olive);line-height:1.55;margin-bottom:18px}
@@ -531,21 +575,23 @@ body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",
 .quiz-score-pct{font-size:.88rem;color:var(--sage);margin-bottom:16px}
 .quiz-score-msg{font-size:1rem;font-weight:700;color:var(--olive-mid);margin-bottom:24px}
 /* MATCH */
-.match-intro{text-align:center;margin-bottom:16px}
-.match-intro p{font-size:.8rem;color:var(--sage);line-height:1.4}
-.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.match-col-lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;text-align:center}
-.match-col-cards{display:flex;flex-direction:column;gap:8px}
-.match-card{padding:14px 12px;border-radius:14px;border:1.5px solid var(--glass-border);background:rgba(255,255,255,.55);backdrop-filter:blur(10px);color:var(--olive);font-size:.82rem;font-weight:600;line-height:1.4;cursor:pointer;transition:all .25s;text-align:center;min-height:64px;display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.match-card:hover:not(.matched):not(.selected){background:rgba(255,255,255,.65)}
-.match-card.selected{background:rgba(28,65,44,.12);border-color:var(--olive);box-shadow:0 0 0 2px var(--olive)}
-.match-card.matched{background:rgba(0,240,87,.12);border-color:rgba(0,240,87,.5);color:var(--olive-mid);cursor:default;opacity:.8}
-.match-card.wrong{animation:mshake .4s}
-@keyframes mshake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
-.match-done{text-align:center;padding:32px 0}
-.match-done-icon{font-size:2.8rem;margin-bottom:12px}
-.match-done-title{font-size:1.3rem;font-weight:800;color:var(--olive);margin-bottom:8px}
-.match-done-sub{font-size:.88rem;color:var(--sage);margin-bottom:20px}
+.match-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.match-ctr{font-size:.72rem;font-weight:700;color:var(--sage);letter-spacing:.06em;text-transform:uppercase}
+.match-bar{flex:1;height:3px;background:rgba(122,156,120,.2);border-radius:2px;margin:0 12px;overflow:hidden}
+.match-bar-fill{height:100%;background:var(--neon);border-radius:2px;transition:width .4s}
+.match-hint{font-size:.75rem;color:var(--sage);text-align:center;margin-bottom:12px}
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.match-col-lbl{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;text-align:center}
+.match-col-cards{display:flex;flex-direction:column;gap:7px}
+.match-card{padding:13px 11px;border-radius:13px;border:1.5px solid var(--glass-border);background:rgba(255,255,255,.55);backdrop-filter:blur(10px);color:var(--olive);font-size:.8rem;font-weight:600;line-height:1.35;cursor:pointer;transition:all .28s cubic-bezier(.4,0,.2,1);text-align:center;min-height:58px;display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;overflow:hidden}
+.match-card:active:not(.matched):not(.selected){transform:scale(.97)}
+.match-card.selected{background:var(--olive);border-color:var(--olive);color:#fff;box-shadow:0 4px 20px rgba(28,65,44,.28);transform:scale(1.02)}
+.match-card.matched{opacity:0;max-height:0;min-height:0;padding-top:0;padding-bottom:0;border-top-width:0;border-bottom-width:0;margin-bottom:-7px;pointer-events:none;cursor:default}
+.match-card.wrong{animation:mshake .38s}
+@keyframes mshake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.match-done{text-align:center;padding:40px 0 24px}
+.match-done-title{font-size:1.4rem;font-weight:900;color:var(--olive);margin-bottom:8px;letter-spacing:-.4px}
+.match-done-score{font-size:.88rem;color:var(--sage);margin-bottom:24px}
 /* BACK TO LEARN NAV */
 .btn-mode-back{padding:12px 22px;min-height:46px;border-radius:100px;background:rgba(255,255,255,.5);border:1px solid var(--glass-border);color:var(--olive);font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;backdrop-filter:blur(10px);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn-mode-back:hover{background:rgba(255,255,255,.7)}
@@ -819,11 +865,10 @@ export default async function handler(req) {
       if (fIdx >= fQueue.length) {
         const k = fKnown.size, t = cards.length;
         p.innerHTML = '<div class="imode-inner"><div class="flash-done">'
-          + '<div class="flash-done-icon">'+(k===t?'🎉':'💪')+'</div>'
-          + '<div class="flash-done-title">'+(k===t?'All '+t+' cards known!':k+' of '+t+' known')+'</div>'
-          + '<div class="flash-done-sub">'+(k<t?'A few more to go. Shuffle and keep going.':'Ready to quiz yourself?')+'</div>'
+          + '<div class="flash-done-title">'+(k===t?'All '+t+' cards known':k+' of '+t+' known')+'</div>'
+          + '<div class="flash-done-sub">'+(k<t?'Keep going — a few more to review.':'Ready to test yourself?')+'</div>'
           + '<button class="btn-restart" onclick="initFlash()">Shuffle &amp; restart</button>'
-          + (k===t?'<br/><br/><button class="mode-btn active" style="margin:0 auto" onclick="setMode(&apos;quiz&apos;)">Try the quiz →</button>':'')
+          + (k===t?'<br/><br/><button class="mode-btn active" style="margin:0 auto" onclick="setMode(&apos;quiz&apos;)">Take the quiz →</button>':'')
           + '</div></div>';
         return;
       }
@@ -837,7 +882,7 @@ export default async function handler(req) {
         + '<div class="flash-face"><div class="flash-face-lbl">Term</div><div class="flash-face-text">'+eh(card.term)+'</div></div>'
         + '<div class="flash-face flash-back-face"><div class="flash-face-lbl">Definition</div><div class="flash-face-text">'+eh(card.def)+'</div></div>'
         + '</div></div>'
-        + '<div class="flash-tap-cue">'+(fFlipped?'↩ Tap to flip back':'👆 Tap card to reveal definition')+'</div>'
+        + '<div class="flash-tap-cue">'+(fFlipped?'Tap to flip back':'Tap card to reveal definition')+'</div>'
         + '<div class="flash-btns'+(fFlipped?'':' hidden')+'" id="fbtns">'
         + '<button class="btn-still" onclick="markFlash(false)">Still learning</button>'
         + '<button class="btn-know" onclick="markFlash(true)">Got it ✓</button>'
@@ -847,7 +892,7 @@ export default async function handler(req) {
       fFlipped = !fFlipped;
       const c = document.getElementById('fc3d');
       if (c) c.style.transform = fFlipped ? 'rotateY(180deg)' : '';
-      const h = document.querySelector('.flash-tap-cue'); if (h) h.textContent = fFlipped ? '↩ Tap to flip back' : '👆 Tap card to reveal definition';
+      const h = document.querySelector('.flash-tap-cue'); if (h) h.textContent = fFlipped ? 'Tap to flip back' : 'Tap card to reveal definition';
       const b = document.getElementById('fbtns'); if (b) b.classList.toggle('hidden', !fFlipped);
     }
     function markFlash(known) { if(known) fKnown.add(fQueue[fIdx]); fIdx++; fFlipped=false; renderFlash(); }
@@ -865,7 +910,7 @@ export default async function handler(req) {
       if (!qs.length) { p.innerHTML='<div class="imode-inner"><p class="no-study">No quiz questions yet — generate a new course to get them.</p></div>'; return; }
       if (qIdx >= qOrd.length) {
         const pct = Math.round(qScore/qOrd.length*100);
-        const msg = pct>=80?'🎉 You nailed it!':pct>=60?'👍 Solid progress — keep reviewing.':'📖 Review the flashcards and try again.';
+        const msg = pct>=80?'You nailed it.':pct>=60?'Solid progress — keep reviewing.':'Review the flashcards and try again.';
         p.innerHTML = '<div class="imode-inner"><div class="quiz-score">'
           + '<div class="quiz-score-num">'+qScore+'/'+qOrd.length+'</div>'
           + '<div class="quiz-score-pct">'+pct+'% correct</div>'
@@ -911,14 +956,17 @@ export default async function handler(req) {
     }
     function renderMatch() {
       const p=document.getElementById('match-panel');
-      if(mDone.size===STUDY.match.length){
-        p.innerHTML='<div class="imode-inner"><div class="match-done"><div class="match-done-icon">🎯</div><div class="match-done-title">All matched!</div><div class="match-done-sub">Perfect score on the matching game.</div><button class="btn-restart" onclick="initMatch()">Play again</button></div></div>';
+      const total=STUDY.match.length;
+      if(mDone.size===total){
+        p.innerHTML='<div class="imode-inner"><div class="match-done"><div class="match-done-title">All matched.</div><div class="match-done-score">'+total+' / '+total+' correct</div><button class="btn-restart" onclick="initMatch()">Play again</button></div></div>';
         return;
       }
+      const pct=Math.round(mDone.size/total*100);
       const tCols = mTerms.map((t,i)=>'<div class="match-card'+(mDone.has(t.idx)?' matched':(mSel&&mSel.side==='t'&&mSel.i===i?' selected':''))+'" onclick="selM(&apos;t&apos;,'+i+')" id="mt'+i+'">'+eh(t.txt)+'</div>').join('');
       const dCols = mDefs.map((d,i)=>'<div class="match-card'+(mDone.has(d.idx)?' matched':'')+'" onclick="selM(&apos;d&apos;,'+i+')" id="md'+i+'">'+eh(d.txt)+'</div>').join('');
       p.innerHTML='<div class="imode-inner">'
-        +'<div class="match-intro"><p>Tap a term on the left, then its matching definition on the right.</p><p>'+(mDone.size)+' / '+STUDY.match.length+' matched</p></div>'
+        +'<div class="match-header"><span class="match-ctr">'+mDone.size+' / '+total+'</span><div class="match-bar"><div class="match-bar-fill" style="width:'+pct+'%"></div></div></div>'
+        +'<div class="match-hint">Tap a term, then its matching definition.</div>'
         +'<div class="match-cols"><div><div class="match-col-lbl">Terms</div><div class="match-col-cards">'+tCols+'</div></div>'
         +'<div><div class="match-col-lbl">Definitions</div><div class="match-col-cards">'+dCols+'</div></div></div></div>';
     }
