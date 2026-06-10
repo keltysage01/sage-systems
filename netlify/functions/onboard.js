@@ -104,7 +104,7 @@ function parseJSON(raw, fallback) {
   }
 }
 
-export default async function handler(req) {
+export default async function handler(req, context) {
   if (req.method !== "POST") return new Response("Method not allowed", { status: 405 });
 
   const data = await req.json();
@@ -184,93 +184,131 @@ ${TOOLS_KB}`;
     console.error("Blob store error:", err.message);
   }
 
-  // Email customer
-  try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.RESEND_API_KEY}` },
-      body: JSON.stringify({
-        from: process.env.FROM_EMAIL || "onboarding@resend.dev",
-        to: email,
-        subject: `Your Custom AI Course is Ready — ${business_name}`,
-        html: `<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head><body style="margin:0;padding:0;background:#f0f4f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-<div style="max-width:560px;margin:0 auto;padding:24px 16px 48px;">
+  const emailHtml = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<style>
+body,table,td{margin:0;padding:0;border:0}
+body{background:#f0f4f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif}
+a{color:inherit}
+@media only screen and (max-width:560px){
+  .wrap{padding:12px 0 32px !important}
+  .card-hero{padding:28px 20px 22px !important}
+  .card-stats{padding:0 20px 22px !important}
+  .card-divider{padding:0 20px !important}
+  .card-modules{padding:20px !important}
+  .card-cta{padding:22px 20px 26px !important}
+  .h1{font-size:1.5rem !important;letter-spacing:-0.5px !important}
+  .stat-td{padding:12px 6px !important}
+  .stat-num{font-size:1.4rem !important}
+  .cta-btn{padding:16px 24px !important;font-size:0.95rem !important}
+}
+</style>
+</head>
+<body>
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr><td>
+<table class="wrap" align="center" width="100%" style="max-width:560px;margin:0 auto;padding:24px 16px 48px" cellpadding="0" cellspacing="0" role="presentation">
 
   <!-- Header -->
-  <div style="background:#1C412C;border-radius:20px 20px 0 0;padding:28px 32px 24px;text-align:center;">
-    <p style="margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#a8c8a4;">Sage Systems</p>
-    <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.5);font-weight:500;">Custom AI Course</p>
-  </div>
+  <tr><td style="background:#1C412C;border-radius:16px 16px 0 0;padding:24px 28px;text-align:center">
+    <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#a8c8a4">Sage Systems</p>
+    <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.5);font-weight:500">Custom AI Course</p>
+  </td></tr>
 
   <!-- Hero -->
-  <div style="background:#ffffff;padding:36px 32px 28px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
-    <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#7A9C78;">It's ready, ${name}.</p>
-    <h1 style="margin:0 0 16px;font-size:2rem;font-weight:900;letter-spacing:-1px;color:#1C412C;line-height:1.1;">Your AI course<br/>for ${business_name}.</h1>
-    <p style="margin:0;font-size:0.95rem;color:#6b7b6b;line-height:1.6;">Built from your answers. Specific to your workflows.<br/>Copy-paste prompts ready to use today.</p>
-  </div>
+  <tr><td class="card-hero" style="background:#ffffff;padding:32px 28px 24px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4">
+    <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#7A9C78">It's ready, ${name}.</p>
+    <h1 class="h1" style="margin:0 0 14px;font-size:1.9rem;font-weight:900;letter-spacing:-1px;color:#1C412C;line-height:1.1">Your AI course<br/>for ${business_name}.</h1>
+    <p style="margin:0;font-size:0.93rem;color:#6b7b6b;line-height:1.65">Built from your answers. Specific to your workflows. Copy-paste prompts ready to use today.</p>
+  </td></tr>
 
   <!-- Stats -->
-  <div style="background:#ffffff;padding:0 32px 28px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
-    <div style="display:flex;gap:10px;">
-      <div style="flex:1;background:#f5faf5;border:1px solid #d4e8d4;border-radius:14px;padding:16px;text-align:center;">
-        <div style="font-size:1.6rem;font-weight:900;color:#1C412C;letter-spacing:-1px;">6</div>
-        <div style="font-size:11px;font-weight:600;color:#7A9C78;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">Modules</div>
-      </div>
-      <div style="flex:1;background:#f5faf5;border:1px solid #d4e8d4;border-radius:14px;padding:16px;text-align:center;">
-        <div style="font-size:1.6rem;font-weight:900;color:#1C412C;letter-spacing:-1px;">${prompts.length}</div>
-        <div style="font-size:11px;font-weight:600;color:#7A9C78;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">Prompts</div>
-      </div>
-      <div style="flex:1;background:#1C412C;border:1px solid #1C412C;border-radius:14px;padding:16px;text-align:center;">
-        <div style="font-size:1.6rem;font-weight:900;color:#00F057;letter-spacing:-1px;">✓</div>
-        <div style="font-size:11px;font-weight:600;color:#a8c8a4;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">Live Now</div>
-      </div>
-    </div>
-  </div>
+  <tr><td class="card-stats" style="background:#ffffff;padding:0 28px 24px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4">
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation"><tr>
+      <td class="stat-td" width="33%" style="padding:14px 5px;text-align:center;background:#f5faf5;border:1px solid #d4e8d4;border-radius:12px">
+        <div class="stat-num" style="font-size:1.6rem;font-weight:900;color:#1C412C;letter-spacing:-1px;line-height:1">6</div>
+        <div style="font-size:11px;font-weight:600;color:#7A9C78;text-transform:uppercase;letter-spacing:0.06em;margin-top:3px">Modules</div>
+      </td>
+      <td width="4%"></td>
+      <td class="stat-td" width="33%" style="padding:14px 5px;text-align:center;background:#f5faf5;border:1px solid #d4e8d4;border-radius:12px">
+        <div class="stat-num" style="font-size:1.6rem;font-weight:900;color:#1C412C;letter-spacing:-1px;line-height:1">${prompts.length}</div>
+        <div style="font-size:11px;font-weight:600;color:#7A9C78;text-transform:uppercase;letter-spacing:0.06em;margin-top:3px">Prompts</div>
+      </td>
+      <td width="4%"></td>
+      <td class="stat-td" width="26%" style="padding:14px 5px;text-align:center;background:#1C412C;border:1px solid #1C412C;border-radius:12px">
+        <div class="stat-num" style="font-size:1.6rem;font-weight:900;color:#21E68A;letter-spacing:-1px;line-height:1">✓</div>
+        <div style="font-size:11px;font-weight:600;color:#a8c8a4;text-transform:uppercase;letter-spacing:0.06em;margin-top:3px">Live Now</div>
+      </td>
+    </tr></table>
+  </td></tr>
 
   <!-- Divider -->
-  <div style="background:#ffffff;padding:0 32px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
-    <div style="border-top:1px solid #eef3ee;"></div>
-  </div>
+  <tr><td class="card-divider" style="background:#ffffff;padding:0 28px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4">
+    <div style="border-top:1px solid #eef3ee"></div>
+  </td></tr>
 
   <!-- Module List -->
-  <div style="background:#ffffff;padding:24px 32px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;">
-    <p style="margin:0 0 14px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7A9C78;">What's inside</p>
+  <tr><td class="card-modules" style="background:#ffffff;padding:22px 28px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4">
+    <p style="margin:0 0 14px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7A9C78">What's inside</p>
     ${['AI Command Center','Prompt Library','Workflow Map','Privacy Rules','First Steps','AI Tools Arsenal'].map((m,i)=>`
-    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;${i<4?'border-bottom:1px solid #f0f5f0;':''}">
-      <div style="width:26px;height:26px;background:#f0f5f0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#1C412C;flex-shrink:0;">${String(i+1).padStart(2,'0')}</div>
-      <span style="font-size:0.9rem;font-weight:600;color:#2d4a3e;">${m}</span>
-    </div>`).join('')}
-  </div>
+    <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="${i<5?'border-bottom:1px solid #f0f5f0;':''}"><tr>
+      <td style="padding:10px 0;width:36px;vertical-align:middle">
+        <div style="width:26px;height:26px;background:#f0f5f0;border-radius:7px;text-align:center;line-height:26px;font-size:11px;font-weight:800;color:#1C412C">${String(i+1).padStart(2,'0')}</div>
+      </td>
+      <td style="padding:10px 0 10px 10px;font-size:0.9rem;font-weight:600;color:#2d4a3e;vertical-align:middle">${m}</td>
+    </tr></table>`).join('')}
+  </td></tr>
 
   <!-- CTA -->
-  <div style="background:#ffffff;padding:28px 32px 32px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;border-radius:0 0 20px 20px;border-bottom:1px solid #e4ede4;">
-    <a href="${courseUrl}" style="display:block;background:#1C412C;color:#ffffff;font-size:1rem;font-weight:800;padding:18px 32px;border-radius:14px;text-decoration:none;letter-spacing:-0.3px;text-align:center;">Open Your Course →</a>
-    <p style="margin:14px 0 0;font-size:12px;color:#9aab9a;text-align:center;">Bookmark this link — it's your permanent access.</p>
-  </div>
+  <tr><td class="card-cta" style="background:#ffffff;padding:24px 28px 28px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4;border-bottom:1px solid #e4ede4;border-radius:0 0 16px 16px">
+    <a class="cta-btn" href="${courseUrl}" style="display:block;background:#1C412C;color:#ffffff;font-size:1rem;font-weight:800;padding:18px 28px;border-radius:12px;text-decoration:none;letter-spacing:-0.3px;text-align:center">Open Your Course →</a>
+    <p style="margin:12px 0 0;font-size:12px;color:#9aab9a;text-align:center">Bookmark this link — it's your permanent access.</p>
+  </td></tr>
 
   <!-- Footer -->
-  <p style="text-align:center;font-size:12px;color:#b0bdb0;margin-top:28px;">Sage Systems · <a href="${siteUrl}" style="color:#7A9C78;text-decoration:none;">sage-systems-ai.netlify.app</a></p>
+  <tr><td style="padding:24px 0 0;text-align:center">
+    <p style="margin:0;font-size:12px;color:#b0bdb0">Sage Systems · <a href="${siteUrl}" style="color:#7A9C78;text-decoration:none">sage-systems-ai.netlify.app</a></p>
+  </td></tr>
 
-</div>
-</body></html>`,
-      }),
-    });
-  } catch (err) { console.error("Customer email error:", err.message); }
+</table>
+</td></tr></table>
+</body></html>`;
 
-  // Notify Kelty
-  try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.RESEND_API_KEY}` },
-      body: JSON.stringify({
-        from: process.env.FROM_EMAIL || "onboarding@resend.dev",
-        to: "keltysage01@gmail.com",
-        reply_to: email,
-        subject: `New course generated — ${business_name}`,
-        html: `<p style="font-family:sans-serif;">New order from <strong>${name}</strong> (${email}) — <strong>${business_name}</strong>.<br/>Course auto-generated and sent.<br/><br/><a href="${courseUrl}">View their course</a></p>`,
-      }),
-    });
-  } catch (err) {}
+  const sendEmails = async () => {
+    try {
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.RESEND_API_KEY}` },
+        body: JSON.stringify({
+          from: process.env.FROM_EMAIL || "onboarding@resend.dev",
+          to: email,
+          subject: `Your Custom AI Course is Ready — ${business_name}`,
+          html: emailHtml,
+        }),
+      });
+    } catch (err) { console.error("Customer email error:", err.message); }
+    try {
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${process.env.RESEND_API_KEY}` },
+        body: JSON.stringify({
+          from: process.env.FROM_EMAIL || "onboarding@resend.dev",
+          to: "keltysage01@gmail.com",
+          reply_to: email,
+          subject: `New course generated — ${business_name}`,
+          html: `<p style="font-family:sans-serif">New order from <strong>${name}</strong> (${email}) — <strong>${business_name}</strong>.<br/>Course auto-generated and sent.<br/><br/><a href="${courseUrl}">View their course</a></p>`,
+        }),
+      });
+    } catch (err) {}
+  };
+
+  if (context?.waitUntil) {
+    context.waitUntil(sendEmails());
+  } else {
+    await sendEmails();
+  }
 
   return new Response(JSON.stringify({ ok: true, courseUrl }), {
     status: 200,

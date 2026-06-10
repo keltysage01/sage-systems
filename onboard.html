@@ -142,8 +142,9 @@
     .confirm-icon svg{width:26px;height:26px;stroke:var(--eg-green);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
     #confirm-state h2{font-family:var(--display);font-size:2.4rem;font-weight:400;letter-spacing:.04em;text-transform:uppercase;color:var(--eg-text);margin-bottom:10px}
     #confirm-state p{font-size:.9rem;color:var(--eg-muted-2);line-height:1.65;max-width:420px;margin:0 auto 28px}
-    #course-link-btn{display:none;background:var(--eg-green);color:var(--eg-bg);font-size:.95rem;font-weight:800;padding:14px 34px;border-radius:8px;text-decoration:none;margin-bottom:10px;box-shadow:0 0 28px rgba(33,230,138,.35);display:none}
-    #course-link-note{display:none;font-family:var(--mono);font-size:.6rem;color:var(--eg-muted-2);margin-bottom:28px;letter-spacing:.08em;text-transform:uppercase}
+    #course-link-btn{background:var(--eg-green);color:var(--eg-bg);font-size:.95rem;font-weight:800;padding:14px 34px;border-radius:8px;text-decoration:none;margin-bottom:10px;box-shadow:0 0 28px rgba(33,230,138,.35);display:inline-block}
+    #course-link-note{font-family:var(--mono);font-size:.6rem;color:var(--eg-muted-2);margin-bottom:28px;letter-spacing:.08em;text-transform:uppercase;display:block}
+    #email-fallback{font-family:var(--mono);font-size:.68rem;color:var(--eg-muted-2);margin-bottom:28px;letter-spacing:.06em;text-transform:uppercase;line-height:1.7;display:none}
 
     .timeline{display:flex;flex-direction:column;gap:0;max-width:380px;margin:28px auto 0;text-align:left}
     .timeline-item{display:flex;gap:14px;align-items:flex-start;padding-bottom:22px;position:relative}
@@ -338,8 +339,9 @@
       </div>
       <h2>Your course is ready.</h2>
       <p>Generated just for your business. Access it below or find it in your inbox.</p>
-      <a id="course-link-btn" href="#" target="_blank" style="display:none;background:var(--eg-green);color:var(--eg-bg);font-size:.95rem;font-weight:800;padding:14px 34px;border-radius:8px;text-decoration:none;margin-bottom:10px;box-shadow:0 0 28px rgba(33,230,138,.35)">Open My Course →</a>
-      <p id="course-link-note" style="display:none;font-family:var(--mono);font-size:.6rem;color:var(--eg-muted-2);margin-bottom:28px;letter-spacing:.08em;text-transform:uppercase">Link also sent to your email.</p>
+      <a id="course-link-btn" href="#" target="_blank" style="display:none">Open My Course →</a>
+      <p id="course-link-note" style="display:none">Link also sent to your email.</p>
+      <p id="email-fallback">Course link sent to your email —<br/>check your inbox to access it.</p>
       <div class="timeline">
         <div class="timeline-item">
           <div class="tl-dot">1</div>
@@ -450,15 +452,21 @@
       let courseUrl = null;
       try {
         const res = await fetch('/api/onboard', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
-        const json = await res.json();
-        courseUrl = json.courseUrl || null;
-      } catch (err) {}
+        if (res.ok) {
+          const json = await res.json();
+          courseUrl = json.courseUrl || null;
+        }
+      } catch (err) { console.error('Course generation error:', err); }
       document.getElementById('loading-state').style.display = 'none';
       document.getElementById('confirm-state').style.display = 'block';
+      const btn = document.getElementById('course-link-btn');
       if (courseUrl) {
-        const btn = document.getElementById('course-link-btn');
-        btn.href = courseUrl; btn.style.display = 'inline-block';
+        btn.href = courseUrl;
+        btn.style.display = 'inline-block';
         document.getElementById('course-link-note').style.display = 'block';
+      } else {
+        btn.style.display = 'none';
+        document.getElementById('email-fallback').style.display = 'block';
       }
     });
   </script>
