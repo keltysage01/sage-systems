@@ -59,16 +59,20 @@ function buildScreens(course) {
   // ── WELCOME ─────────────────────────────────────────────────────
   screens.push({ id: "welcome", module: 0, html: `
     <div class="welcome-shell">
-      ${logo ? `<img class="welcome-logo" src="${logo}" alt="${biz}" onerror="this.style.display='none'" style="mix-blend-mode:multiply;object-fit:contain"/>` : `<div class="welcome-biz-name">${biz}</div>`}
-      <div class="welcome-tag">Custom AI Course</div>
-      <h1 class="welcome-title">AI for ${biz}</h1>
-      <p class="welcome-for">Built for <strong>${owner}</strong> — specific to the real workflows of <strong>${biz}</strong>.</p>
-      <p class="welcome-body">${esc(welcome).replace(/\n\n/g,"</p><p class=\"welcome-body\">").replace(/\n/g,"<br/>")}</p>
-      <div class="welcome-pills">
-        <span class="w-pill">5 modules</span>
-        <span class="w-pill">Copy-paste prompts</span>
-        <span class="w-pill">Progress saved</span>
-        <span class="w-pill">Self-paced</span>
+      <div class="welcome-identity">
+        ${logo ? `<img class="welcome-logo" src="${logo}" alt="${biz}" onerror="this.style.display='none'" style="mix-blend-mode:multiply;object-fit:contain"/>` : `<div class="welcome-biz-name">${biz}</div>`}
+        <div class="welcome-tag">Custom AI Course</div>
+      </div>
+      <h1 class="welcome-title">Your AI course<br/>is ready, ${owner}.</h1>
+      <div class="welcome-stats">
+        <div class="wstat"><span class="wstat-n">5</span><span class="wstat-l">Modules</span></div>
+        <div class="wstat-div"></div>
+        <div class="wstat"><span class="wstat-n">${prompts.length}</span><span class="wstat-l">Prompts</span></div>
+        <div class="wstat-div"></div>
+        <div class="wstat"><span class="wstat-n">✓</span><span class="wstat-l">Self-paced</span></div>
+      </div>
+      <div class="welcome-body-card gl">
+        <p class="welcome-body">${esc(welcome).replace(/\n\n/g,"</p><p class=\"welcome-body\">").replace(/\n/g,"<br/>")}</p>
       </div>
     </div>` });
 
@@ -365,11 +369,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .btn-arrow:disabled{opacity:.22;pointer-events:none}
 .nav-ctr{font-size:.95rem;font-weight:700;color:var(--olive);letter-spacing:-.2px;text-align:center;min-width:64px}
 .nav-ctr .nav-total{font-weight:400;color:var(--sage)}
-.nav-tab-btn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;background:none;border:none;font-family:inherit;padding:0;transition:all .2s;flex-shrink:0}
+.nav-tab-btn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;background:none;border:none;font-family:inherit;padding:6px 12px;border-radius:12px;transition:all .2s;flex-shrink:0}
 .nav-tab-btn svg{width:22px;height:22px;stroke:var(--sage);fill:none;stroke-width:1.8;transition:stroke .2s}
 .nav-tab-btn span{font-size:.58rem;font-weight:600;color:var(--sage);transition:color .2s;letter-spacing:.02em}
-.nav-tab-btn.active svg{stroke:var(--neon);filter:drop-shadow(0 0 6px var(--neon))}
-.nav-tab-btn.active span{color:var(--olive-mid)}
+.nav-tab-btn.active{background:rgba(28,65,44,.08)}
+.nav-tab-btn.active svg{stroke:var(--olive)}
+.nav-tab-btn.active span{color:var(--olive);font-weight:700}
 
 /* GLASS CARD — reusable */
 .gl{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:var(--r);box-shadow:var(--shadow),inset 0 1px 0 var(--glass-shine);position:relative;overflow:hidden}
@@ -382,13 +387,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 /* WELCOME */
 .welcome-shell{text-align:center;padding:28px 0 16px}
-.welcome-logo{height:80px;width:auto;margin-bottom:20px;mix-blend-mode:multiply;object-fit:contain}
-.welcome-tag{font-size:.63rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
-.welcome-title{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:900;letter-spacing:-1.2px;margin-bottom:8px;color:var(--olive)}
-.welcome-for{font-size:.93rem;color:var(--sage);margin-bottom:20px}
-.welcome-body{font-size:.92rem;color:var(--olive-mid);line-height:1.78;max-width:560px;margin:0 auto 22px;text-align:left}
-.welcome-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:8px}
-.w-pill{font-size:.73rem;font-weight:600;color:var(--olive);background:rgba(255,255,255,.45);border:1px solid var(--glass-border);padding:5px 14px;border-radius:100px;backdrop-filter:blur(8px)}
+.welcome-identity{margin-bottom:22px}
+.welcome-logo{height:72px;width:auto;margin-bottom:10px;mix-blend-mode:multiply;object-fit:contain}
+.welcome-tag{font-size:.63rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--sage);margin-top:6px}
+.welcome-title{font-size:clamp(1.9rem,5vw,2.5rem);font-weight:900;letter-spacing:-1.2px;line-height:1.12;margin:0 0 24px;color:var(--olive)}
+.welcome-stats{display:flex;align-items:center;justify-content:center;gap:0;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:16px;padding:18px 24px;margin-bottom:20px;box-shadow:var(--shadow),inset 0 1px 0 var(--glass-shine)}
+.wstat{display:flex;flex-direction:column;align-items:center;flex:1}
+.wstat-n{font-size:1.7rem;font-weight:900;color:var(--olive);letter-spacing:-1px;line-height:1}
+.wstat-l{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--sage);margin-top:4px}
+.wstat-div{width:1px;height:36px;background:var(--glass-border);flex-shrink:0;margin:0 8px}
+.welcome-body-card{padding:20px 22px;margin-bottom:8px;text-align:left}
+.welcome-body{font-size:.92rem;color:var(--olive-mid);line-height:1.78;margin:0}
+.welcome-body+.welcome-body{margin-top:14px}
 
 /* SETUP */
 .setup-list{margin-top:18px;display:flex;flex-direction:column;gap:10px}
@@ -563,7 +573,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .btn-map:hover{background:rgba(255,255,255,.7)}
 
 /* BIZ NAME FALLBACKS (when no logo uploaded) */
-.welcome-biz-name{font-size:clamp(1.6rem,6vw,2.2rem);font-weight:900;letter-spacing:-1px;color:var(--olive);margin-bottom:16px;line-height:1.1}
+.welcome-biz-name{font-size:clamp(1.4rem,5vw,1.9rem);font-weight:900;letter-spacing:-0.8px;color:var(--olive);margin-bottom:4px;line-height:1.1}
 .grad-biz-name{font-size:clamp(1.4rem,5vw,1.9rem);font-weight:900;letter-spacing:-0.8px;color:var(--olive);margin-bottom:20px;line-height:1.1}
 
 /* MOBILE */
