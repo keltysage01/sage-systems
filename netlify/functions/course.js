@@ -675,9 +675,9 @@ export default async function handler(req) {
       <span>Dashboard</span>
     </button>
     <span id="learn-nav" style="display:flex;align-items:center;gap:12px">
-      <button class="btn-arrow" id="btn-back" onclick="back()" aria-label="Previous">&#8592;</button>
+      <button class="btn-arrow" id="btn-back" onclick="back()" ontouchend="event.preventDefault();back()" aria-label="Previous">&#8592;</button>
       <span class="nav-ctr" id="nav-ctr"></span>
-      <button class="btn-arrow" id="btn-next" onclick="next()" aria-label="Next">&#8594;</button>
+      <button class="btn-arrow" id="btn-next" onclick="next()" ontouchend="event.preventDefault();next()" aria-label="Next">&#8594;</button>
     </span>
     <button class="btn-mode-back" id="btn-mode-back" onclick="setMode('learn')" style="display:none">← Lesson</button>
     <button class="nav-tab-btn" id="tab-profile" onclick="goTo(${total-1})" title="Completion">
@@ -688,15 +688,16 @@ export default async function handler(req) {
   </div>
 
   <script>
+    window.onerror = function(msg,_,line){ var b=document.getElementById('nav-ctr'); if(b) b.innerHTML='<span style="color:red;font-size:.65rem">ERR L'+line+': '+msg.slice(0,60)+'</span>'; return false; };
     // ── DATA ──────────────────────────────────────────────
     const TOTAL = ${total};
     const SLUG = ${JSON.stringify(slug)};
     const MS = ${JSON.stringify(moduleStarts)};
     const CL = ${checklistLen};
-    const STUDY = ${JSON.stringify(course.study || {flashcards:[],quiz:[],match:[]})};
+    const STUDY = ${JSON.stringify(course.study || {flashcards:[],quiz:[],match:[]}).replace(/</g,'\\u003c')};
     const SMODS = ${JSON.stringify(screens.map(s => s.module))};
     const KEY = 'course_' + SLUG + '_screen';
-    let cur = Math.min(parseInt(localStorage.getItem(KEY) || '0'), TOTAL - 1);
+    let cur = Math.min(Math.max(0, parseInt(localStorage.getItem(KEY)) || 0), TOTAL - 1);
     let dir = 1;
 
     function goTo(n) {
