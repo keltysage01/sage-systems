@@ -336,9 +336,9 @@ const CSS = `
   --glass-shine:rgba(255,255,255,0.7);--r:18px;
   --text:#1C412C;--muted:#7A9C78;--shadow:0 4px 24px rgba(28,65,44,.08);
 }
-html,body{height:100%;margin:0;padding:0;overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(155deg,#e2ead8 0%,#d0e2c4 40%,#c4d9b4 100%);color:var(--text);line-height:1.6}
-.app-shell{position:fixed;inset:0;display:flex;flex-direction:column;overflow:hidden}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(155deg,#e2ead8 0%,#d0e2c4 40%,#c4d9b4 100%);color:var(--text);line-height:1.6;display:flex;flex-direction:column;height:100%;height:-webkit-fill-available;max-height:100%;overflow:hidden}
 .bg-mesh{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 70% 50% at 20% 15%,rgba(200,230,180,.5) 0%,transparent 55%),radial-gradient(ellipse 55% 45% at 80% 80%,rgba(160,210,150,.35) 0%,transparent 55%),radial-gradient(ellipse 60% 55% at 60% 30%,rgba(220,240,200,.4) 0%,transparent 60%);animation:mesh 18s ease-in-out infinite alternate;pointer-events:none}
 @keyframes mesh{0%{opacity:.8}100%{opacity:1;filter:hue-rotate(8deg)}}
 
@@ -352,7 +352,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .progress-rail{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(122,156,120,.2)}
 .progress-fill{height:2px;background:linear-gradient(90deg,var(--olive),var(--neon));transition:width .4s ease}
 
-.course-main{flex:1;overflow-y:auto;overflow-x:hidden}
+.course-main{flex:1 1 0;overflow-y:auto;overflow-x:hidden;min-height:0}
 .card-wrap{max-width:740px;margin:0 auto;padding:24px 16px 32px}
 
 /* SCREENS */
@@ -363,8 +363,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 @keyframes sInR{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:translateX(0)}}
 @keyframes sInL{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:translateX(0)}}
 
-/* BOTTOM NAV — iOS glass tab bar */
-.course-nav{flex-shrink:0;background:rgba(255,255,255,.38);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--glass-border);padding:12px 24px max(14px,env(safe-area-inset-bottom,14px));display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:inset 0 1px 0 var(--glass-shine)}
+/* BOTTOM NAV */
+.course-nav{flex-shrink:0;flex-grow:0;background:rgba(255,255,255,.38);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--glass-border);padding:10px 20px max(12px,env(safe-area-inset-bottom,12px));display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:inset 0 1px 0 var(--glass-shine)}
 .btn-arrow{width:52px;height:52px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--olive);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;flex-shrink:0;box-shadow:var(--shadow);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn-arrow:hover{background:rgba(255,255,255,.55);transform:scale(1.05)}
 .btn-arrow:disabled{opacity:.22;pointer-events:none}
@@ -632,7 +632,7 @@ export default async function handler(req) {
 </head>
 <body>
   <div class="bg-mesh"></div>
-  <div class="app-shell">
+  <div id="dbg" style="display:none;position:fixed;top:4px;left:50%;transform:translateX(-50%);background:#c00;color:#fff;padding:4px 12px;border-radius:100px;font-size:11px;font-weight:700;z-index:9999;pointer-events:none"></div>
   <div class="course-top">
     ${course.logo ? `<img class="top-logo" src="${course.logo}" alt="${esc(course.business_name)}" onerror="this.style.display='none'"/>` : `<div class="top-biz-pill">${esc(course.business_name)}</div>`}
     <div class="top-right">
@@ -685,10 +685,10 @@ export default async function handler(req) {
       <span>Profile</span>
     </button>
   </div>
-  </div>
 
   <script>
-    window.onerror = function(msg,_,line){ var b=document.getElementById('nav-ctr'); if(b) b.innerHTML='<span style="color:red;font-size:.65rem">ERR L'+line+': '+msg.slice(0,60)+'</span>'; return false; };
+    function dbg(msg,ok){ var d=document.getElementById('dbg'); if(!d)return; d.textContent=msg; d.style.background=ok?'#1C412C':'#c00'; d.style.display='block'; if(ok)setTimeout(function(){d.style.display='none';},3000); }
+    window.onerror = function(msg,_,line){ dbg('ERR L'+line+': '+msg.slice(0,50), false); return false; };
     // ── DATA ──────────────────────────────────────────────
     const TOTAL = ${total};
     const SLUG = ${JSON.stringify(slug)};
@@ -785,8 +785,8 @@ export default async function handler(req) {
 
     let curMode = 'learn';
 
-    render();
-    restoreChecks();
+    try { render(); restoreChecks(); dbg('JS OK – '+TOTAL+' screens', true); }
+    catch(e) { dbg('INIT ERR: '+e.message.slice(0,50), false); }
 
     // ── HELPERS ────────────────────────────────────────────
     function eh(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
