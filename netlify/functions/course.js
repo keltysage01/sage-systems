@@ -336,8 +336,9 @@ const CSS = `
   --glass-shine:rgba(255,255,255,0.7);--r:18px;
   --text:#1C412C;--muted:#7A9C78;--shadow:0 4px 24px rgba(28,65,44,.08);
 }
-html,body{height:100%;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(155deg,#e2ead8 0%,#d0e2c4 40%,#c4d9b4 100%);color:var(--text);display:flex;flex-direction:column;height:100vh;height:-webkit-fill-available;overflow:hidden;line-height:1.6}
+html,body{height:100%;margin:0;padding:0;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(155deg,#e2ead8 0%,#d0e2c4 40%,#c4d9b4 100%);color:var(--text);line-height:1.6}
+.app-shell{position:fixed;inset:0;display:flex;flex-direction:column;overflow:hidden}
 .bg-mesh{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 70% 50% at 20% 15%,rgba(200,230,180,.5) 0%,transparent 55%),radial-gradient(ellipse 55% 45% at 80% 80%,rgba(160,210,150,.35) 0%,transparent 55%),radial-gradient(ellipse 60% 55% at 60% 30%,rgba(220,240,200,.4) 0%,transparent 60%);animation:mesh 18s ease-in-out infinite alternate;pointer-events:none}
 @keyframes mesh{0%{opacity:.8}100%{opacity:1;filter:hue-rotate(8deg)}}
 
@@ -351,8 +352,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .progress-rail{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(122,156,120,.2)}
 .progress-fill{height:2px;background:linear-gradient(90deg,var(--olive),var(--neon));transition:width .4s ease}
 
-.course-main{position:relative;z-index:2;flex:1;overflow-y:auto}
-.card-wrap{max-width:740px;margin:0 auto;padding:24px 16px 100px}
+.course-main{flex:1;overflow-y:auto;overflow-x:hidden}
+.card-wrap{max-width:740px;margin:0 auto;padding:24px 16px 32px}
 
 /* SCREENS */
 .screen{display:none}
@@ -363,7 +364,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 @keyframes sInL{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:translateX(0)}}
 
 /* BOTTOM NAV — iOS glass tab bar */
-.course-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.38);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--glass-border);padding:12px 24px max(14px,env(safe-area-inset-bottom,14px));display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:inset 0 1px 0 var(--glass-shine);will-change:transform}
+.course-nav{flex-shrink:0;background:rgba(255,255,255,.38);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--glass-border);padding:12px 24px max(14px,env(safe-area-inset-bottom,14px));display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:inset 0 1px 0 var(--glass-shine)}
 .btn-arrow{width:52px;height:52px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--olive);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;flex-shrink:0;box-shadow:var(--shadow);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn-arrow:hover{background:rgba(255,255,255,.55);transform:scale(1.05)}
 .btn-arrow:disabled{opacity:.22;pointer-events:none}
@@ -577,7 +578,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 /* MOBILE */
 @media(max-width:520px){
-  .card-wrap{padding:16px 12px 100px}
+  .card-wrap{padding:16px 12px 24px}
   .course-nav{padding:10px 16px max(12px,env(safe-area-inset-bottom,12px));gap:8px}
   .btn-arrow{width:42px;height:42px;font-size:1rem}
   .nav-ctr{min-width:48px;font-size:.85rem}
@@ -631,6 +632,7 @@ export default async function handler(req) {
 </head>
 <body>
   <div class="bg-mesh"></div>
+  <div class="app-shell">
   <div class="course-top">
     ${course.logo ? `<img class="top-logo" src="${course.logo}" alt="${esc(course.business_name)}" onerror="this.style.display='none'"/>` : `<div class="top-biz-pill">${esc(course.business_name)}</div>`}
     <div class="top-right">
@@ -682,6 +684,7 @@ export default async function handler(req) {
       <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       <span>Profile</span>
     </button>
+  </div>
   </div>
 
   <script>
