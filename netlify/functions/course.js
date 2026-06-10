@@ -1380,5 +1380,5 @@ export default async function handler(req) {
 </body>
 </html>`;
 
-  return new Response(html, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8" } });
+  return new Response(html, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
 }
