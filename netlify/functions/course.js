@@ -770,6 +770,8 @@ export default async function handler(req) {
       }
     }
 
+    let curMode = 'learn';
+
     render();
     restoreChecks();
 
@@ -777,7 +779,6 @@ export default async function handler(req) {
     function eh(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
     // ── MODE SWITCHING ─────────────────────────────────────
-    let curMode = 'learn';
     function setMode(m) {
       curMode = m;
       document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
