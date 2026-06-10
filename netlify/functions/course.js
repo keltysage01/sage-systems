@@ -6,6 +6,29 @@ function esc(s) {
   return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
+function hexToRgb(h) {
+  h = h.replace('#','');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+function toHex(r,g,b) {
+  return '#'+[r,g,b].map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
+}
+function lighten(h,t) { const [r,g,b]=hexToRgb(h); return toHex(r+(255-r)*t,g+(255-g)*t,b+(255-b)*t); }
+function dk(h,t) { const [r,g,b]=hexToRgb(h); return toHex(r*(1-t),g*(1-t),b*(1-t)); }
+
+function brandCSS(brand) {
+  if (!brand || !/^#[0-9a-fA-F]{6}$/.test(brand)) return '';
+  const olive = dk(brand, 0.08);
+  const oliveMid = lighten(brand, 0.1);
+  const sage = lighten(brand, 0.38);
+  const sageLight = lighten(brand, 0.6);
+  const bg1 = lighten(brand, 0.86);
+  const bg2 = lighten(brand, 0.79);
+  const bg3 = lighten(brand, 0.72);
+  return `:root{--olive:${olive};--olive-mid:${oliveMid};--sage:${sage};--sage-light:${sageLight}}` +
+    `body{background:linear-gradient(155deg,${bg1} 0%,${bg2} 40%,${bg3} 100%)}`;
+}
+
 function buildScreens(course) {
   const { name, business_name, welcome, brain, prompts = [], map = {}, rules = [], checklist = [], logo } = course;
   const biz = esc(business_name);
@@ -337,7 +360,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 /* BOTTOM NAV — iOS glass tab bar */
 .course-nav{flex-shrink:0;position:relative;z-index:100;background:rgba(255,255,255,.38);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-top:1px solid var(--glass-border);padding:12px 24px max(14px,env(safe-area-inset-bottom,14px));display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:inset 0 1px 0 var(--glass-shine)}
-.btn-arrow{width:48px;height:48px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--olive);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;flex-shrink:0;box-shadow:var(--shadow)}
+.btn-arrow{width:52px;height:52px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);color:var(--olive);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;flex-shrink:0;box-shadow:var(--shadow);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn-arrow:hover{background:rgba(255,255,255,.55);transform:scale(1.05)}
 .btn-arrow:disabled{opacity:.22;pointer-events:none}
 .nav-ctr{font-size:.95rem;font-weight:700;color:var(--olive);letter-spacing:-.2px;text-align:center;min-width:64px}
@@ -445,9 +468,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .check-box.checked::after{content:"✓";color:var(--olive);font-size:.65rem;font-weight:900}
 
 /* MODE BAR */
-.mode-bar{flex-shrink:0;position:relative;z-index:50;background:rgba(255,255,255,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);padding:8px 16px;display:none;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;align-items:center}
+.mode-bar{flex-shrink:0;position:relative;z-index:50;background:rgba(255,255,255,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-border);padding:10px 16px;display:none;gap:6px;overflow-x:auto;scrollbar-width:none;align-items:center}
 .mode-bar::-webkit-scrollbar{display:none}
-.mode-btn{flex-shrink:0;padding:7px 16px;border-radius:100px;font-size:.78rem;font-weight:700;border:1px solid transparent;background:transparent;color:var(--sage);cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.mode-btn{flex-shrink:0;padding:9px 18px;min-height:40px;border-radius:100px;font-size:.8rem;font-weight:700;border:1px solid transparent;background:transparent;color:var(--sage);cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .mode-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
 .mode-btn.active{background:var(--olive);color:#fff;border-color:var(--olive);box-shadow:0 2px 8px rgba(28,65,44,.2)}
 /* INTERACTIVE PANELS */
@@ -459,21 +482,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .flash-counter{font-size:.72rem;font-weight:700;color:var(--sage);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
 .flash-bar{height:3px;background:rgba(122,156,120,.2);border-radius:2px;max-width:200px;margin:0 auto;overflow:hidden}
 .flash-bar-fill{height:100%;background:var(--neon);border-radius:2px;transition:width .4s}
-.flash-scene{perspective:1200px;margin:0 auto 14px;max-width:480px;height:210px;cursor:pointer}
-.flash-3d{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.flash-scene{perspective:1200px;margin:0 auto 16px;max-width:520px;height:240px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.flash-3d{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1)}
 .flash-3d.flipped{transform:rotateY(180deg)}
-.flash-face{position:absolute;inset:0;border-radius:20px;background:rgba(255,255,255,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);box-shadow:0 8px 32px rgba(28,65,44,.1),inset 0 1px 0 rgba(255,255,255,.8);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.flash-face-lbl{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
-.flash-face-text{font-size:1.1rem;font-weight:700;color:var(--olive);line-height:1.4}
+.flash-face{position:absolute;inset:0;border-radius:22px;background:rgba(255,255,255,.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);box-shadow:0 8px 40px rgba(28,65,44,.12),inset 0 1px 0 rgba(255,255,255,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;text-align:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flash-face-lbl{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin-bottom:12px}
+.flash-face-text{font-size:1.15rem;font-weight:700;color:var(--olive);line-height:1.45}
 .flash-back-face{transform:rotateY(180deg)}
-.flash-back-face .flash-face-text{font-size:.92rem;font-weight:500;color:var(--olive-mid);line-height:1.6}
-.flash-hint{font-size:.7rem;color:var(--sage);text-align:center;margin-bottom:14px}
-.flash-btns{display:flex;gap:10px;max-width:480px;margin:0 auto}
+.flash-back-face .flash-face-text{font-size:.95rem;font-weight:500;color:var(--olive-mid);line-height:1.65}
+.flash-tap-cue{font-size:.72rem;color:var(--sage);text-align:center;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+.flash-btns{display:flex;gap:10px;max-width:520px;margin:0 auto}
 .flash-btns.hidden{visibility:hidden;pointer-events:none}
-.btn-still{flex:1;padding:12px;border-radius:14px;border:1px solid rgba(122,156,120,.3);background:rgba(255,255,255,.4);color:var(--sage);font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
-.btn-know{flex:1;padding:12px;border-radius:14px;border:1px solid rgba(0,240,87,.4);background:rgba(0,240,87,.1);color:var(--olive-mid);font-size:.85rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
-.btn-still:hover{background:rgba(255,255,255,.65)}
-.btn-know:hover{background:rgba(0,240,87,.2)}
+.btn-still{flex:1;min-height:52px;padding:14px 12px;border-radius:16px;border:1.5px solid rgba(122,156,120,.35);background:rgba(255,255,255,.5);color:var(--sage);font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn-know{flex:1;min-height:52px;padding:14px 12px;border-radius:16px;border:1.5px solid rgba(0,240,87,.5);background:rgba(0,240,87,.15);color:var(--olive-mid);font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn-still:active{background:rgba(255,255,255,.8)}
+.btn-know:active{background:rgba(0,240,87,.3)}
 .flash-done{text-align:center;padding:32px 0}
 .flash-done-icon{font-size:2.8rem;margin-bottom:12px}
 .flash-done-title{font-size:1.3rem;font-weight:800;color:var(--olive);margin-bottom:8px}
@@ -481,11 +504,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 /* QUIZ */
 .quiz-qnum{font-size:.63rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
 .quiz-qtext{font-size:1rem;font-weight:700;color:var(--olive);line-height:1.55;margin-bottom:18px}
-.quiz-choices{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
-.quiz-choice{padding:13px 17px;border-radius:14px;border:1px solid var(--glass-border);background:rgba(255,255,255,.45);backdrop-filter:blur(10px);color:var(--olive);font-size:.88rem;font-weight:600;text-align:left;cursor:pointer;transition:all .2s;font-family:inherit;width:100%}
-.quiz-choice:hover:not(:disabled){background:rgba(255,255,255,.65);border-color:rgba(122,156,120,.5)}
-.quiz-choice.correct{background:rgba(0,240,87,.15);border-color:rgba(0,240,87,.5);color:var(--olive-mid)}
-.quiz-choice.wrong{background:rgba(220,50,50,.1);border-color:rgba(220,50,50,.4);color:#7a2020}
+.quiz-choices{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.quiz-choice{padding:16px 20px;min-height:56px;border-radius:16px;border:1.5px solid var(--glass-border);background:rgba(255,255,255,.55);backdrop-filter:blur(10px);color:var(--olive);font-size:.92rem;font-weight:600;text-align:left;cursor:pointer;transition:all .2s;font-family:inherit;width:100%;display:flex;align-items:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;line-height:1.4}
+.quiz-choice:active:not(:disabled){background:rgba(255,255,255,.8)}
+.quiz-choice.correct{background:rgba(0,240,87,.18);border-color:rgba(0,240,87,.6);color:var(--olive-mid)}
+.quiz-choice.wrong{background:rgba(220,50,50,.1);border-color:rgba(220,50,50,.45);color:#7a2020}
 .quiz-choice:disabled{cursor:default}
 .quiz-feed{padding:13px 16px;border-radius:14px;font-size:.83rem;line-height:1.5;display:none}
 .quiz-feed.show{display:block}
@@ -503,7 +526,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .match-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .match-col-lbl{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;text-align:center}
 .match-col-cards{display:flex;flex-direction:column;gap:8px}
-.match-card{padding:11px 12px;border-radius:12px;border:1px solid var(--glass-border);background:rgba(255,255,255,.45);backdrop-filter:blur(10px);color:var(--olive);font-size:.8rem;font-weight:600;line-height:1.4;cursor:pointer;transition:all .25s;text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center}
+.match-card{padding:14px 12px;border-radius:14px;border:1.5px solid var(--glass-border);background:rgba(255,255,255,.55);backdrop-filter:blur(10px);color:var(--olive);font-size:.82rem;font-weight:600;line-height:1.4;cursor:pointer;transition:all .25s;text-align:center;min-height:64px;display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .match-card:hover:not(.matched):not(.selected){background:rgba(255,255,255,.65)}
 .match-card.selected{background:rgba(28,65,44,.12);border-color:var(--olive);box-shadow:0 0 0 2px var(--olive)}
 .match-card.matched{background:rgba(0,240,87,.12);border-color:rgba(0,240,87,.5);color:var(--olive-mid);cursor:default;opacity:.8}
@@ -514,7 +537,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .match-done-title{font-size:1.3rem;font-weight:800;color:var(--olive);margin-bottom:8px}
 .match-done-sub{font-size:.88rem;color:var(--sage);margin-bottom:20px}
 /* BACK TO LEARN NAV */
-.btn-mode-back{padding:9px 20px;border-radius:100px;background:rgba(255,255,255,.5);border:1px solid var(--glass-border);color:var(--olive);font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;backdrop-filter:blur(10px)}
+.btn-mode-back{padding:12px 22px;min-height:46px;border-radius:100px;background:rgba(255,255,255,.5);border:1px solid var(--glass-border);color:var(--olive);font-size:.84rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;backdrop-filter:blur(10px);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .btn-mode-back:hover{background:rgba(255,255,255,.7)}
 /* RESTART BTN */
 .btn-restart{padding:10px 24px;border-radius:100px;background:rgba(255,255,255,.5);border:1px solid var(--glass-border);color:var(--olive);font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;display:inline-block}
@@ -595,7 +618,7 @@ export default async function handler(req) {
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>AI Course — ${esc(course.business_name)}</title>
-  <style>${CSS}</style>
+  <style>${CSS}</style>${brandCSS(course.brand_color) ? `<style>${brandCSS(course.brand_color)}</style>` : ''}
 </head>
 <body>
   <div class="bg-mesh"></div>
@@ -796,11 +819,11 @@ export default async function handler(req) {
         + '<div class="flash-header"><div class="flash-counter">'+(fIdx+1)+' / '+fQueue.length+'</div>'
         + '<div class="flash-bar"><div class="flash-bar-fill" style="width:'+pct+'%"></div></div></div>'
         + '<div class="flash-scene" onclick="flipFlash()">'
-        + '<div class="flash-3d" id="fc3d" style="'+(fFlipped?'transform:rotateY(180deg)':'')+'"">'
+        + '<div class="flash-3d" id="fc3d"' + (fFlipped?' style="transform:rotateY(180deg)"':'') + '>'
         + '<div class="flash-face"><div class="flash-face-lbl">Term</div><div class="flash-face-text">'+eh(card.term)+'</div></div>'
         + '<div class="flash-face flash-back-face"><div class="flash-face-lbl">Definition</div><div class="flash-face-text">'+eh(card.def)+'</div></div>'
         + '</div></div>'
-        + '<div class="flash-hint">'+(fFlipped?'Tap card to flip back':'Tap card to reveal definition')+'</div>'
+        + '<div class="flash-tap-cue">'+(fFlipped?'↩ Tap to flip back':'👆 Tap card to reveal definition')+'</div>'
         + '<div class="flash-btns'+(fFlipped?'':' hidden')+'" id="fbtns">'
         + '<button class="btn-still" onclick="markFlash(false)">Still learning</button>'
         + '<button class="btn-know" onclick="markFlash(true)">Got it ✓</button>'
@@ -810,7 +833,7 @@ export default async function handler(req) {
       fFlipped = !fFlipped;
       const c = document.getElementById('fc3d');
       if (c) c.style.transform = fFlipped ? 'rotateY(180deg)' : '';
-      const h = document.querySelector('.flash-hint'); if (h) h.textContent = fFlipped ? 'Tap card to flip back' : 'Tap card to reveal definition';
+      const h = document.querySelector('.flash-tap-cue'); if (h) h.textContent = fFlipped ? '↩ Tap to flip back' : '👆 Tap card to reveal definition';
       const b = document.getElementById('fbtns'); if (b) b.classList.toggle('hidden', !fFlipped);
     }
     function markFlash(known) { if(known) fKnown.add(fQueue[fIdx]); fIdx++; fFlipped=false; renderFlash(); }
