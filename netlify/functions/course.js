@@ -346,7 +346,7 @@ function buildScreens(course) {
 
 // ── CSS ──────────────────────────────────────────────────────────────
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --eg-bg:#070A0F;--eg-bg-2:#0A0E15;--eg-bg-3:#0D1219;
@@ -365,7 +365,7 @@ const CSS = `
   --sand:rgba(13,18,25,0.58);--sand2:rgba(9,13,20,0.82);
   --line:rgba(234,240,255,0.08);
   --display:"Bebas Neue",Impact,"Arial Narrow",sans-serif;
-  --body:"Syne",system-ui,sans-serif;
+  --body:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --mono:"JetBrains Mono",ui-monospace,monospace;
   --r:14px;
 }
