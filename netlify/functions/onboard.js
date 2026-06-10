@@ -174,6 +174,7 @@ ${TOOLS_KB}`;
     id: courseId, name, email, business_name, brand_color,
     welcome, brain, prompts, tools, map, rules, checklist,
     logo: logo || null, study: { flashcards: [], quiz: [], match: [] },
+    intake: { name, email, business_name, website, offer, brand_color, tone, tagline, ideal_client, priority_task, tools_needed, off_limits, learning_style, extra_notes },
   };
 
   const store = getStore("courses");
