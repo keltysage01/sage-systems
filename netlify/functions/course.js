@@ -724,37 +724,6 @@ body{font-family:var(--body);background:#fff;color:var(--text);-webkit-font-smoo
 .pts-float{position:fixed;pointer-events:none;z-index:300;font-family:var(--display);font-weight:800;font-size:1.4rem;color:var(--text);left:50%;transform:translateX(-50%);animation:pfloat .9s ease-out forwards}
 @keyframes pfloat{0%{opacity:1;top:65%}100%{opacity:0;top:35%}}
 
-/* AI TODAY */
-.mode-btn-news.active{background:linear-gradient(135deg,var(--olive),var(--sage));border-color:transparent}
-.news-wrap{padding:16px 18px 32px}
-.news-eyebrow{font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:4px}
-.news-headline-main{font-family:var(--display);font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--text);line-height:1.1;margin-bottom:4px}
-.news-subhead{font-size:.82rem;color:var(--text-mid);line-height:1.5;margin-bottom:18px}
-.news-grid{display:flex;flex-direction:column;gap:11px}
-.news-card{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:16px 16px 14px;animation:sInR .3s cubic-bezier(.2,.8,.2,1) both}
-.news-card:nth-child(2){animation-delay:.06s}
-.news-card:nth-child(3){animation-delay:.12s}
-.news-card:nth-child(4){animation-delay:.18s}
-.news-card:nth-child(5){animation-delay:.24s}
-.news-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
-.news-tool-name{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--text);letter-spacing:.01em;line-height:1.1}
-.news-tag{font-family:var(--mono);font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:99px;white-space:nowrap;flex-shrink:0}
-.news-tag-new{color:var(--olive);background:var(--sand);border:1px solid var(--line)}
-.news-tag-update{color:#1a6b8a;background:#e8f4f8;border:1px solid #b8dcec}
-.news-tag-feature{color:#5a3a9a;background:#f0ebfa;border:1px solid #d8c8f0}
-.news-tag-tip{color:#7a5a20;background:#fdf3dc;border:1px solid #f0d898}
-.news-tag-free{color:#1c5a2c;background:#e8f5ec;border:1px solid #a8d8b8}
-.news-card-headline{font-size:.88rem;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:7px}
-.news-card-why{font-size:.82rem;color:var(--text-mid);line-height:1.55;margin-bottom:10px}
-.news-card-action{background:var(--sand);border-left:2.5px solid var(--olive);border-radius:0 8px 8px 0;padding:8px 11px;font-size:.77rem;color:var(--text-mid);line-height:1.5}
-.news-card-action strong{color:var(--text);font-weight:700}
-.news-meta{font-family:var(--mono);font-size:.56rem;color:var(--sage);text-transform:uppercase;letter-spacing:.09em;text-align:center;margin:14px 0 6px}
-.news-refresh-btn{display:block;margin:0 auto;background:none;border:1.5px solid var(--line);color:var(--sage);font-family:var(--mono);font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:8px 18px;border-radius:99px;cursor:pointer;transition:border-color .15s,color .15s}
-.news-refresh-btn:active{border-color:var(--sage);color:var(--text)}
-.news-loading{text-align:center;padding:52px 20px 20px}
-.news-loading-ring{width:36px;height:36px;border:2.5px solid var(--line);border-top-color:var(--olive);border-radius:50%;margin:0 auto 16px;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.news-loading-text{font-family:var(--mono);font-size:.65rem;color:var(--sage);text-transform:uppercase;letter-spacing:.1em;line-height:1.7}
 
 /* MOBILE */
 @media(max-width:480px){
@@ -772,8 +741,7 @@ body{font-family:var(--body);background:#fff;color:var(--text);-webkit-font-smoo
   .flash-scene{height:190px}
   .tool-card{padding:13px 14px}
   .match-card{font-size:.75rem;min-height:50px;padding:10px 8px}
-  .news-wrap{padding:14px 14px 28px}
-  .win-icon{width:60px;height:60px}
+.win-icon{width:60px;height:60px}
   .win-text{font-size:1.5rem}
 }
 `;
@@ -835,10 +803,6 @@ export default async function handler(req) {
         <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
         Match
       </button>
-      <button class="mode-btn mode-btn-news" data-mode="news" onclick="setMode('news')">
-        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        AI Today
-      </button>
     </div>
 
     <div class="course-main" id="course-main">
@@ -848,7 +812,6 @@ export default async function handler(req) {
       <div id="flash-panel" class="imode-panel" style="display:none"></div>
       <div id="quiz-panel" class="imode-panel" style="display:none"></div>
       <div id="match-panel" class="imode-panel" style="display:none"></div>
-      <div id="news-panel" class="imode-panel" style="display:none"></div>
     </div>
 
     <div class="dots" id="dots"></div>
@@ -1123,7 +1086,7 @@ export default async function handler(req) {
       curMode = m;
       document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === m));
       document.getElementById('learn-panel').style.display = m === 'learn' ? '' : 'none';
-      ['flash','quiz','match','news'].forEach(p => document.getElementById(p+'-panel').style.display = m === p ? '' : 'none');
+      ['flash','quiz','match'].forEach(p => document.getElementById(p+'-panel').style.display = m === p ? '' : 'none');
       const backBtn = document.getElementById('btn-back');
       const nextBtn = document.getElementById('btn-next');
       const modeBack = document.getElementById('btn-mode-back');
@@ -1141,7 +1104,6 @@ export default async function handler(req) {
       if (m === 'flash') initFlash();
       if (m === 'quiz')  initQuiz();
       if (m === 'match') initMatch();
-      if (m === 'news')  initNews();
     }
 
     // ── FLASHCARDS ──────────────────────────────────────────
@@ -1327,55 +1289,6 @@ export default async function handler(req) {
       }
     }
 
-    // ── AI TODAY ────────────────────────────────────────────
-    let newsLoaded = false;
-    function initNews(force) {
-      const panel = document.getElementById('news-panel');
-      if (!panel) return;
-      if (newsLoaded && !force) return;
-      panel.innerHTML = '<div class="news-wrap"><div class="news-loading"><div class="news-loading-ring"></div><div class="news-loading-text">Scanning AI for<br/>'+BIZ+'…</div></div></div>';
-      fetch('/api/ai-news?id=${slug}' + (force ? '&refresh=1' : ''))
-        .then(r => r.ok ? r.json() : Promise.reject(r.status))
-        .then(data => {
-          const items = data.items || [];
-          const ageMs = Date.now() - (data.generated_at || Date.now());
-          const ageH = Math.round(ageMs / 3600000);
-          const ageText = ageH < 1 ? 'Just updated' : ageH === 1 ? '1 hour ago' : ageH + ' hours ago';
-          const tagClass = t => {
-            if (t==='Free') return 'news-tag-free';
-            if (t==='Major Update'||t==='New Feature') return 'news-tag-update';
-            if (t==='Tip') return 'news-tag-tip';
-            return 'news-tag-new';
-          };
-          panel.innerHTML = '<div class="news-wrap">'
-            + '<div class="news-eyebrow">AI Intelligence</div>'
-            + '<div class="news-headline-main">What\\'s New in AI</div>'
-            + '<div class="news-subhead">Fresh picks for '+BIZ+' — updated daily.</div>'
-            + '<div class="news-grid">'
-            + items.map(item =>
-                '<div class="news-card">'
-                + '<div class="news-card-top">'
-                + '<div class="news-tool-name">' + escHtml(item.tool) + '</div>'
-                + '<span class="news-tag ' + tagClass(item.tag) + '">' + escHtml(item.tag) + '</span>'
-                + '</div>'
-                + '<div class="news-card-headline">' + escHtml(item.headline) + '</div>'
-                + '<div class="news-card-why">' + escHtml(item.why) + '</div>'
-                + '<div class="news-card-action"><strong>Try today:</strong> ' + escHtml(item.action) + '</div>'
-                + '</div>'
-              ).join('')
-            + '</div>'
-            + '<div class="news-meta">' + ageText + ' · Personalized for your business</div>'
-            + '<button class="news-refresh-btn" onclick="initNews(true)">↻ Refresh</button>'
-            + '</div>';
-          newsLoaded = true;
-        })
-        .catch(() => {
-          panel.innerHTML = '<div class="news-wrap"><p style="text-align:center;color:var(--sage);font-size:.88rem;padding:40px 0">Couldn\\'t load updates right now.<br/><br/><button class="news-refresh-btn" onclick="initNews(true)">Try again</button></p></div>';
-        });
-    }
-    function escHtml(s) {
-      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
   </script>
 </body>
 </html>`;
