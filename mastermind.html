@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The AI Mastermind — Navigate AI Together | eCon Growth</title>
+  <meta name="description" content="Four live sessions a week. A weekly AI forecast every Sunday. A room full of people who are actually building. Free to join.">
+  <link rel="icon" type="image/png" href="/assets/logo.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#070A0F;--bg2:#0A0E15;--bg3:#0D1219;
+      --green:#21E68A;--gs:rgba(33,230,138,.08);--gb:rgba(33,230,138,.22);--gg:rgba(33,230,138,.45);
+      --text:#EAF0FF;--mu:rgba(234,240,255,.65);--mu2:rgba(234,240,255,.4);--mu3:rgba(234,240,255,.18);
+      --bd:rgba(234,240,255,.07);--bd2:rgba(234,240,255,.11);
+      --red:#EF4444;
+      --display:"Bebas Neue",Impact,"Arial Narrow",sans-serif;
+      --mono:"JetBrains Mono",ui-monospace,monospace;
+      --body:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:var(--body);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6}
+
+    /* ── SCROLL PROGRESS ── */
+    #scroll-prog{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--green),rgba(150,255,210,.8));z-index:9999;pointer-events:none;box-shadow:0 0 10px rgba(33,230,138,.6);transition:width .1s linear}
+
+    /* ── BG MESH ── */
+    .bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;
+      background:radial-gradient(circle at 75% -8%,rgba(33,230,138,.10),transparent 34rem),
+                radial-gradient(circle at 8% 108%,rgba(33,230,138,.07),transparent 28rem),
+                linear-gradient(180deg,var(--bg),var(--bg2))}
+    .bg-mesh::before{content:"";position:absolute;inset:0;
+      background-image:linear-gradient(rgba(33,230,138,.016) 1px,transparent 1px),linear-gradient(90deg,rgba(33,230,138,.016) 1px,transparent 1px);
+      background-size:54px 54px;mask-image:linear-gradient(to bottom,black 0%,rgba(0,0,0,.15) 100%)}
+    .bg-mesh::after{content:"";position:absolute;inset:0;opacity:.14;
+      background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.22) 3px,rgba(0,0,0,0) 4px)}
+
+    /* ── CANVAS ── */
+    #hero-canvas{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.6}
+
+    /* ── FLOATING ORBS ── */
+    .orb{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;will-change:transform}
+    .orb-a{width:700px;height:700px;background:radial-gradient(circle,rgba(33,230,138,.09),transparent 65%);top:-200px;right:-200px;animation:orbA 30s ease-in-out infinite}
+    .orb-b{width:500px;height:500px;background:radial-gradient(circle,rgba(33,230,138,.06),transparent 65%);bottom:-100px;left:-150px;animation:orbB 38s ease-in-out infinite}
+    @keyframes orbA{0%,100%{transform:translate(0,0)}33%{transform:translate(-60px,40px)}66%{transform:translate(40px,-30px)}}
+    @keyframes orbB{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,-60px)}}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 28px;height:62px;display:flex;justify-content:space-between;align-items:center;transition:background .4s,border-color .4s}
+    nav.scrolled{background:rgba(7,10,15,.95);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--bd)}
+    .logo{display:inline-flex;align-items:center;gap:7px;text-decoration:none;white-space:nowrap}
+    .logo-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(33,230,138,.7),0 0 26px rgba(33,230,138,.25);animation:glow 2.4s infinite}
+    @keyframes glow{0%,100%{box-shadow:0 0 8px rgba(33,230,138,.6)}50%{box-shadow:0 0 18px rgba(33,230,138,.9),0 0 40px rgba(33,230,138,.3)}}
+    .logo-text{font-family:var(--display);font-size:20px;letter-spacing:.06em;color:var(--text);text-transform:uppercase;line-height:1}
+    .logo-c{color:var(--green)}
+    .nav-join{background:var(--green);color:var(--bg);font-family:var(--body);font-size:.82rem;font-weight:800;padding:9px 20px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap}
+    .nav-join:hover{background:#fff;box-shadow:0 0 28px rgba(33,230,138,.5);transform:translateY(-1px)}
+
+    /* ── SCROLL REVEAL ── */
+    .rv{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+    .rv.in{opacity:1;transform:translateY(0)}
+    .rv-left{opacity:0;transform:translateX(-28px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+    .rv-left.in{opacity:1;transform:translateX(0)}
+    .rv-right{opacity:0;transform:translateX(28px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+    .rv-right.in{opacity:1;transform:translateX(0)}
+
+    /* ── REUSABLE ── */
+    .section{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:32px 24px}
+    .section-label{font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .section-label::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(33,230,138,.6);flex-shrink:0}
+    h2{font-family:var(--display);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:400;letter-spacing:.02em;text-transform:uppercase;line-height:.92;color:var(--text)}
+    h2 em{font-style:normal;color:var(--green)}
+    .subhead{font-size:1.05rem;color:var(--mu);line-height:1.75}
+    .btn-green{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:var(--bg);font-family:var(--body);font-size:1rem;font-weight:800;padding:16px 36px;border-radius:8px;text-decoration:none;box-shadow:0 0 40px rgba(33,230,138,.35),0 0 80px rgba(33,230,138,.12);transition:transform .2s,box-shadow .2s,background .2s;cursor:pointer;border:none}
+    .btn-green:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(33,230,138,.55),0 0 100px rgba(33,230,138,.25);background:#2fffaa}
+    .btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text);font-family:var(--body);font-size:.95rem;font-weight:700;padding:15px 28px;border-radius:8px;text-decoration:none;border:1px solid var(--bd2);transition:all .2s}
+    .btn-ghost:hover{border-color:var(--gb);color:var(--green);background:var(--gs)}
+    .cta-note{font-family:var(--mono);font-size:.65rem;color:var(--mu2);letter-spacing:.1em;text-transform:uppercase}
+    .divider{border:none;border-top:1px solid var(--bd)}
+
+    /* ── HERO ── */
+    .hero{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 24px 64px;overflow:hidden}
+    .hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--gs);border:1px solid var(--gb);color:var(--green);font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:7px 18px;border-radius:4px;margin-bottom:24px;opacity:0;animation:fadeUp .6s .1s ease forwards;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100vw - 48px)}
+    .hero-badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--green);animation:glow 2.2s infinite;flex-shrink:0}
+    .hero h1{font-family:var(--display);font-size:clamp(2.4rem,10vw,7rem);font-weight:400;letter-spacing:.01em;line-height:.9;text-transform:uppercase;color:var(--text);margin-bottom:22px;overflow-wrap:break-word;word-break:break-word}
+    .hero h1 em{font-style:normal;color:var(--green)}
+    .hero .tw-line{display:block;opacity:0;transform:translateY(24px)}
+    .hero .subhead{max-width:560px;margin:0 auto 36px;font-size:1rem;opacity:0;animation:fadeUp .7s .9s ease forwards}
+    .hero-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;opacity:0;animation:fadeUp .6s 1.1s ease forwards}
+    .hero-note{margin-top:14px;opacity:0;animation:fadeUp .5s 1.3s ease forwards}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── TICKER ── */
+    .ticker-wrap{position:relative;z-index:2;overflow:hidden;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);background:rgba(7,10,15,.9);backdrop-filter:blur(12px);padding:12px 0}
+    .ticker-track{display:flex;white-space:nowrap;animation:tickerScroll 32s linear infinite}
+    .ticker-item{display:inline-flex;align-items:center;gap:8px;padding:0 28px;font-family:var(--mono);font-size:.72rem;color:var(--mu2);letter-spacing:.08em;text-transform:uppercase}
+    .ticker-item .dot{width:4px;height:4px;border-radius:50%;background:var(--green);opacity:.6;flex-shrink:0}
+    @keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    /* ── PROBLEM ── */
+    .problem-sec{background:var(--bg2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+    .problem-list{display:flex;flex-direction:column;gap:4px;margin-top:14px}
+    .problem-item{display:flex;align-items:flex-start;gap:13px;padding:18px 20px;background:rgba(7,10,15,.7);border:1px solid var(--bd2);border-radius:10px;transition:border-color .3s,background .3s;opacity:0;transform:translateX(-20px);transition:opacity .5s,transform .5s,border-color .3s,background .3s}
+    .problem-item.in{opacity:1;transform:translateX(0)}
+    .problem-item:hover{border-color:rgba(239,68,68,.2);background:rgba(239,68,68,.03)}
+    .px{color:var(--red);font-size:13px;flex-shrink:0;margin-top:2px}
+    .pt{font-family:var(--mono);font-size:.78rem;color:var(--mu);line-height:1.65}
+    .pt strong{color:var(--text)}
+    .truth-box{margin-top:14px;padding:26px 28px;background:rgba(33,230,138,.05);border:1px solid var(--gb);border-radius:12px;position:relative;overflow:hidden}
+    .truth-box::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
+    .truth-box p{font-family:var(--mono);font-size:.82rem;color:var(--mu);line-height:1.75}
+    .truth-box p strong{color:var(--text)}
+
+    /* ── WEEK SCHEDULE VISUAL ── */
+    .schedule-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+    .schedule-day{background:rgba(13,18,25,.8);border:1px solid var(--bd2);border-radius:10px;padding:16px 14px;text-align:center;transition:all .4s;position:relative;overflow:hidden}
+    .schedule-day::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+    .schedule-day.lit{border-color:var(--gb);background:rgba(33,230,138,.05)}
+    .schedule-day.lit::before{transform:scaleX(1)}
+    .sd-day{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+    .sd-topic{font-family:var(--mono);font-size:.72rem;color:var(--mu);line-height:1.5}
+
+    /* ── PLAN ── */
+    .plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;position:relative}
+    .plan-connector{position:absolute;top:36px;left:calc(33.33% + 7px);right:calc(33.33% + 7px);height:1px;background:linear-gradient(90deg,var(--green),var(--green));opacity:.25;z-index:0}
+    .plan-step{background:rgba(13,18,25,.85);border:1px solid var(--bd2);border-radius:14px;padding:32px 24px;position:relative;overflow:hidden;transition:border-color .3s,transform .3s;z-index:1}
+    .plan-step:hover{border-color:var(--gb);transform:translateY(-4px)}
+    .plan-step::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);opacity:0;transition:opacity .3s}
+    .plan-step:hover::before{opacity:1}
+    .plan-num{font-family:var(--display);font-size:3rem;color:var(--green);line-height:1;margin-bottom:12px;opacity:.6}
+    .plan-title{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text);margin-bottom:10px}
+    .plan-desc{font-family:var(--mono);font-size:.76rem;color:var(--mu);line-height:1.7}
+
+    /* ── WHAT YOU GET ── */
+    .get-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px}
+    .get-card{background:rgba(13,18,25,.85);border:1px solid var(--bd2);border-radius:14px;padding:30px 26px;transition:all .3s;cursor:default}
+    .get-card:hover{border-color:var(--gb);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.4),0 0 30px rgba(33,230,138,.04)}
+    .get-title{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:9px}
+    .get-desc{font-size:.9rem;color:var(--mu);line-height:1.7}
+    .get-note{font-family:var(--mono);font-size:.62rem;color:var(--mu2);margin-top:8px;letter-spacing:.06em}
+
+    /* ── FOR SECTION ── */
+    .for-sec{background:var(--bg2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+    .for-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+    .for-list{display:flex;flex-direction:column;gap:4px;margin-top:14px}
+    .for-item{display:flex;align-items:flex-start;gap:13px;padding:18px 20px;background:rgba(7,10,15,.7);border:1px solid var(--bd2);border-radius:10px;transition:all .3s}
+    .for-item:hover{border-color:var(--gb);background:rgba(33,230,138,.03)}
+    .for-item.no{opacity:.6}
+    .for-item.no:hover{border-color:rgba(239,68,68,.18);background:rgba(239,68,68,.03)}
+    .fc{font-size:13px;font-weight:700;flex-shrink:0;margin-top:2px}
+    .fc.yes{color:var(--green)}
+    .fc.no{color:var(--red)}
+    .ft{font-family:var(--mono);font-size:.78rem;color:var(--mu);line-height:1.65}
+    .ft strong{color:var(--text)}
+
+    /* ── WINS ── */
+    .wins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+    .win-card{background:rgba(13,18,25,.85);border:1px solid var(--bd2);border-radius:14px;padding:28px 22px;min-height:180px;display:flex;flex-direction:column;justify-content:flex-end;transition:all .3s}
+    .win-card.ph{border-style:dashed;opacity:.4;align-items:center;justify-content:center;gap:8px}
+    .win-card:not(.ph):hover{border-color:var(--gb);transform:translateY(-4px)}
+    .win-ph-icon{font-size:24px;color:var(--mu2)}
+    .win-ph-text{font-family:var(--mono);font-size:.62rem;color:var(--mu2);letter-spacing:.1em;text-transform:uppercase;text-align:center}
+    .win-quote{font-size:.9rem;color:var(--mu);line-height:1.7;font-style:italic;margin-bottom:14px}
+    .win-name{font-family:var(--mono);font-size:.65rem;font-weight:700;color:var(--green);letter-spacing:.1em;text-transform:uppercase}
+
+    /* ── OPTIN ── */
+    .optin-sec{padding:36px 24px;position:relative;z-index:2;text-align:center}
+    .optin-inner{max-width:520px;margin:0 auto}
+    @property --beam{syntax:"<angle>";inherits:false;initial-value:0deg}
+    .optin-card{background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.01) 40%,rgba(33,230,138,.025)),rgba(13,18,25,.75);border:1px solid var(--gb);border-radius:20px;padding:52px 40px;position:relative;overflow:hidden;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px)}
+    .optin-card::before{content:"";position:absolute;inset:0;border-radius:20px;padding:1.5px;background:conic-gradient(from var(--beam,0deg),transparent 0deg 260deg,rgba(33,230,138,.4) 300deg,var(--green) 330deg,rgba(33,230,138,.4) 352deg,transparent 360deg);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:beamspin 8s linear infinite;pointer-events:none}
+    @keyframes beamspin{to{--beam:360deg}}
+    .optin-badge{display:inline-flex;align-items:center;gap:7px;background:var(--gs);border:1px solid var(--gb);color:var(--green);font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:7px 16px;border-radius:4px;margin-bottom:22px}
+    .optin-badge::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--green);animation:glow 2.2s infinite}
+    .optin-card h2{font-size:clamp(2rem,5vw,3rem);margin-bottom:14px}
+    .optin-card .subhead{font-size:.95rem;margin-bottom:32px}
+    .optin-form{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+    .optin-field input{width:100%;background:rgba(7,10,15,.85);border:1px solid var(--bd2);border-radius:10px;padding:14px 16px;font-size:.92rem;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;font-family:var(--body)}
+    .optin-field input::placeholder{color:var(--mu2)}
+    .optin-field input:focus{border-color:rgba(33,230,138,.45);box-shadow:0 0 0 3px rgba(33,230,138,.1)}
+    .optin-submit{width:100%;background:var(--green);color:var(--bg);font-family:var(--body);font-size:1rem;font-weight:800;padding:16px 24px;border-radius:8px;border:none;cursor:pointer;box-shadow:0 0 32px rgba(33,230,138,.35);transition:all .2s}
+    .optin-submit:hover{transform:translateY(-1px);box-shadow:0 0 52px rgba(33,230,138,.55);background:#2fffaa}
+    .optin-disclaimer{font-family:var(--mono);font-size:.6rem;color:var(--mu2);letter-spacing:.06em;line-height:1.7}
+    #optin-success{display:none;text-align:left;padding:4px 0}
+    .success-label{font-family:var(--mono);font-size:.65rem;color:var(--green);letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+    .success-label::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(33,230,138,.8);flex-shrink:0;animation:glow 2s infinite}
+    .success-name{font-family:var(--display);font-size:clamp(1.8rem,5vw,2.4rem);color:var(--text);line-height:1;margin-bottom:6px;letter-spacing:.02em;text-transform:uppercase}
+    .success-sub{font-size:.88rem;color:var(--mu);margin-bottom:20px}
+    .meet-card{background:rgba(33,230,138,.05);border:1px solid var(--gb);border-radius:12px;padding:20px 22px;margin-bottom:14px}
+    .meet-card-eyebrow{font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+    .meet-card-name{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:3px}
+    .meet-card-time{font-family:var(--mono);font-size:.72rem;color:var(--mu);margin-bottom:16px}
+    .meet-join-btn{display:flex;align-items:center;justify-content:center;gap:9px;background:var(--green);color:var(--bg);font-family:var(--body);font-size:.95rem;font-weight:800;padding:13px 20px;border-radius:8px;text-decoration:none;width:100%;box-shadow:0 0 28px rgba(33,230,138,.4);transition:all .2s}
+    .meet-join-btn:hover{background:#2fffaa;box-shadow:0 0 44px rgba(33,230,138,.6);transform:translateY(-1px)}
+    .meet-join-btn svg{flex-shrink:0}
+    .meet-dial{font-family:var(--mono);font-size:.62rem;color:var(--mu2);margin-top:11px;line-height:1.85}
+    .meet-dial a{color:var(--mu2);text-decoration:none;border-bottom:1px solid rgba(234,240,255,.12)}
+    .meet-dial a:hover{color:var(--green)}
+    .success-footer{font-family:var(--mono);font-size:.65rem;color:var(--mu2);letter-spacing:.06em;line-height:1.75;padding-top:14px;border-top:1px solid var(--bd);margin-top:4px}
+
+    /* ── FAQ ── */
+    .faq-list{display:flex;flex-direction:column;gap:3px;margin-top:18px;max-width:700px;margin-left:auto;margin-right:auto}
+    .faq-item{background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;overflow:hidden;transition:border-color .3s}
+    .faq-item.open{border-color:var(--gb)}
+    .faq-q{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;cursor:pointer;gap:20px;-webkit-tap-highlight-color:transparent}
+    .faq-q:hover{background:rgba(33,230,138,.02)}
+    .faq-q-text{font-family:var(--body);font-size:.92rem;font-weight:700;color:var(--text);line-height:1.4}
+    .faq-icon{width:28px;height:28px;border-radius:6px;background:var(--gs);border:1px solid var(--gb);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;color:var(--green);transition:transform .3s;line-height:1}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .42s ease}
+    .faq-item.open .faq-a{max-height:320px}
+    .faq-a-inner{padding:0 28px 22px;font-family:var(--body);font-size:.88rem;color:var(--mu);line-height:1.75;border-top:1px solid var(--bd)}
+    .faq-a-inner p{padding-top:16px}
+
+    /* ── FINAL CTA BOX ── */
+    .final-box{margin-top:28px;padding:52px 32px;background:rgba(33,230,138,.05);border:1px solid var(--gb);border-radius:16px;position:relative;overflow:hidden;text-align:center}
+    .final-box::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
+
+    /* ── FOOTER ── */
+    footer{position:relative;z-index:2;border-top:1px solid var(--bd);padding:28px 24px;text-align:center}
+    footer .logo{justify-content:center;margin-bottom:14px}
+    .footer-note{font-family:var(--mono);font-size:.65rem;color:var(--mu2);letter-spacing:.08em;line-height:1.9}
+    .footer-note a{color:var(--mu2);text-decoration:none}
+    .footer-note a:hover{color:var(--green)}
+
+    /* ── MOBILE ── */
+    @media(max-width:760px){
+      .problem-grid,.for-grid{grid-template-columns:1fr;gap:32px}
+      .plan-grid,.wins-grid{grid-template-columns:1fr}
+      .get-grid{grid-template-columns:1fr}
+      .schedule-strip{grid-template-columns:1fr 1fr}
+      .optin-card{padding:28px 18px}
+      .plan-connector{display:none}
+      nav{padding:0 18px}
+      .btn-green{width:100%;justify-content:center;padding:15px 20px;font-size:.95rem}
+      .btn-ghost{width:100%;justify-content:center;padding:13px 20px;font-size:.9rem}
+      .hero-btns{flex-direction:column;gap:10px;width:100%}
+      .hero .subhead{font-size:.92rem}
+      .hero h1{font-size:clamp(2rem,7vw,3.6rem)}
+    }
+    @media(max-width:480px){
+      .schedule-strip{grid-template-columns:1fr 1fr}
+      /* shrink orbs so they don't dominate the viewport */
+      .orb-a{width:280px;height:280px;top:-80px;right:-80px}
+      .orb-b{width:220px;height:220px;bottom:-60px;left:-60px}
+      /* canvas particles look fine small */
+      #hero-canvas{opacity:.4}
+      .hero h1{font-size:clamp(1.2rem,5vw,2rem);letter-spacing:0;word-break:break-word}
+      .section{padding:28px 18px}
+      .optin-card{padding:24px 16px}
+    }
+  </style>
+</head>
+<body>
+<div id="scroll-prog"></div>
+<div class="bg-mesh"></div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a class="logo" href="/">
+    <span class="logo-dot"></span>
+    <span class="logo-text">eCon <span class="logo-c">Growth</span></span>
+  </a>
+  <a href="#join" class="nav-join">Join Free →</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="home">
+  <canvas id="hero-canvas"></canvas>
+
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+
+  <div style="position:relative;z-index:2;width:100%;max-width:760px">
+    <div class="hero-badge">Free to Join · No Course · Live Every Week</div>
+    <h1 id="hero-h1">
+      <span class="tw-line" data-delay="200">The Room Where</span>
+      <span class="tw-line" data-delay="400"><em>AI Builders</em></span>
+      <span class="tw-line" data-delay="600">Don't Fall Behind</span>
+    </h1>
+    <p class="subhead">Four live sessions a week. A weekly AI forecast every Sunday. A community of people who are actually building — not just watching tutorials.</p>
+    <div class="hero-btns">
+      <a href="#join" class="btn-green">Join the Mastermind — Free →</a>
+      <a href="#what-you-get" class="btn-ghost">See What's Inside ↓</a>
+    </div>
+    <p class="cta-note hero-note">No payment · No credit card · Just an email</p>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
+
+<!-- ══ PROBLEM ══ -->
+<div class="problem-sec">
+  <div class="section">
+    <div class="problem-grid">
+      <div class="rv-left">
+        <div class="section-label">The Reality</div>
+        <h2>AI Is Moving Faster<br>Than You Can<br><em>Keep Up</em> Alone</h2>
+        <div class="truth-box" style="margin-top:14px">
+          <p>The people winning with AI aren't smarter. They're <strong>in the right rooms</strong> — sharing what's working, catching what's new before everyone else, doing it with people who are actually building.</p>
+        </div>
+        <div class="schedule-strip" style="margin-top:14px" id="schedule-strip">
+          <div class="schedule-day" data-day="MON"><div class="sd-day">Mon</div><div class="sd-topic">AI Policy &amp; Regulation</div></div>
+          <div class="schedule-day" data-day="TUE"><div class="sd-day">Tue</div><div class="sd-topic">New Tech &amp; Models</div></div>
+          <div class="schedule-day" data-day="WED"><div class="sd-day">Wed</div><div class="sd-topic">AI News Signal</div></div>
+          <div class="schedule-day" data-day="THU"><div class="sd-day">Thu</div><div class="sd-topic">Practical &amp; Wins</div></div>
+        </div>
+      </div>
+      <div class="rv-right">
+        <p style="font-family:var(--mono);font-size:.68rem;color:var(--mu2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px">Sound familiar?</p>
+        <div class="problem-list" id="problem-list">
+          <div class="problem-item"><span class="px">✗</span><div class="pt"><strong>You're tracking AI alone.</strong> By the time you read about a new tool, everyone else has moved on to the next one.</div></div>
+          <div class="problem-item"><span class="px">✗</span><div class="pt"><strong>You know AI could help</strong> — you just don't know which tools, which workflows, or what actually matters right now.</div></div>
+          <div class="problem-item"><span class="px">✗</span><div class="pt"><strong>Every week there's something new</strong> and nowhere to process it with people who get it.</div></div>
+          <div class="problem-item"><span class="px">✗</span><div class="pt"><strong>You've bought courses.</strong> They go out of date in 90 days and never had the thing you needed.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PLAN ══ -->
+<section class="section" id="how-it-works">
+  <div style="text-align:center" class="rv">
+    <div class="section-label" style="justify-content:center">How It Works</div>
+    <h2>Three Steps to<br><em>Staying Current</em></h2>
+    <p class="subhead" style="max-width:500px;margin:16px auto 0">A weekly rhythm. Live rooms. A Sunday forecast. No prep required.</p>
+  </div>
+  <div class="plan-grid" id="plan-grid">
+    <div class="plan-connector"></div>
+    <div class="plan-step rv">
+      <div class="plan-num">01</div>
+      <div class="plan-title">Join Free</div>
+      <div class="plan-desc">Drop your email. That's it. No payment, no commitment. Your first Sunday forecast arrives this week.</div>
+    </div>
+    <div class="plan-step rv">
+      <div class="plan-num">02</div>
+      <div class="plan-title">Show Up Live</div>
+      <div class="plan-desc">Four sessions Mon–Thu. A daily reminder lands in your inbox and as an SMS so you never miss one. Each session has a theme.</div>
+    </div>
+    <div class="plan-step rv">
+      <div class="plan-num">03</div>
+      <div class="plan-title">Build With the Room</div>
+      <div class="plan-desc">Share wins, brainstorm what's new, get the Sunday forecast so you know what the week is about before Monday starts.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ WHAT YOU GET ══ -->
+<section class="section" id="what-you-get" style="background:var(--bg2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);max-width:100%;padding-left:0;padding-right:0">
+  <div style="max-width:960px;margin:0 auto;padding:32px 24px">
+    <div class="rv" style="text-align:center;margin-bottom:0">
+      <div class="section-label" style="justify-content:center">What's Inside</div>
+      <h2>Everything You Need to<br>Stay <em>Sharp</em> on AI</h2>
+    </div>
+    <div class="get-grid" id="get-grid">
+      <div class="get-card rv"><div><div class="get-title">Four Live Sessions a Week</div><div class="get-desc">Mon–Thu, each session covers a themed topic — policy, a new capability, broader news, and a practical application or member spotlight.</div><div class="get-note">Mon–Thu · Zoom · No prep required</div></div></div>
+      <div class="get-card rv"><div><div class="get-title">Sunday Weekly Forecast</div><div class="get-desc">Every Sunday evening you get a preview of all four sessions — the topics, the framing, and what to watch. Curated by AI, reviewed before it sends.</div><div class="get-note">Arrives Sunday · Covers the full week ahead</div></div></div>
+      <div class="get-card rv"><div><div class="get-title">Daily Session Reminders</div><div class="get-desc">A same-day email when there's a session, plus an SMS one hour out. You always know what's on and never have to check a calendar.</div><div class="get-note">Email + SMS · Meeting days only · Easy to pause</div></div></div>
+      <div class="get-card rv"><div><div class="get-title">The Community Space</div><div class="get-desc">A Circle community where you share what you're building, ask questions between sessions, and see what's working for others.</div><div class="get-note">Sessions on Google Meet · Community on Circle</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHO IT'S FOR ══ -->
+<div class="for-sec">
+  <div class="section">
+    <div class="for-grid">
+      <div class="rv-left">
+        <div class="section-label">Who This Is For</div>
+        <h2>Built for People<br>Who Are <em>Actually Building</em></h2>
+        <p class="subhead" style="margin-top:18px">This is not for people who want to watch videos and feel productive. It's for people using AI to build things — and who want to do it with a room full of people doing the same.</p>
+      </div>
+      <div class="rv-right">
+        <div class="for-list">
+          <div class="for-item"><span class="fc yes">✓</span><div class="ft"><strong>You're already using AI</strong> in your work and want to use it better — not start from scratch.</div></div>
+          <div class="for-item"><span class="fc yes">✓</span><div class="ft"><strong>You want peers, not professors.</strong> A room where everyone is figuring it out together beats a course where one person talks at you.</div></div>
+          <div class="for-item"><span class="fc yes">✓</span><div class="ft"><strong>You want to stay current</strong> without spending hours reading every AI newsletter that lands in your inbox.</div></div>
+          <div class="for-item"><span class="fc yes">✓</span><div class="ft"><strong>You want momentum.</strong> A weekly rhythm, live accountability, and a community that shows up keeps you moving.</div></div>
+          <div class="for-item no"><span class="fc no">✗</span><div class="ft" style="color:var(--mu2)"><strong style="color:rgba(234,240,255,.38)">Not for you</strong> if you want passive content on your own schedule. This is a live room. It expects you to show up.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WINS ══ -->
+<section class="section" id="wins">
+  <div class="rv" style="text-align:center">
+    <div class="section-label" style="justify-content:center">Member Wins</div>
+    <h2>What People Are<br><em>Building</em> Inside</h2>
+  </div>
+  <div class="wins-grid" id="wins-grid">
+    <div class="win-card ph rv"><span class="win-ph-text">First wins coming soon</span></div>
+    <div class="win-card ph rv"><span class="win-ph-text">Members building now</span></div>
+    <div class="win-card ph rv"><span class="win-ph-text">Your win could be here</span></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ OPT-IN ══ -->
+<section class="optin-sec" id="join">
+  <div class="optin-inner rv">
+    <div class="optin-card">
+      <div class="optin-badge">Free · No Payment · Live Every Week</div>
+      <h2>Join the<br><em>AI Mastermind</em></h2>
+      <p class="subhead">Drop your info. You're in. Next live session is Thursday at 6:30 PM.</p>
+
+      <div id="optin-form-wrap">
+        <form class="optin-form" id="optin-form" novalidate>
+          <div class="optin-field">
+            <input type="text" name="first_name" placeholder="First name" required autocomplete="given-name" />
+          </div>
+          <div class="optin-field">
+            <input type="email" name="email" placeholder="Email address" required autocomplete="email" />
+          </div>
+          <div class="optin-field">
+            <input type="tel" name="phone" placeholder="Phone (optional — for SMS reminders)" autocomplete="tel" />
+          </div>
+          <button type="submit" class="optin-submit" id="optin-btn">Join the Mastermind — Free →</button>
+        </form>
+
+        <div id="optin-success">
+          <div class="success-label">You're In</div>
+          <p class="success-name" id="success-name-el">Welcome.</p>
+          <p class="success-sub">Your Sunday forecast is on its way. Here's your link for the next live session:</p>
+
+          <div class="meet-card">
+            <p class="meet-card-eyebrow">Next Live Session</p>
+            <p class="meet-card-name">Claude Partnership Network</p>
+            <p class="meet-card-time">Thursday · 6:30 – 7:30 PM</p>
+            <a class="meet-join-btn" href="https://meet.google.com/nnd-xtaj-koi" target="_blank" rel="noopener">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              Join on Google Meet
+            </a>
+            <div class="meet-dial">
+              Dial in (audio only) · <a href="tel:+13167421129">+1 316-742-1129</a><br>
+              PIN: 450 146 983# &nbsp;·&nbsp; <a href="https://tel.meet/nnd-xtaj-koi?pin=1214304516015" target="_blank" rel="noopener">More dial-in numbers</a>
+            </div>
+          </div>
+
+          <p class="success-footer">Daily reminders go out on session days. Reply "pause" to any email to mute them — you stay in the community.</p>
+        </div>
+      </div>
+
+      <p class="optin-disclaimer" style="margin-top:16px">No spam. No selling your info. Reminders on meeting days only. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="section" style="padding-top:40px">
+  <div class="rv" style="text-align:center">
+    <div class="section-label" style="justify-content:center">Questions</div>
+    <h2>Before You Ask —<br><em>We'll Answer It</em></h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">How much time does this actually take each week?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Each live session is about an hour. Four sessions a week is the full schedule, but show up to as many or as few as you want. The Sunday forecast takes two minutes to read. No minimum participation.</p></div></div></div>
+    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">What's the format of the live sessions?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Live on Google Meet. Monday is AI policy and regulation. Tuesday digs into a specific new model or capability. Wednesday covers broader AI news. Thursday is a practical application or member spotlight. Conversational, not lecture-style.</p></div></div></div>
+    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">What if I miss a session?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Catch up through the community or the next week's forecast. These are live rooms, not on-demand — the value is in showing up. If you miss one, the next is tomorrow. The Sunday forecast gives you context either way.</p></div></div></div>
+    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">Can I pause reminders without leaving?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Yes. Reply to any reminder email with "pause" and we'll stop them until you say otherwise. You stay in the community and still get the Sunday forecast.</p></div></div></div>
+    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">Is this really free? What's the catch?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Free to join and free to stay. No catch. If you later want a personalized AI course built around you specifically, that's a separate $50 product. The mastermind itself never costs anything.</p></div></div></div>
+    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">What platform is the community on?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Live sessions run on Google Meet — you'll get the link the moment you sign up. Community space is on Circle. Reminders come through email and SMS.</p></div></div></div>
+  </div>
+
+  <div class="final-box rv">
+    <h2 style="font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:14px">Ready to Stop Flying Solo?</h2>
+    <p class="subhead" style="max-width:440px;margin:0 auto 32px;font-size:.95rem">Free. No payment. A live room of people building with AI — and a weekly forecast so you're never guessing.</p>
+    <a href="#join" class="btn-green">Join the Mastermind — Free →</a>
+    <p class="cta-note" style="margin-top:14px">Takes 30 seconds · Your Sunday forecast arrives this week</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="logo" href="/">
+    <span class="logo-dot"></span>
+    <span class="logo-text">eCon <span class="logo-c">Growth</span></span>
+  </a>
+  <p class="footer-note" style="margin-top:14px">
+    © 2026 eCon Growth &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html">Terms</a><br>
+    The AI Mastermind is a free community. No payment required.
+  </p>
+</footer>
+
+<script>
+/* ── SCROLL PROGRESS ── */
+const prog = document.getElementById('scroll-prog');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  prog.style.width = (h > 0 ? Math.min(100, window.scrollY / h * 100) : 0) + '%';
+}, { passive: true });
+
+/* ── NAV SCROLL ── */
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60), { passive: true });
+
+/* ── HERO CANVAS PARTICLES ── */
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles;
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  function mkParticle() {
+    return {
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 2.4 + 0.8,
+      vx: (Math.random() - .5) * .7,
+      vy: (Math.random() - .5) * .7,
+      a: Math.random(),
+      va: (Math.random() - .5) * .012
+    };
+  }
+  function init() { resize(); particles = Array.from({length: 140}, mkParticle); }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.a += p.va;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+      if (p.a < 0) p.va = Math.abs(p.va);
+      if (p.a > 1) p.va = -Math.abs(p.va);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(33,230,138,${(p.a * .8).toFixed(2)})`;
+      ctx.fill();
+    });
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 180) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(33,230,138,${(.18 * (1 - dist / 180)).toFixed(3)})`;
+          ctx.lineWidth = .8;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  function reinit() { resize(); particles = Array.from({length: 140}, mkParticle); }
+  window.addEventListener('resize', reinit);
+  requestAnimationFrame(() => { init(); draw(); });
+})();
+
+/* ── HERO HEADLINE STAGGER ── */
+(function() {
+  const lines = document.querySelectorAll('.tw-line');
+  lines.forEach(line => {
+    const delay = parseInt(line.getAttribute('data-delay') || '0');
+    setTimeout(() => {
+      line.style.transition = 'opacity .65s ease, transform .65s cubic-bezier(.2,.8,.2,1)';
+      line.style.opacity = '1';
+      line.style.transform = 'translateY(0)';
+    }, delay);
+  });
+})();
+
+/* ── TICKER ── */
+(function() {
+  const items = [
+    'Four Live Sessions Weekly','Sunday AI Forecast','Daily Session Reminders',
+    'Community on Circle','Mon: AI Policy','Tue: New Tech','Wed: AI News',
+    'Thu: Practical Wins','Free to Join','No Passive Content','Live Rooms Only',
+    'Zoom Sessions','SMS + Email Reminders','Pause Anytime',
+  ];
+  const track = document.getElementById('ticker-track');
+  const html = items.map(t => `<span class="ticker-item"><span class="dot"></span>${t}</span>`).join('');
+  track.innerHTML = html + html; // doubled for seamless loop
+})();
+
+/* ── SCROLL REVEAL (IntersectionObserver) ── */
+(function() {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        const delay = parseFloat(e.target.getAttribute('data-delay') || '0');
+        setTimeout(() => e.target.classList.add('in'), delay * 1000);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: .1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.rv,.rv-left,.rv-right').forEach(el => io.observe(el));
+})();
+
+/* ── PROBLEM ITEMS STAGGER ── */
+(function() {
+  const items = document.querySelectorAll('.problem-item');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        items.forEach((item, i) => {
+          setTimeout(() => item.classList.add('in'), i * 120);
+        });
+        io.disconnect();
+      }
+    });
+  }, { threshold: .15 });
+  if (items.length) io.observe(items[0].closest('.problem-list') || items[0]);
+})();
+
+/* ── SCHEDULE DAY CYCLING ── */
+(function() {
+  const days = document.querySelectorAll('.schedule-day');
+  let cur = 0;
+  function cycle() {
+    days.forEach(d => d.classList.remove('lit'));
+    days[cur].classList.add('lit');
+    cur = (cur + 1) % days.length;
+  }
+  cycle();
+  setInterval(cycle, 1800);
+})();
+
+/* ── CARD 3D TILT ── */
+document.querySelectorAll('.get-card,.plan-step,.win-card:not(.ph)').forEach(card => {
+  card.addEventListener('mouseenter', () => card.style.transition = 'transform .12s ease,border-color .3s,box-shadow .3s');
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - .5;
+    const py = (e.clientY - r.top) / r.height - .5;
+    card.style.transform = `perspective(800px) rotateX(${(-py * 5).toFixed(1)}deg) rotateY(${(px * 5).toFixed(1)}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transition = 'transform .5s cubic-bezier(.2,.7,.2,1),border-color .3s,box-shadow .3s';
+    card.style.transform = '';
+  });
+});
+
+/* ── FAQ ── */
+document.querySelectorAll('.faq-q').forEach(q => q.addEventListener('click', () => q.parentElement.classList.toggle('open')));
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+
+/* ── OPT-IN FORM → eCon OS CRM ── */
+document.getElementById('optin-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form    = e.target;
+  const name    = form.querySelector('[name="first_name"]').value.trim();
+  const email   = form.querySelector('[name="email"]').value.trim();
+  const phone   = form.querySelector('[name="phone"]').value.trim();
+  const emailEl = form.querySelector('[name="email"]');
+
+  if (!name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    emailEl.style.borderColor = 'rgba(239,68,68,.5)';
+    emailEl.focus();
+    return;
+  }
+  emailEl.style.borderColor = '';
+
+  const btn = document.getElementById('optin-btn');
+  btn.textContent = 'Joining…';
+  btn.disabled = true;
+
+  const payload = {
+    first_name: name,
+    email,
+    phone: phone || undefined,
+    source: 'mastermind-landing',
+    tags: ['mastermind-optin'],
+    funnel_stage: 'mastermind-active',
+    meet_link: 'https://meet.google.com/nnd-xtaj-koi'
+  };
+
+  // Try eCon OS CRM — swap endpoint once confirmed with Kris/Watson
+  const CRM_ENDPOINTS = [
+    'https://econ-os-nine.vercel.app/api/contacts',
+    'https://econ-os-nine.vercel.app/api/leads',
+    'https://econ-os-nine.vercel.app/api/members',
+  ];
+  for (const url of CRM_ENDPOINTS) {
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(5000)
+      });
+      if (res.ok) break;
+    } catch (_) { /* try next */ }
+  }
+
+  // Personalise success state
+  const nameEl = document.getElementById('success-name-el');
+  if (nameEl) nameEl.textContent = 'Welcome, ' + name + '.';
+
+  form.style.display = 'none';
+  document.getElementById('optin-success').style.display = 'block';
+});
+</script>
+</body>
+</html>
