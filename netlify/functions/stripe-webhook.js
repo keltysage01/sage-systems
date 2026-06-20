@@ -86,7 +86,7 @@ Off limits / never use AI for: ${off_limits || "none specified"}
   const siteUrl = process.env.SITE_URL || "https://sage-systems-ai.netlify.app";
   const courseUrl = `${siteUrl}/course?id=${courseId}`;
 
-  const [welcomeRaw, brainRaw, promptsRaw, toolsRaw, mapRaw, rulesRaw, checklistRaw] = await Promise.all([
+  const [welcomeRaw, brainRaw, promptsRaw, toolsRaw, mapRaw, rulesRaw, checklistRaw, flashcardsRaw, quizRaw, matchRaw] = await Promise.all([
     callClaude(`Write a course intro for ${name} at ${business_name}. Return ONLY a JSON array of 4-5 short bullet points. No emojis. First item: their single biggest AI opportunity stated directly. Next 2-3: specific things they will learn or have after this course. Last: one short motivating sentence.\n\nExample: ["Automate intake and FAQ responses saving 5+ hours weekly","10 prompts built for your exact workflows — ready to use today","A Business Brain prompt that gives AI full context every session","Your personal AI tools arsenal mapped to your business","You have everything you need to start this week"]\n\n${ctx}`, 400),
     callClaude(`Create a reusable "Business Brain" system prompt for ${name} at ${business_name} to paste at the start of every Claude or ChatGPT session. Include: who the business is, what they offer, who they serve, brand voice/tone, and any hard limits. Start with: "You are an AI assistant for..."\n\n${ctx}`, 420),
     callClaude(`Create 10 copy-paste prompts for ${name} at ${business_name}. Each targets a different business function and includes [bracket fields]. Cover: (1) client intake/onboarding, (2) content/copywriting, (3) email follow-up, (4) social media, (5) proposal/sales, (6) customer service/FAQ, (7) meeting summary/SOP, (8) research, (9) HR/hiring, (10) wildcard specific to their offer. Each prompt must include [bracket fields] and produce a real usable result specific to ${business_name}.\n\nReturn ONLY valid JSON array:\n[{"title":"Short name","what":"One sentence result","prompt":"Full prompt with [bracket fields]"}]\n\n${ctx}`, 2800),
@@ -94,6 +94,9 @@ Off limits / never use AI for: ${off_limits || "none specified"}
     callClaude(`Create a workflow map for ${name} at ${business_name} — what AI handles, what stays human, what to improve first. 4-5 items per column.\n\nReturn ONLY valid JSON:\n{"ai":["..."],"human":["..."],"improve":["..."]}\n\n${ctx}`, 500),
     callClaude(`Write 5 privacy rules for ${name} at ${business_name} — specific things that should NEVER go into any AI tool.\n\nReturn ONLY valid JSON array of strings:\n["Rule 1","Rule 2"]\n\n${ctx}`, 300),
     callClaude(`Write a first-steps checklist for ${name} at ${business_name} — 8 concrete actions to take this week. Specific and actionable.\n\nReturn ONLY valid JSON array of strings:\n["Action 1","Action 2"]\n\n${ctx}`, 450),
+    callClaude(`Create 10 flashcards to help ${name} master AI concepts relevant to ${business_name}. Each card: a short question on the front, a clear practical answer on the back — specific to their industry and workflows.\n\nReturn ONLY valid JSON array:\n[{"front":"What is a system prompt?","back":"Instructions you give AI before the conversation starts — sets its role, tone, and limits."}]\n\n${ctx}`, 900),
+    callClaude(`Create 8 multiple-choice quiz questions to test ${name}'s AI knowledge for ${business_name}. Each question has 4 options with exactly one correct answer. Make questions practical — about prompting, tools, and AI usage for their specific business.\n\nReturn ONLY valid JSON array:\n[{"question":"What should you include in every prompt for best results?","options":["Your name","Context about your business and goal","The date","Your email"],"answer":1}]\n\n${ctx}`, 900),
+    callClaude(`Create 8 matching pairs to help ${name} learn AI terminology for ${business_name}. Each pair: a term on the left, its plain-English definition on the right. Use terms relevant to their workflows.\n\nReturn ONLY valid JSON array:\n[{"term":"System Prompt","definition":"Instructions that tell AI who it is and how to behave"}]\n\n${ctx}`, 600),
   ]);
 
   const prompts = parseJSON(promptsRaw, []);
@@ -101,6 +104,9 @@ Off limits / never use AI for: ${off_limits || "none specified"}
   const map = parseJSON(mapRaw, { ai: [], human: [], improve: [] });
   const rules = parseJSON(rulesRaw, []);
   const checklist = parseJSON(checklistRaw, []);
+  const flashcards = parseJSON(flashcardsRaw, []);
+  const quiz = parseJSON(quizRaw, []);
+  const match = parseJSON(matchRaw, []);
 
   const courseData = {
     id: courseId, name, email, business_name,
@@ -108,7 +114,7 @@ Off limits / never use AI for: ${off_limits || "none specified"}
     welcome: welcomeRaw, brain: brainRaw,
     prompts, tools: toolsList, map, rules, checklist,
     logo: null,
-    study: { flashcards: [], quiz: [], match: [] },
+    study: { flashcards, quiz, match },
     intake,
   };
 
