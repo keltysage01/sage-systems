@@ -2,6 +2,8 @@ import { getStore } from "@netlify/blobs";
 
 export const config = { path: "/course" };
 
+const BOOK_CALL_URL = "https://calendly.com/keltysage01/growth-call";
+
 function esc(s) {
   return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
@@ -46,6 +48,10 @@ function buildScreens(course) {
       <div class="win-text">${capability}</div>
       ${opts && opts.action ? `<div class="action-step win-action"><span class="action-label">Do this now</span><span>${esc(opts.action)}</span></div>` : ""}
       ${next ? `<p class="win-next">${next}</p>` : ""}
+      <div class="win-call-nudge">
+        <span class="win-call-label">Want to walk through this live?</span>
+        <a class="win-call-link" href="${BOOK_CALL_URL}" target="_blank" rel="noopener">Book a free 30-min growth call →</a>
+      </div>
     </div>`;
 
   const promptCard = (id, dest, promptText, label) => `
@@ -585,6 +591,13 @@ function buildScreens(course) {
         <div class="grad-item"><span class="gi-check">✓</span>19 Anthropic certified courses — your path to go deeper</div>
       </div>
       <div class="concept-note" style="text-align:left;margin-bottom:20px">You've now built the four pillars of AI fluency at ${biz}: <strong>Delegation</strong> (what to hand off), <strong>Description</strong> (how to communicate clearly), <strong>Discernment</strong> (what to trust), and <strong>Diligence</strong> (what you're accountable for).</div>
+      <div class="grad-call-card">
+        <div class="grad-call-eyebrow">Ready to go deeper?</div>
+        <div class="grad-call-headline">Book a free AI Growth Call</div>
+        <p class="grad-call-desc">30 minutes with Kelty. We'll review your course, map your next automation wins, and build a 90-day AI roadmap for ${esc(biz)}.</p>
+        <a class="grad-call-btn" href="${BOOK_CALL_URL}" target="_blank" rel="noopener">Book My Growth Call →</a>
+        <p class="grad-call-note">Free · No commitment · Spots limited</p>
+      </div>
       <button class="btn-map" onclick="goTo(2)">Back to course map</button>
     </div>` });
 
@@ -784,6 +797,15 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .win-eyebrow{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--sage);margin-bottom:10px}
 .win-text{font-family:var(--display);font-size:clamp(1.6rem,5vw,2rem);font-weight:800;letter-spacing:-.03em;color:var(--text);margin-bottom:16px;line-height:1.15}
 .win-next{font-size:.9rem;color:var(--text-mid);line-height:1.65;max-width:400px;margin:0 auto}
+.win-action{margin:16px 0}
+.win-call-nudge{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.win-call-label{font-size:.78rem;color:var(--text-mid)}
+.win-call-link{font-size:.82rem;font-weight:700;color:var(--olive);text-decoration:none;white-space:nowrap}
+.win-call-link:hover{text-decoration:underline}
+
+/* BOOK CALL NAV PILL */
+.btn-book-call{flex-shrink:0;border:1.5px solid var(--olive);background:transparent;color:var(--olive);text-decoration:none;font-family:var(--body);font-size:11px;font-weight:700;padding:5px 11px;border-radius:99px;white-space:nowrap;transition:background .15s,color .15s;letter-spacing:.01em}
+.btn-book-call:hover{background:var(--olive);color:#fff}
 
 /* GRADUATION */
 .grad-shell{padding:16px 0;text-align:center}
@@ -795,6 +817,13 @@ body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;bac
 .grad-item{display:flex;align-items:center;gap:12px;font-size:.92rem;color:var(--text-mid);padding:13px 16px;background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 4px rgba(28,65,44,.04)}
 .gi-check{color:var(--olive);font-weight:700;font-size:1rem;flex-shrink:0}
 .btn-map{background:var(--sand);border:1px solid var(--line);color:var(--text);font-size:.88rem;font-weight:700;padding:10px 22px;border-radius:99px;cursor:pointer;font-family:inherit;transition:background .15s}
+.grad-call-card{background:var(--olive);border-radius:20px;padding:28px 24px;margin-bottom:20px;text-align:center;box-shadow:0 12px 36px rgba(28,65,44,.28)}
+.grad-call-eyebrow{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--sage-light);margin-bottom:10px}
+.grad-call-headline{font-family:var(--display);font-size:clamp(1.6rem,5vw,2rem);font-weight:800;letter-spacing:-.01em;color:#fff;margin-bottom:10px;line-height:1.08}
+.grad-call-desc{font-size:.9rem;color:rgba(255,255,255,.75);line-height:1.65;margin-bottom:22px}
+.grad-call-btn{display:inline-block;background:#fff;color:var(--olive);font-family:var(--body);font-size:.95rem;font-weight:800;padding:14px 30px;border-radius:99px;text-decoration:none;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.grad-call-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.22)}
+.grad-call-note{font-family:var(--mono);font-size:.58rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:12px}
 
 /* INTERACTIVE PANELS */
 .imode-panel{position:relative}
@@ -971,6 +1000,7 @@ export default async function handler(req) {
       <div class="top-where" id="top-where">Welcome</div>
       <div class="ptrack"><div class="pfill" id="pfill"></div></div>
       <div class="pts-badge" id="pts-badge">0 pts</div>
+      <a class="btn-book-call" href="${BOOK_CALL_URL}" target="_blank" rel="noopener">Book Call</a>
       <button class="btn-mods" onclick="openMap()">Modules</button>
     </div>
 
