@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The AI Mastermind — Navigate AI Together | eCon Growth</title>
-  <meta name="description" content="Four live sessions a week. A weekly AI forecast every Sunday. A room full of people who are actually building. Free to join.">
+  <meta name="description" content="Five live sessions a week. A weekly AI forecast every Sunday. A room full of people who are actually building. Free to join.">
   <link rel="icon" type="image/png" href="/assets/logo.png">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
@@ -37,7 +37,7 @@
       background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.22) 3px,rgba(0,0,0,0) 4px)}
 
     /* ── CANVAS ── */
-    #hero-canvas{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.6}
+    #hero-canvas{display:none}
 
     /* ── FLOATING ORBS ── */
     .orb{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;will-change:transform}
@@ -115,7 +115,7 @@
     .truth-box p strong{color:var(--text)}
 
     /* ── WEEK SCHEDULE VISUAL ── */
-    .schedule-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+    .schedule-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
     .schedule-day{background:rgba(13,18,25,.8);border:1px solid var(--bd2);border-radius:10px;padding:16px 14px;text-align:center;transition:all .4s;position:relative;overflow:hidden}
     .schedule-day::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .4s}
     .schedule-day.lit{border-color:var(--gb);background:rgba(33,230,138,.05)}
@@ -281,7 +281,7 @@
       <span class="tw-line" data-delay="400"><em>AI Builders</em></span>
       <span class="tw-line" data-delay="600">Don't Fall Behind</span>
     </h1>
-    <p class="subhead">Four live sessions a week. A weekly AI forecast every Sunday. A community of people who are actually building — not just watching tutorials.</p>
+    <p class="subhead">Five live sessions a week. A weekly AI forecast every Sunday. A community of people who are actually building — not just watching tutorials.</p>
     <div class="hero-btns">
       <a href="#join" class="btn-green">Join the Mastermind — Free →</a>
       <a href="#what-you-get" class="btn-ghost">See What's Inside ↓</a>
@@ -310,6 +310,7 @@
           <div class="schedule-day" data-day="TUE"><div class="sd-day">Tue</div><div class="sd-topic">New Tech &amp; Models</div></div>
           <div class="schedule-day" data-day="WED"><div class="sd-day">Wed</div><div class="sd-topic">AI News Signal</div></div>
           <div class="schedule-day" data-day="THU"><div class="sd-day">Thu</div><div class="sd-topic">Practical &amp; Wins</div></div>
+          <div class="schedule-day" data-day="FRI"><div class="sd-day">Fri</div><div class="sd-topic">Open Build</div></div>
         </div>
       </div>
       <div class="rv-right">
@@ -342,7 +343,7 @@
     <div class="plan-step rv">
       <div class="plan-num">02</div>
       <div class="plan-title">Show Up Live</div>
-      <div class="plan-desc">Four sessions Mon–Thu. A daily reminder lands in your inbox and as an SMS so you never miss one. Each session has a theme.</div>
+      <div class="plan-desc">Five sessions Mon–Fri. A daily reminder lands in your inbox and as an SMS so you never miss one. Each session has a theme.</div>
     </div>
     <div class="plan-step rv">
       <div class="plan-num">03</div>
@@ -362,8 +363,8 @@
       <h2>Everything You Need to<br>Stay <em>Sharp</em> on AI</h2>
     </div>
     <div class="get-grid" id="get-grid">
-      <div class="get-card rv"><div><div class="get-title">Four Live Sessions a Week</div><div class="get-desc">Mon–Thu, each session covers a themed topic — policy, a new capability, broader news, and a practical application or member spotlight.</div><div class="get-note">Mon–Thu · Zoom · No prep required</div></div></div>
-      <div class="get-card rv"><div><div class="get-title">Sunday Weekly Forecast</div><div class="get-desc">Every Sunday evening you get a preview of all four sessions — the topics, the framing, and what to watch. Curated by AI, reviewed before it sends.</div><div class="get-note">Arrives Sunday · Covers the full week ahead</div></div></div>
+      <div class="get-card rv"><div><div class="get-title">Five Live Sessions a Week</div><div class="get-desc">Mon–Fri, each session covers a themed topic — policy, a new capability, broader news, a practical application, or a member spotlight.</div><div class="get-note">Mon–Fri · Zoom · No prep required</div></div></div>
+      <div class="get-card rv"><div><div class="get-title">Sunday Weekly Forecast</div><div class="get-desc">Every Sunday evening you get a preview of all five sessions — the topics, the framing, and what to watch. Curated by AI, reviewed before it sends.</div><div class="get-note">Arrives Sunday · Covers the full week ahead</div></div></div>
       <div class="get-card rv"><div><div class="get-title">Daily Session Reminders</div><div class="get-desc">A same-day email when there's a session, plus an SMS one hour out. You always know what's on and never have to check a calendar.</div><div class="get-note">Email + SMS · Meeting days only · Easy to pause</div></div></div>
       <div class="get-card rv"><div><div class="get-title">The Community Space</div><div class="get-desc">A Circle community where you share what you're building, ask questions between sessions, and see what's working for others.</div><div class="get-note">Sessions on Google Meet · Community on Circle</div></div></div>
     </div>
@@ -464,8 +465,8 @@
     <h2>Before You Ask —<br><em>We'll Answer It</em></h2>
   </div>
   <div class="faq-list">
-    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">How much time does this actually take each week?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Each live session is about an hour. Four sessions a week is the full schedule, but show up to as many or as few as you want. The Sunday forecast takes two minutes to read. No minimum participation.</p></div></div></div>
-    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">What's the format of the live sessions?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Live on Google Meet. Monday is AI policy and regulation. Tuesday digs into a specific new model or capability. Wednesday covers broader AI news. Thursday is a practical application or member spotlight. Conversational, not lecture-style.</p></div></div></div>
+    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">How much time does this actually take each week?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Each live session is about an hour. Five sessions a week is the full schedule, but show up to as many or as few as you want. The Sunday forecast takes two minutes to read. No minimum participation.</p></div></div></div>
+    <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">What's the format of the live sessions?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Live on Google Meet. Monday is AI policy and regulation. Tuesday digs into a specific new model or capability. Wednesday covers broader AI news. Thursday is a practical application or member spotlight. Friday is open build — bring what you're working on. Conversational, not lecture-style.</p></div></div></div>
     <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">What if I miss a session?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Catch up through the community or the next week's forecast. These are live rooms, not on-demand — the value is in showing up. If you miss one, the next is tomorrow. The Sunday forecast gives you context either way.</p></div></div></div>
     <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">Can I pause reminders without leaving?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Yes. Reply to any reminder email with "pause" and we'll stop them until you say otherwise. You stay in the community and still get the Sunday forecast.</p></div></div></div>
     <div class="faq-item rv"><div class="faq-q"><div class="faq-q-text">Is this really free? What's the catch?</div><div class="faq-icon">+</div></div><div class="faq-a"><div class="faq-a-inner"><p>Free to join and free to stay. No catch. If you later want a personalized AI course built around you specifically, that's a separate $50 product. The mastermind itself never costs anything.</p></div></div></div>
@@ -575,7 +576,7 @@ window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.
 /* ── TICKER ── */
 (function() {
   const items = [
-    'Four Live Sessions Weekly','Sunday AI Forecast','Daily Session Reminders',
+    'Five Live Sessions Weekly','Sunday AI Forecast','Daily Session Reminders',
     'Community on Circle','Mon: AI Policy','Tue: New Tech','Wed: AI News',
     'Thu: Practical Wins','Free to Join','No Passive Content','Live Rooms Only',
     'Zoom Sessions','SMS + Email Reminders','Pause Anytime',
