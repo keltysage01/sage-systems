@@ -93,6 +93,10 @@
     </div>
   </div>
 
+  <a id="course-btn" href="#" style="display:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:1rem;font-weight:800;letter-spacing:.01em;background:var(--g);color:#000;padding:16px 36px;border-radius:10px;text-decoration:none;margin-bottom:20px;box-shadow:0 0 30px rgba(33,230,138,.4)">
+    Open My Course →
+  </a>
+
   <div class="email-card" id="email-card" style="display:none">
     <div class="label">Sending your course to</div>
     <div class="addr" id="email-display"></div>
@@ -141,9 +145,13 @@
         if (data.ready && data.courseId) {
           clearInterval(poll);
           markStep2Done();
-          setTimeout(() => {
-            window.location.href = `/course?id=${data.courseId}`;
-          }, 800);
+          const courseUrl = `/course?id=${data.courseId}`;
+          // Show button immediately as fallback
+          const btn = document.getElementById('course-btn');
+          btn.href = courseUrl;
+          btn.style.display = 'inline-block';
+          // Also attempt auto-redirect
+          setTimeout(() => { window.location.href = courseUrl; }, 800);
         }
       } catch {}
       if (attempts >= maxAttempts) clearInterval(poll);
