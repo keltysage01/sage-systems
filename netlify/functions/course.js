@@ -69,7 +69,7 @@ function buildScreens(course) {
         <div class="welcome-tag">Custom AI Course</div>
       </div>
       <div class="welcome-stats">
-        <div class="wstat"><span class="wstat-n">5</span><span class="wstat-l">Modules</span></div>
+        <div class="wstat"><span class="wstat-n">7</span><span class="wstat-l">Modules</span></div>
         <div class="wstat-div"></div>
         <div class="wstat"><span class="wstat-n">${prompts.length}</span><span class="wstat-l">Prompts</span></div>
         <div class="wstat-div"></div>
@@ -98,6 +98,7 @@ function buildScreens(course) {
     { n:4, title:"Privacy Rules",       desc:"What should never go into any AI tool" },
     { n:5, title:"First Steps",         desc:"Eight actions to take this week to get started" },
     { n:6, title:"AI Tools Arsenal",    desc:"Six tools mapped to your exact business workflows" },
+    { n:7, title:"Anthropic Training Library", desc:"19 free certified courses — Claude, MCP, agents, and AI fluency" },
   ];
   const modIcons = [
     `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>`,
@@ -106,11 +107,12 @@ function buildScreens(course) {
     `<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
     `<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
     `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>`,
+    `<svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`,
   ];
   screens.push({ id: "module-map", module: 0, html: `
     <div class="mmap-header">
       <div class="mmap-dash-title">Course Dashboard</div>
-      <div class="mmap-dash-sub">${biz} — 6 modules</div>
+      <div class="mmap-dash-sub">${biz} — 7 modules</div>
     </div>
     <div class="mmap-featured">
       <div class="mmap-card" onclick="jumpToModule(1)" id="mcard-1">
@@ -400,7 +402,172 @@ function buildScreens(course) {
 
   screens.push({ id:"m6-win", module:6, html:winScreen(6,
     `Use the right AI tool for every task at ${biz} — not just one.`,
-    "You've completed all six modules. See your full summary below.") });
+    "Next: 19 free Anthropic certified courses to go deeper.") });
+
+  // ── MODULE 7: ANTHROPIC TRAINING LIBRARY ─────────────────────────
+  moduleStarts[7] = screens.length;
+  screens.push({ id:"m7-intro", module:7, html:`
+    <div class="module-intro-shell">
+      <div class="mod-badge">07</div>
+      <div class="screen-tag">Module 7</div>
+      <h2 class="screen-title">Anthropic Training Library</h2>
+      <p class="screen-desc">19 free, certified courses from Anthropic covering Claude, MCP, agent systems, and AI fluency. Available at Anthropic Academy — no cost, no catch.</p>
+      <div class="lesson-list">
+        ${lessonItem("19 courses across 6 categories")}
+        ${lessonItem("Free with optional certificates")}
+        ${lessonItem("Self-paced — start anywhere, finish at your own speed")}
+      </div>
+    </div>` });
+
+  screens.push({ id:"m7-hook", module:7, html:`
+    <div class="screen-tag">Module 7 · Lesson 1</div>
+    <h2 class="screen-title">Why go deeper</h2>
+    <div class="hook-card hook-bullets">
+      <ul>
+        <li>Most people use 5% of what Claude can actually do</li>
+        <li>Anthropic's free courses unlock the rest — systematically</li>
+        <li>Start with Claude 101, finish with Building with the Claude API</li>
+        <li>Each course takes 30–120 minutes and earns a certificate</li>
+      </ul>
+    </div>
+    <div class="tool-pills"><span class="tool-pill">100% Free</span><span class="tool-pill">Self-paced</span><span class="tool-pill">Certified</span></div>
+    <div class="concept-note"><span class="d-pill">Diligence</span><strong>Invest 2 hours.</strong> Claude 101 alone will change how you use AI every day. The AI Fluency: Small Business course adds a framework that applies across your entire operation.</div>` });
+
+  screens.push({ id:"m7-courses", module:7, html:`
+    <div class="screen-tag">Module 7 · All Courses</div>
+    <h2 class="screen-title">19 Free Courses</h2>
+    <p class="screen-desc">Tap any course to open it. Start with <strong>Claude 101</strong> if you're new — or jump to whatever fits your goals.</p>
+
+    <div class="anthro-section">
+      <div class="anthro-section-lbl">General Claude · 3 courses</div>
+      <div class="anthro-courses">
+        <a class="anthro-card" href="https://anthropic.skilljar.com/claude-101" target="_blank">
+          <span class="anthro-card-num">01</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Claude 101</div><div class="anthro-card-desc">Core features, Projects, Artifacts, Skills, Enterprise Search.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free + Cert</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/introduction-to-claude-cowork" target="_blank">
+          <span class="anthro-card-num">02</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Claude Cowork</div><div class="anthro-card-desc">Files, plugins, task loops, Chrome, Microsoft 365.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/claude-code-101" target="_blank">
+          <span class="anthro-card-num">03</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Claude Code 101</div><div class="anthro-card-desc">Agentic loops, Plan Mode, Subagents, MCP, Hooks.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="anthro-section">
+      <div class="anthro-section-lbl">Developer / API · 5 courses</div>
+      <div class="anthro-courses">
+        <a class="anthro-card" href="https://anthropic.skilljar.com/claude-platform-101" target="_blank">
+          <span class="anthro-card-num">04</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Claude Platform 101</div><div class="anthro-card-desc">API requests, agent loops, tool use, extended thinking, managed agents.</div></div>
+          <span class="anthro-card-badge anthro-badge-dev">Dev</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/claude-code-in-action" target="_blank">
+          <span class="anthro-card-num">05</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Claude Code in Action</div><div class="anthro-card-desc">Context management, custom commands, GitHub, SDK.</div></div>
+          <span class="anthro-card-badge anthro-badge-dev">Dev</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/claude-with-the-anthropic-api" target="_blank">
+          <span class="anthro-card-num">06</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Building with the Claude API</div><div class="anthro-card-desc">RAG, tool use, prompt caching, agents, Computer Use. Python hands-on.</div></div>
+          <span class="anthro-card-badge anthro-badge-dev">Dev</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/claude-in-amazon-bedrock" target="_blank">
+          <span class="anthro-card-num">07</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Claude on Amazon Bedrock</div><div class="anthro-card-desc">AWS-accredited. RAG, tool use, extended reasoning, MCP on Bedrock.</div></div>
+          <span class="anthro-card-badge anthro-badge-dev">AWS</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/claude-with-google-vertex" target="_blank">
+          <span class="anthro-card-num">08</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Claude on Vertex AI</div><div class="anthro-card-desc">GCP. Vision, PDF processing, prompt caching, agent workflows.</div></div>
+          <span class="anthro-card-badge anthro-badge-dev">GCP</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="anthro-section">
+      <div class="anthro-section-lbl">Model Context Protocol · 2 courses</div>
+      <div class="anthro-courses">
+        <a class="anthro-card" href="https://anthropic.skilljar.com/introduction-to-model-context-protocol" target="_blank">
+          <span class="anthro-card-num">09</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Intro to MCP</div><div class="anthro-card-desc">Build MCP servers and clients with Python. Tools, resources, prompts.</div></div>
+          <span class="anthro-card-badge anthro-badge-mcp">MCP</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/model-context-protocol-advanced-topics" target="_blank">
+          <span class="anthro-card-num">10</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">MCP Advanced Topics</div><div class="anthro-card-desc">Sampling, notifications, transport, production scaling.</div></div>
+          <span class="anthro-card-badge anthro-badge-mcp">MCP</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="anthro-section">
+      <div class="anthro-section-lbl">Agent Systems · 2 courses</div>
+      <div class="anthro-courses">
+        <a class="anthro-card" href="https://anthropic.skilljar.com/introduction-to-agent-skills" target="_blank">
+          <span class="anthro-card-num">11</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Agent Skills</div><div class="anthro-card-desc">Build reusable markdown instructions Claude applies automatically.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/introduction-to-subagents" target="_blank">
+          <span class="anthro-card-num">12</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Subagents</div><div class="anthro-card-desc">Delegate tasks, manage context, design structured outputs.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="anthro-section">
+      <div class="anthro-section-lbl">AI Fluency · 7 courses</div>
+      <div class="anthro-courses">
+        <a class="anthro-card" href="https://anthropic.skilljar.com/ai-fluency-framework-foundations" target="_blank">
+          <span class="anthro-card-num">13</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">AI Fluency: Framework</div><div class="anthro-card-desc">The 4D Framework — Delegation, Description, Discernment, Diligence.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free + Cert</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/ai-capabilities-and-limitations" target="_blank">
+          <span class="anthro-card-num">14</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">AI Capabilities &amp; Limits</div><div class="anthro-card-desc">How AI thinks, knowledge limits, working memory, steerability.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/ai-fluency-for-small-businesses" target="_blank">
+          <span class="anthro-card-num">15</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">AI Fluency: Small Business</div><div class="anthro-card-desc">Practical AI for owner-operators. Built with PayPal.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free + Cert</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/ai-fluency-for-nonprofits" target="_blank">
+          <span class="anthro-card-num">16</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">AI Fluency: Nonprofits</div><div class="anthro-card-desc">Fundraising, communications, program delivery, operations.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/ai-fluency-for-educators" target="_blank">
+          <span class="anthro-card-num">17</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">AI Fluency: Educators</div><div class="anthro-card-desc">Apply AI into teaching practice, course design, learning outcomes.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free + Cert</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/ai-fluency-for-students" target="_blank">
+          <span class="anthro-card-num">18</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">AI Fluency: Students</div><div class="anthro-card-desc">AI competency for academic performance and career planning.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free + Cert</span>
+        </a>
+        <a class="anthro-card" href="https://anthropic.skilljar.com/teaching-ai-fluency" target="_blank">
+          <span class="anthro-card-num">19</span>
+          <div class="anthro-card-body"><div class="anthro-card-title">Teaching AI Fluency</div><div class="anthro-card-desc">Teach and assess the 4D Framework in instructor-led settings.</div></div>
+          <span class="anthro-card-badge anthro-badge-free">Free + Cert</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="action-step" style="margin-top:20px"><span class="action-label">Start here</span><span>Go to <strong>anthropic.com/learn</strong> → enroll in Claude 101 → complete it this week. It takes about 45 minutes and comes with a certificate.</span></div>` });
+
+  screens.push({ id:"m7-win", module:7, html:winScreen(7,
+    "Access 19 free Anthropic certified courses — and know exactly where to start.",
+    "You've completed all seven modules. See your full summary below.") });
 
   // ── GRADUATION ───────────────────────────────────────────────────
   screens.push({ id:"grad", module:0, html:`
@@ -415,6 +582,7 @@ function buildScreens(course) {
         <div class="grad-item"><span class="gi-check">✓</span>Privacy rules for ${biz}</div>
         <div class="grad-item"><span class="gi-check">✓</span>First-steps checklist to start this week</div>
         <div class="grad-item"><span class="gi-check">✓</span>${tools.length || 6} AI tools mapped to your workflows</div>
+        <div class="grad-item"><span class="gi-check">✓</span>19 Anthropic certified courses — your path to go deeper</div>
       </div>
       <div class="concept-note" style="text-align:left;margin-bottom:20px">You've now built the four pillars of AI fluency at ${biz}: <strong>Delegation</strong> (what to hand off), <strong>Description</strong> (how to communicate clearly), <strong>Discernment</strong> (what to trust), and <strong>Diligence</strong> (what you're accountable for).</div>
       <button class="btn-map" onclick="goTo(2)">Back to course map</button>
@@ -725,6 +893,21 @@ body{font-family:var(--body);background:#fff;color:var(--text);-webkit-font-smoo
 @keyframes pfloat{0%{opacity:1;top:65%}100%{opacity:0;top:35%}}
 
 
+/* ANTHROPIC ACADEMY */
+.anthro-section{margin-bottom:20px}
+.anthro-section-lbl{font-family:var(--mono);font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;padding-left:2px}
+.anthro-courses{display:flex;flex-direction:column;gap:6px}
+.anthro-card{display:flex;align-items:center;gap:10px;padding:11px 13px;background:#fff;border:1.5px solid var(--line);border-radius:12px;text-decoration:none;color:inherit;transition:border-color .15s,background .15s}
+.anthro-card:hover{border-color:var(--sage-light);background:var(--sand)}
+.anthro-card-num{font-family:var(--mono);font-size:.58rem;font-weight:700;color:var(--sage);min-width:18px;flex-shrink:0}
+.anthro-card-body{flex:1;min-width:0}
+.anthro-card-title{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:2px;line-height:1.2}
+.anthro-card-desc{font-size:.72rem;color:var(--text-mid);line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.anthro-card-badge{font-family:var(--mono);font-size:.54rem;font-weight:700;letter-spacing:.05em;padding:3px 7px;border-radius:4px;flex-shrink:0;white-space:nowrap}
+.anthro-badge-free{background:rgba(122,156,120,.12);color:var(--sage);border:1px solid rgba(122,156,120,.25)}
+.anthro-badge-dev{background:rgba(100,100,240,.08);color:#6868cc;border:1px solid rgba(100,100,240,.2)}
+.anthro-badge-mcp{background:rgba(180,140,40,.08);color:#8a6a10;border:1px solid rgba(180,140,40,.2)}
+
 /* MOBILE */
 @media(max-width:480px){
   .stage{padding:20px 16px 36px}
@@ -849,8 +1032,8 @@ export default async function handler(req) {
     const STUDY = ${JSON.stringify(course.study || {flashcards:[],quiz:[],match:[]}).replace(/</g,'\\u003c')};
     const SMODS = ${JSON.stringify(screens.map(s => s.module))};
     const SIDS = ${JSON.stringify(screens.map(s => s.id))};
-    const MNAMES = ['Intro','AI Command Center','Prompt Library','Workflow Map','Privacy Rules','First Steps'];
-    const WIN_IDS = new Set(['m1-win','m2-win','m3-win','m4-win','m5-win','grad']);
+    const MNAMES = ['Intro','AI Command Center','Prompt Library','Workflow Map','Privacy Rules','First Steps','AI Tools Arsenal','Anthropic Academy'];
+    const WIN_IDS = new Set(['m1-win','m2-win','m3-win','m4-win','m5-win','m6-win','m7-win','grad']);
     const KEY = 'course_' + SLUG + '_screen';
     const PKEY = 'course_' + SLUG + '_pts';
     let cur = Math.min(Math.max(0, parseInt(localStorage.getItem(KEY)) || 0), TOTAL - 1);
@@ -977,7 +1160,8 @@ export default async function handler(req) {
       if (list) {
         const entries = [
           {n:1,name:'AI Command Center'},{n:2,name:'Prompt Library'},
-          {n:3,name:'Workflow Map'},{n:4,name:'Privacy Rules'},{n:5,name:'First Steps'}
+          {n:3,name:'Workflow Map'},{n:4,name:'Privacy Rules'},{n:5,name:'First Steps'},
+          {n:6,name:'AI Tools Arsenal'},{n:7,name:'Anthropic Academy'}
         ];
         list.innerHTML = entries.map(e => {
           const start = MS[e.n];
