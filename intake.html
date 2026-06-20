@@ -524,6 +524,7 @@
         if (json.tempId) {
           const btn = document.getElementById('stripe-buy-btn');
           btn.href = 'https://buy.stripe.com/28E00lcbP14d5n35iH8k802?client_reference_id=' + json.tempId;
+          sessionStorage.setItem('ss_email', data.email);
         }
         document.getElementById('result-email').textContent = data.email;
         if (json.actionPrompts && json.actionPrompts.length) {

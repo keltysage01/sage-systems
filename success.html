@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Course Generating — Sage Systems</title>
+<style>
+  :root{--g:#21E68A;--bg:#0a130d;--panel:#111a13;--border:rgba(33,230,138,.18)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif}
+
+  /* scanlines */
+  body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0,rgba(0,0,0,.12) 1px,transparent 1px,transparent 3px);
+    animation:scan 8s linear infinite}
+  @keyframes scan{0%{background-position:0 0}100%{background-position:0 80px}}
+
+  main{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center}
+
+  .icon-wrap{width:80px;height:80px;margin:0 auto 28px;position:relative}
+  .icon-ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--g);animation:ringPulse 2.4s ease-in-out infinite}
+  .icon-ring:nth-child(2){animation-delay:.8s;inset:-10px;opacity:.5}
+  @keyframes ringPulse{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:.25;transform:scale(1.08)}}
+  .icon-inner{position:absolute;inset:8px;background:rgba(33,230,138,.08);border-radius:50%;border:1.5px solid rgba(33,230,138,.35);display:flex;align-items:center;justify-content:center}
+
+  .check-svg{width:30px;height:30px}
+  .check-svg circle{stroke:var(--g);stroke-width:2;fill:none;stroke-dasharray:113;stroke-dashoffset:113;animation:circleDraw .7s .3s ease forwards}
+  .check-svg path{stroke:var(--g);stroke-width:2.5;fill:none;stroke-dasharray:30;stroke-dashoffset:30;stroke-linecap:round;stroke-linejoin:round;animation:checkDraw .4s 1s ease forwards}
+  @keyframes circleDraw{to{stroke-dashoffset:0}}
+  @keyframes checkDraw{to{stroke-dashoffset:0}}
+
+  .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--g);opacity:.6;margin-bottom:14px}
+  h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;letter-spacing:-.03em;line-height:1.08;color:#fff;margin-bottom:16px}
+  h1 span{color:var(--g)}
+  .sub{font-size:.95rem;color:rgba(255,255,255,.5);line-height:1.7;max-width:400px;margin:0 auto 36px}
+
+  /* progress steps */
+  .steps{display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;margin:0 auto 40px;text-align:left}
+  .step{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--panel);border:1px solid var(--border);border-radius:10px;font-size:.82rem}
+  .step-dot{width:8px;height:8px;border-radius:50%;background:var(--g);flex-shrink:0;box-shadow:0 0 8px var(--g)}
+  .step-dot.pulse{animation:dotPulse 1.5s ease-in-out infinite}
+  .step-dot.dim{background:rgba(33,230,138,.25);box-shadow:none}
+  @keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .step-label{flex:1;color:rgba(255,255,255,.75);font-weight:500}
+  .step-label.done{color:var(--g)}
+  .step-label.dim{color:rgba(255,255,255,.3)}
+  .step-badge{font-size:.7rem;font-weight:700;letter-spacing:.06em;padding:2px 7px;border-radius:4px}
+  .step-badge.done{background:rgba(33,230,138,.12);color:var(--g);border:1px solid rgba(33,230,138,.3)}
+  .step-badge.active{background:rgba(33,230,138,.08);color:var(--g);border:1px solid rgba(33,230,138,.2);animation:dotPulse 1.5s ease-in-out infinite}
+  .step-badge.pending{background:rgba(255,255,255,.04);color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.1)}
+
+  .email-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:22px 24px;max-width:380px;width:100%;margin:0 auto 32px}
+  .email-card .label{font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(33,230,138,.6);margin-bottom:6px}
+  .email-card .addr{font-size:.95rem;font-weight:600;color:#fff}
+  .email-card .note{font-size:.78rem;color:rgba(255,255,255,.38);margin-top:6px;line-height:1.5}
+
+  .back{font-size:.8rem;color:rgba(255,255,255,.3);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:1px;transition:color .2s}
+  .back:hover{color:rgba(255,255,255,.6)}
+</style>
+</head>
+<body>
+<main>
+  <div class="icon-wrap">
+    <div class="icon-ring"></div>
+    <div class="icon-ring"></div>
+    <div class="icon-inner">
+      <svg class="check-svg" viewBox="0 0 36 36">
+        <circle cx="18" cy="18" r="17"/>
+        <path d="M11 18l5 5 9-10"/>
+      </svg>
+    </div>
+  </div>
+
+  <p class="eyebrow">Payment confirmed</p>
+  <h1>Building your<br/><span>AI course now.</span></h1>
+  <p class="sub">We're generating every module, prompt, and workflow map specific to your business. This takes about 60–90 seconds.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-dot"></div>
+      <span class="step-label done">Payment verified</span>
+      <span class="step-badge done">DONE</span>
+    </div>
+    <div class="step">
+      <div class="step-dot pulse"></div>
+      <span class="step-label">Generating your course</span>
+      <span class="step-badge active">RUNNING</span>
+    </div>
+    <div class="step">
+      <div class="step-dot dim"></div>
+      <span class="step-label dim">Email with your link</span>
+      <span class="step-badge pending">NEXT</span>
+    </div>
+  </div>
+
+  <div class="email-card" id="email-card" style="display:none">
+    <div class="label">Sending your course to</div>
+    <div class="addr" id="email-display"></div>
+    <div class="note">Check your inbox in 1–2 minutes. Check spam if you don't see it.</div>
+  </div>
+
+  <a class="back" href="/">← Back to home</a>
+</main>
+
+<script>
+  // Show email if passed via query param (e.g. from intake form storing it in sessionStorage)
+  const stored = sessionStorage.getItem('ss_email');
+  if (stored) {
+    document.getElementById('email-card').style.display = 'block';
+    document.getElementById('email-display').textContent = stored;
+  }
+
+  // Animate the active step dot to "done" after ~90s (course usually ready)
+  setTimeout(() => {
+    const steps = document.querySelectorAll('.step');
+    const dots  = document.querySelectorAll('.step-dot');
+    const labels = document.querySelectorAll('.step-label');
+    const badges = document.querySelectorAll('.step-badge');
+
+    // step 2 → done
+    dots[1].classList.remove('pulse');
+    labels[1].classList.add('done');
+    badges[1].className = 'step-badge done';
+    badges[1].textContent = 'DONE';
+
+    // step 3 → active
+    dots[2].classList.remove('dim');
+    dots[2].classList.add('pulse');
+    labels[2].classList.remove('dim');
+    badges[2].className = 'step-badge active';
+    badges[2].textContent = 'SENDING';
+  }, 90000);
+</script>
+</body>
+</html>
