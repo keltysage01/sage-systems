@@ -1,4 +1,10 @@
+import { getStore } from "@netlify/blobs";
+
 export const config = { path: "/api/snapshot" };
+
+function genTempId() {
+  return "tmp_" + Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
+}
 
 async function callClaude(prompt, maxTokens) {
   const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -75,6 +81,15 @@ Under 250 words. Sign off as "Kelty at Sage Systems".
 
 ${context}`;
 
+  // Save intake data so the Stripe webhook can retrieve it after payment
+  const tempId = genTempId();
+  try {
+    const store = getStore("pending-intakes");
+    await store.setJSON(tempId, body, { metadata: { createdAt: Date.now() } });
+  } catch (err) {
+    console.error("Failed to save pending intake:", err.message);
+  }
+
   try {
     const [teaser, promptsRaw, emailBody] = await Promise.all([
       callClaude(teaserPrompt, 200),
@@ -115,7 +130,7 @@ ${context}`;
       emailSent = emailRes.ok;
     } catch (e) {}
 
-    return new Response(JSON.stringify({ teaser, actionPrompts, emailSent }), {
+    return new Response(JSON.stringify({ teaser, actionPrompts, emailSent, tempId }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

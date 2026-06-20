@@ -429,7 +429,7 @@
         <p class="email-note">Full breakdown sent to <span id="result-email"></span></p>
         <div style="margin-top:24px;padding-top:22px;border-top:1px solid var(--eg-border);text-align:center">
           <p style="font-family:var(--mono);font-size:.62rem;color:var(--eg-muted-2);margin-bottom:14px;letter-spacing:.08em;text-transform:uppercase">Want the full custom course — prompts, workflow map, everything built for your business?</p>
-          <a href="https://buy.stripe.com/28E00lcbP14d5n35iH8k802" style="display:inline-block;background:var(--eg-green);color:var(--eg-bg);font-size:.95rem;font-weight:800;padding:13px 30px;border-radius:8px;text-decoration:none;box-shadow:0 0 28px rgba(33,230,138,.35)">Get My Full Course — $9.99 →</a>
+          <a id="stripe-buy-btn" href="https://buy.stripe.com/28E00lcbP14d5n35iH8k802" style="display:inline-block;background:var(--eg-green);color:var(--eg-bg);font-size:.95rem;font-weight:800;padding:13px 30px;border-radius:8px;text-decoration:none;box-shadow:0 0 28px rgba(33,230,138,.35)">Get My Full Course — $9.99 →</a>
           <p style="font-family:var(--mono);font-size:.6rem;color:var(--eg-muted-2);margin-top:10px;letter-spacing:.1em;text-transform:uppercase">One-time. No subscription.</p>
         </div>
       </div>
@@ -516,6 +516,10 @@
         document.getElementById('loading-state').style.display = 'none';
         document.getElementById('result-state').style.display = 'block';
         document.getElementById('snapshot-content').textContent = json.teaser || 'Your snapshot is being prepared — check your email in a moment.';
+        if (json.tempId) {
+          const btn = document.getElementById('stripe-buy-btn');
+          btn.href = 'https://buy.stripe.com/28E00lcbP14d5n35iH8k802?client_reference_id=' + json.tempId;
+        }
         document.getElementById('result-email').textContent = data.email;
         if (json.actionPrompts && json.actionPrompts.length) {
           document.getElementById('prompts-section').style.display = 'block';
