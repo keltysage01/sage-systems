@@ -88,7 +88,7 @@
     </div>
     <div class="step">
       <div class="step-dot dim"></div>
-      <span class="step-label dim">Email with your link</span>
+      <span class="step-label dim">Opening your course</span>
       <span class="step-badge pending">NEXT</span>
     </div>
   </div>
@@ -103,33 +103,55 @@
 </main>
 
 <script>
-  // Show email if passed via query param (e.g. from intake form storing it in sessionStorage)
   const stored = sessionStorage.getItem('ss_email');
   if (stored) {
     document.getElementById('email-card').style.display = 'block';
     document.getElementById('email-display').textContent = stored;
   }
 
-  // Animate the active step dot to "done" after ~90s (course usually ready)
-  setTimeout(() => {
-    const steps = document.querySelectorAll('.step');
-    const dots  = document.querySelectorAll('.step-dot');
-    const labels = document.querySelectorAll('.step-label');
-    const badges = document.querySelectorAll('.step-badge');
+  const dots   = document.querySelectorAll('.step-dot');
+  const labels = document.querySelectorAll('.step-label');
+  const badges = document.querySelectorAll('.step-badge');
 
-    // step 2 → done
+  function markStep2Done() {
     dots[1].classList.remove('pulse');
     labels[1].classList.add('done');
     badges[1].className = 'step-badge done';
     badges[1].textContent = 'DONE';
-
-    // step 3 → active
     dots[2].classList.remove('dim');
     dots[2].classList.add('pulse');
     labels[2].classList.remove('dim');
     badges[2].className = 'step-badge active';
-    badges[2].textContent = 'SENDING';
-  }, 90000);
+    badges[2].textContent = 'REDIRECTING';
+  }
+
+  // Extract Stripe session_id from URL (?session_id=cs_live_...)
+  const params = new URLSearchParams(location.search);
+  const sessionId = params.get('session_id');
+
+  if (sessionId) {
+    // Poll every 3s for up to 3 minutes
+    let attempts = 0;
+    const maxAttempts = 60;
+    const poll = setInterval(async () => {
+      attempts++;
+      try {
+        const res = await fetch(`/api/course-status?session=${encodeURIComponent(sessionId)}`);
+        const data = await res.json();
+        if (data.ready && data.courseId) {
+          clearInterval(poll);
+          markStep2Done();
+          setTimeout(() => {
+            window.location.href = `/course?id=${data.courseId}`;
+          }, 800);
+        }
+      } catch {}
+      if (attempts >= maxAttempts) clearInterval(poll);
+    }, 3000);
+  } else {
+    // No session_id — fall back to 90s visual timer
+    setTimeout(markStep2Done, 90000);
+  }
 </script>
 </body>
 </html>

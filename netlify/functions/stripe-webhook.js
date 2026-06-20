@@ -229,8 +229,12 @@ export default async function handler(req, context) {
         return;
       }
 
-      await generateCourse(intake);
+      const courseId = await generateCourse(intake);
       await pendingStore.delete(tempId);
+
+      // Store sessionId → courseId so success page can redirect without waiting for email
+      const sessionStore = getStore("session-courses");
+      await sessionStore.setJSON(session.id, { courseId }, { metadata: { createdAt: Date.now() } });
     } catch (err) {
       console.error("stripe-webhook: course generation failed", err.message);
     }
