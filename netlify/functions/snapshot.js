@@ -1,9 +1,10 @@
 import { getStore } from "@netlify/blobs";
+import { randomBytes } from "crypto";
 
 export const config = { path: "/api/snapshot" };
 
 function genTempId() {
-  return "tmp_" + Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
+  return "tmp_" + randomBytes(16).toString("hex");
 }
 
 async function callClaude(prompt, maxTokens) {

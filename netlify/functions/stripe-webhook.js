@@ -1,9 +1,17 @@
 import { getStore } from "@netlify/blobs";
-import { createHmac, timingSafeEqual } from "crypto";
+import { createHmac, timingSafeEqual, randomBytes } from "crypto";
 
 export const config = { path: "/api/stripe-webhook" };
 
 const STRIPE_BUY_URL = "https://buy.stripe.com/28E00lcbP14d5n35iH8k802";
+
+function escHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function escSubject(s) {
+  return String(s || "").replace(/[\r\n]/g, " ");
+}
 
 function verifyStripeSignature(rawBody, sigHeader, secret) {
   try {
@@ -17,7 +25,7 @@ function verifyStripeSignature(rawBody, sigHeader, secret) {
 }
 
 function genId() {
-  return Math.random().toString(36).slice(2, 9) + Date.now().toString(36);
+  return randomBytes(24).toString("base64url");
 }
 
 async function callClaude(prompt, maxTokens) {
@@ -124,8 +132,8 @@ body{margin:0;padding:0;background:#f0f4f0;font-family:-apple-system,BlinkMacSys
     <p style="margin:0;font-size:13px;color:rgba(255,255,255,.5)">Custom AI Course</p>
   </td></tr>
   <tr><td class="card" style="background:#fff;padding:32px 28px 24px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4">
-    <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7A9C78">It's ready, ${name}.</p>
-    <h1 style="margin:0 0 14px;font-size:1.9rem;font-weight:900;letter-spacing:-1px;color:#1C412C;line-height:1.1">Your AI course<br/>for ${business_name}.</h1>
+    <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7A9C78">It's ready, ${escHtml(name)}.</p>
+    <h1 style="margin:0 0 14px;font-size:1.9rem;font-weight:900;letter-spacing:-1px;color:#1C412C;line-height:1.1">Your AI course<br/>for ${escHtml(business_name)}.</h1>
     <p style="margin:0;font-size:.93rem;color:#6b7b6b;line-height:1.65">Built from your answers. ${prompts.length} prompts ready to copy. Your workflow map, privacy rules, and tool arsenal — all specific to your business.</p>
   </td></tr>
   <tr><td style="background:#fff;padding:0 28px 24px;border-left:1px solid #e4ede4;border-right:1px solid #e4ede4">
@@ -159,7 +167,7 @@ body{margin:0;padding:0;background:#f0f4f0;font-family:-apple-system,BlinkMacSys
       body: JSON.stringify({
         from: process.env.FROM_EMAIL || "onboarding@resend.dev",
         to: email,
-        subject: `Your Custom AI Course is Ready — ${business_name}`,
+        subject: escSubject(`Your Custom AI Course is Ready — ${business_name}`),
         html: emailHtml,
       }),
     }),
@@ -170,8 +178,8 @@ body{margin:0;padding:0;background:#f0f4f0;font-family:-apple-system,BlinkMacSys
         from: process.env.FROM_EMAIL || "onboarding@resend.dev",
         to: "keltysage01@gmail.com",
         reply_to: email,
-        subject: `New paid course — ${business_name} (${name})`,
-        html: `<p style="font-family:sans-serif">New $9.99 payment from <strong>${name}</strong> (${email}) — <strong>${business_name}</strong>.<br/>Course generated and emailed.<br/><br/><a href="${courseUrl}">View their course</a></p>`,
+        subject: escSubject(`New paid course — ${business_name} (${name})`),
+        html: `<p style="font-family:sans-serif">New $9.99 payment from <strong>${escHtml(name)}</strong> (${escHtml(email)}) — <strong>${escHtml(business_name)}</strong>.<br/>Course generated and emailed.<br/><br/><a href="${escHtml(courseUrl)}">View their course</a></p>`,
       }),
     }),
   ]);
@@ -186,10 +194,9 @@ export default async function handler(req, context) {
   const sig = req.headers.get("stripe-signature");
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  if (secret && sig) {
-    if (!verifyStripeSignature(rawBody, sig, secret)) {
-      return new Response("Invalid signature", { status: 400 });
-    }
+  if (!secret) return new Response("Webhook not configured", { status: 500 });
+  if (!sig || !verifyStripeSignature(rawBody, sig, secret)) {
+    return new Response("Invalid signature", { status: 400 });
   }
 
   let event;
