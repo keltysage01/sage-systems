@@ -2,7 +2,8 @@ import { getStore } from "@netlify/blobs";
 
 export const config = { path: "/course" };
 
-const BOOK_CALL_URL = "https://calendly.com/keltysage01/growth-call";
+// TODO: replace with client's booking link when provided
+const BOOK_CALL_URL = "#book-call";
 
 function esc(s) {
   return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
