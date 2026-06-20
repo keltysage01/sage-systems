@@ -424,6 +424,7 @@ function buildScreens(course) {
         ${lessonItem("Free with optional certificates")}
         ${lessonItem("Self-paced — start anywhere, finish at your own speed")}
       </div>
+      <a href="/library" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;margin-top:18px;background:#000;color:#00FF66;font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:11px 22px;border-radius:4px;text-decoration:none;border:1px solid rgba(0,255,102,.4);box-shadow:0 0 18px rgba(0,255,102,.12);transition:box-shadow .2s">OPEN THE OPERATOR'S LIBRARY →</a>
     </div>` });
 
   screens.push({ id:"m7-hook", module:7, html:`
