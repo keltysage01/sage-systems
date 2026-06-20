@@ -3,7 +3,7 @@ import { getStore } from "@netlify/blobs";
 export const config = { path: "/course" };
 
 // TODO: replace with client's booking link when provided
-const BOOK_CALL_URL = "https://econ-growth.com";
+const BOOK_CALL_URL = "https://os.econ-growth.com/book/growth-call";
 
 function esc(s) {
   return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
