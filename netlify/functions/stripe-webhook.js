@@ -99,6 +99,7 @@ Off limits / never use AI for: ${off_limits || "none specified"}
     callClaude(`Create 8 matching pairs to help ${name} learn AI terminology for ${business_name}. Each pair: a short term and its plain-English definition (under 10 words). Use terms relevant to their workflows.\n\nReturn ONLY valid JSON array:\n[{"term":"System Prompt","def":"Instructions that tell AI who it is and how to behave"}]\n\n${ctx}`, 600),
   ]);
 
+  const welcome = JSON.stringify(parseJSON(welcomeRaw, []));
   const prompts = parseJSON(promptsRaw, []);
   const toolsList = parseJSON(toolsRaw, []);
   const map = parseJSON(mapRaw, { ai: [], human: [], improve: [] });
@@ -111,7 +112,7 @@ Off limits / never use AI for: ${off_limits || "none specified"}
   const courseData = {
     id: courseId, name, email, business_name,
     brand_color: intake.brand_color || null,
-    welcome: welcomeRaw, brain: brainRaw,
+    welcome, brain: brainRaw,
     prompts, tools: toolsList, map, rules, checklist,
     logo: null,
     study: { flashcards, quiz, match },
